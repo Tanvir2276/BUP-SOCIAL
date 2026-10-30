@@ -1,0 +1,511 @@
+// BUP Social (BUPSoCo) - Prisma Schema for MySQL
+// Bangladesh University of Professionals
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  FACULTY
+  CLUB_ADMIN
+  MODERATOR
+  ADMIN
+}
+
+enum NoticeCategory {
+  GENERAL
+  EXAM
+  ASSIGNMENT
+  ROUTINE_CHANGE
+  CLASS_POSTPONEMENT
+  MAKE_UP_CLASS
+  EMERGENCY
+}
+
+enum NoticeScope {
+  CAMPUS
+  DEPARTMENT
+  COURSE
+  SECTION
+}
+
+enum UrgencyLevel {
+  NORMAL
+  IMPORTANT
+  URGENT
+}
+
+enum CommunityType {
+  CAMPUS
+  DEPARTMENT
+  COURSE
+  CLUB
+  BATCH
+}
+
+enum RideType {
+  OFFER
+  REQUEST
+}
+
+enum LostFoundType {
+  LOST
+  FOUND
+}
+
+enum PostMediaType {
+  TEXT
+  IMAGE
+  VIDEO
+  REEL
+  NOTE
+}
+
+enum ItemStatus {
+  OPEN
+  CLAIMED
+  RESOLVED
+}
+
+model User {
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  password         String
+  role             Role     @default(STUDENT)
+  studentId        String?  @unique
+  facultyId        String?  @unique
+  designation      String?  @default("Student")
+  bio              String?  @db.Text
+  avatar           String?  @db.Text
+  isVerified       Boolean  @default(false)
+  
+  // Academic Hierarchy Associations
+  facultyName      String?  @default("Faculty of Science & Technology (FST)")
+  departmentCode   String?  @default("ICT")
+  programName      String?  @default("BICE (B.Sc. in Information & Communication Engineering)")
+  batchName        String?  @default("BICE-2024")
+  sectionName      String?  @default("Section A")
+
+  // Teacher Requirement: Custom reminder settings
+  leadTimeMinutes  Int      @default(15)
+  deviceType       String   @default("browser")
+  soundEnabled     Boolean  @default(true)
+  classReminders   Boolean  @default(true)
+  examReminders    Boolean  @default(true)
+  noticeAlerts     Boolean  @default(true)
+
+  // Teacher Requirement: Course Preferences & Favorite Clubs
+  coursePreferences String? @default("[\"ICT-2201\",\"ICT-2202\",\"CSE-3101\"]") @db.Text
+  favoriteClubs     String? @default("[\"BUP InfoTech Club (BUPITC)\",\"BUP Robotics Club (BUPRC)\"]") @db.Text
+
+  // E2EE Public Key
+  publicKey        String?  @db.Text
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  posts            Post[]
+  comments         Comment[]
+  reactions        Reaction[]
+  savedPosts       SavedPost[]
+  reminders        CustomReminder[]
+  auditLogs        AuditLog[]
+  favoriteClubList FavoriteClub[]
+  eventRegistrations EventRegistration[]
+  noticesPublished FacultyNotice[]
+
+  @@index([email])
+  @@index([role])
+  @@index([departmentCode])
+}
+
+model OtpRecord {
+  id        String   @id @default(uuid())
+  email     String
+  otpHash   String
+  expiresAt DateTime
+  isUsed    Boolean  @default(false)
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model FacultyEntity {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  name        String
+  description String?  @db.Text
+}
+
+model DepartmentEntity {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  name        String
+  facultyCode String
+  description String?  @db.Text
+  coursesCount Int     @default(0)
+  icon        String   @default("Cpu")
+}
+
+model CourseEntity {
+  id             String   @id @default(uuid())
+  code           String   @unique
+  title          String
+  departmentCode String
+  departmentName String
+  semester       String   @default("Spring 2026")
+  level          String   @default("Undergraduate")
+  credits        Float    @default(3.0)
+  description    String?  @db.Text
+  sections       CourseSection[]
+
+  @@index([departmentCode])
+}
+
+model CourseSection {
+  id             String       @id @default(uuid())
+  courseCode     String
+  course         CourseEntity @relation(fields: [courseCode], references: [code], onDelete: Cascade)
+  sectionName    String       // "Section A", "Section B"
+  instructorName String
+  instructorEmail String?
+  room           String       @default("Academic Block 2, Room 402")
+  schedule       String       @default("Sun 10:30-12:00, Tue 10:30-12:00")
+  capacity       Int          @default(45)
+  enrolledCount  Int          @default(40)
+
+  @@index([courseCode])
+  @@index([sectionName])
+}
+
+model FacultyNotice {
+  id             String         @id @default(uuid())
+  title          String
+  content        String         @db.Text
+  category       NoticeCategory @default(GENERAL)
+  scope          NoticeScope    @default(SECTION)
+  departmentCode String         @default("ALL")
+  courseCode     String         @default("ALL")
+  sectionName    String         @default("ALL") // "Section A", "Section B", "ALL"
+  urgency        UrgencyLevel   @default(NORMAL)
+  attachmentName String?
+  attachmentUrl  String?
+
+  authorId       String
+  author         User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorName     String
+  authorRole     String         @default("FACULTY")
+  authorDesignation String?     @default("Assistant Professor")
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([departmentCode])
+  @@index([courseCode])
+  @@index([sectionName])
+  @@index([authorId])
+}
+
+model Community {
+  id          String        @id @default(uuid())
+  name        String
+  slug        String        @unique
+  description String?       @db.Text
+  type        CommunityType @default(CAMPUS)
+  target      String        @default("General Campus")
+  isPublic    Boolean       @default(true)
+  membersCount Int          @default(0)
+  createdAt   DateTime      @default(now())
+
+  posts       Post[]
+}
+
+model Post {
+  id              String        @id @default(uuid())
+  authorId        String
+  author          User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorName      String
+  authorRole      String        @default("STUDENT")
+  authorAvatar    String?       @db.Text
+  authorDepartment String?
+  authorBatch     String?
+  authorStudentId String?
+
+  communityType   CommunityType @default(CAMPUS)
+  communityTarget String        @default("General Campus")
+  communityId     String?
+  community       Community?    @relation(fields: [communityId], references: [id])
+
+  title           String
+  content         String        @db.Text
+  tags            String?       @default("[\"#BUPSocial\"]")
+  mediaType       PostMediaType @default(TEXT)
+  mediaUrl        String?       @db.Text
+  attachmentName  String?
+  attachmentUrl   String?       @db.Text
+  imageUrl        String?       @db.Text
+  likesCount      Int           @default(0)
+  commentsCount   Int           @default(0)
+  viewsCount      Int           @default(0)
+  sharesCount     Int           @default(0)
+  isPinned        Boolean       @default(false)
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  comments        Comment[]
+  reactions       Reaction[]
+  savedBy         SavedPost[]
+
+  @@index([authorId])
+  @@index([communityType])
+}
+
+model Comment {
+  id           String   @id @default(uuid())
+  postId       String
+  post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId     String
+  author       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorName   String
+  authorRole   String   @default("STUDENT")
+  authorAvatar String?  @db.Text
+  content      String   @db.Text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([postId])
+  @@index([authorId])
+}
+
+model Reaction {
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   @default("LIKE")
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+}
+
+model SavedPost {
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+}
+
+model Club {
+  id                  String   @id @default(uuid())
+  name                String   @unique
+  shortCode           String
+  category            String   @default("Technology & Science")
+  description         String   @db.Text
+  advisor             String   @default("Faculty Advisor")
+  president           String   @default("Student President")
+  banner              String?  @db.Text
+  logo                String?  @db.Text
+  membersCount        Int      @default(120)
+  upcomingEventsCount Int      @default(2)
+
+  favorites           FavoriteClub[]
+  events              ClubEvent[]
+}
+
+model FavoriteClub {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clubId    String?
+  club      Club?    @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  clubName  String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, clubName])
+}
+
+model ClubEvent {
+  id             String              @id @default(uuid())
+  clubId         String?
+  club           Club?               @relation(fields: [clubId], references: [id])
+  clubName       String
+  title          String
+  description    String              @db.Text
+  date           String
+  time           String
+  venue          String              @default("Bijoy Auditorium, BUP")
+  category       String              @default("Workshop")
+  posterUrl      String?             @db.Text
+  registeredCount Int                @default(0)
+
+  registrations  EventRegistration[]
+
+  @@index([clubName])
+}
+
+model EventRegistration {
+  id           String    @id @default(uuid())
+  eventId      String
+  event        ClubEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userName     String
+  studentId    String?
+  registeredAt DateTime  @default(now())
+
+  @@unique([eventId, userId])
+}
+
+model RoutineEntry {
+  id             String   @id @default(uuid())
+  departmentCode String   @default("ICT")
+  programName    String   @default("BICE")
+  batchName      String   @default("BICE-2024")
+  courseCode     String
+  courseTitle    String
+  sectionName    String   // "Section A", "Section B"
+  instructorName String
+  dayOfWeek      String   // "Sunday", "Monday", "Tuesday", etc.
+  startTime      String   // "10:30"
+  endTime        String   // "12:00"
+  room           String   @default("Block 2, Room 402")
+  isUpdated      Boolean  @default(false)
+  updateNote     String?  @default("")
+  createdAt      DateTime @default(now())
+
+  @@index([departmentCode, batchName, sectionName])
+}
+
+model CustomReminder {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String
+  reminderType    String   @default("CLASS")
+  targetDate      String?
+  leadTimeMinutes Int      @default(15)
+  deviceType      String   @default("browser")
+  soundEnabled    Boolean  @default(true)
+  isEnabled       Boolean  @default(true)
+  isCompleted     Boolean  @default(false)
+  eventRefId      String?
+  createdAt       DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Conversation {
+  id          String             @id @default(uuid())
+  canonicalId String             @unique
+  isGroup     Boolean            @default(false)
+  title       String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  messages    EncryptedMessage[]
+}
+
+model EncryptedMessage {
+  id                  String       @id @default(uuid())
+  conversationId      String
+  conversation        Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId            String
+  senderName          String
+  recipientId         String
+  recipientName       String
+  isEncrypted         Boolean      @default(true)
+  ciphertext          String       @db.Text
+  iv                  String
+  salt                String?
+  keyFingerprint      String       @default("AES-256-GCM-SHA256")
+  plainPreviewForDemo String?      @db.Text
+  read                Boolean      @default(false)
+  createdAt           DateTime     @default(now())
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@index([recipientId])
+}
+
+model RideOffer {
+  id             String          @id @default(uuid())
+  hostUserId     String
+  hostName       String
+  hostStudentId  String?
+  hostPhone      String?
+  hostAvatar     String?         @db.Text
+  type           RideType        @default(OFFER)
+  origin         String
+  destination    String          @default("BUP Campus, Mirpur Cantonment")
+  pickupPoint    String?         @default("Bus Stand")
+  departureTime  String
+  rideDate       String
+  transportMode  String          @default("Bike")
+  seatsAvailable Int             @default(1)
+  estimatedCost  String          @default("Shared (BDT 30-50)")
+  notes          String?         @db.Text
+  bupGoUrl       String          @default("https://bup-go-project-8njl.vercel.app/")
+  status         String          @default("ACTIVE")
+  createdAt      DateTime        @default(now())
+
+  passengers     RidePassenger[]
+}
+
+model RidePassenger {
+  id          String    @id @default(uuid())
+  rideId      String
+  ride        RideOffer @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  userId      String
+  name        String
+  contact     String?
+  status      String    @default("JOINED")
+  createdAt   DateTime  @default(now())
+
+  @@index([rideId])
+}
+
+model LostFoundItem {
+  id               String        @id @default(uuid())
+  type             LostFoundType @default(LOST)
+  title            String
+  description      String        @db.Text
+  location         String
+  dateReported     String
+  itemCategory     String        @default("General")
+  status           ItemStatus    @default(OPEN)
+  reportedByUserId String
+  reportedByName   String
+  contactInfo      String
+  imageUrl         String?       @db.Text
+  createdAt        DateTime      @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userName   String?
+  actionType String
+  entityType String
+  entityId   String?
+  details    String?  @db.Text
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([actionType])
+}

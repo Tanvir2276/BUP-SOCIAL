@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+code, kbd, samp, pre {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Glassmorphism helpers with high-contrast university palette */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(203, 213, 225, 0.7);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+}
+
+.dark .glass-panel {
+  background: rgba(13, 24, 43, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(30, 58, 102, 0.5);
+  box-shadow: 0 4px 25px -2px rgba(0, 0, 0, 0.35);
+}
+
+/* 
+ * Requirement 2: Realistic Animated Button System with Motion & Tactile Physics
+ * Applies to buttons across the whole platform
+ */
+button {
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              box-shadow 0.18s ease-out, 
+              background-color 0.18s ease,
+              border-color 0.18s ease;
+  user-select: none;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.96) translateY(1px);
+}
+
+/* Reusable tactile motion button classes */
+.btn-motion {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-motion:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -2px rgba(3, 85, 162, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn-motion:active:not(:disabled) {
+  transform: translateY(1px) scale(0.97);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Primary Navy BUP Button */
+.btn-bup-primary {
+  background: linear-gradient(135deg, #0355a2 0%, #074885 50%, #091b33 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px -2px rgba(3, 85, 162, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  font-weight: 700;
+}
+
+.btn-bup-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #026bc9 0%, #0355a2 50%, #074885 100%);
+  box-shadow: 0 8px 20px -2px rgba(3, 85, 162, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Gold Academic Accent Button */
+.btn-bup-gold {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px -2px rgba(245, 158, 11, 0.35);
+  font-weight: 700;
+}
+
+.btn-bup-gold:hover:not(:disabled) {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  box-shadow: 0 8px 20px -2px rgba(245, 158, 11, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Emerald Campus Green Button */
+.btn-bup-emerald {
+  background: linear-gradient(135deg, #059669 0%, #006a4e 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px -2px rgba(0, 106, 78, 0.35);
+  font-weight: 700;
+}
+
+.btn-bup-emerald:hover:not(:disabled) {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 8px 20px -2px rgba(0, 106, 78, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Shimmer gleam animation for featured cards */
+.shimmer-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 0.08) 25%,
+    rgba(255, 255, 255, 0) 30%
+  );
+  transform: rotate(30deg);
+  animation: shimmer 6s infinite;
+  pointer-events: none;
+}
