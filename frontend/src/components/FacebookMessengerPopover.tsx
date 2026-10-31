@@ -45,7 +45,7 @@ export const INITIAL_MESSENGER_CHATS: ChatThread[] = [
   {
     id: 'c1',
     name: 'Safaytul Islam Rafi',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=300',
     role: 'student',
     department: 'BICE-2024 CR',
     isOnline: true,
@@ -156,7 +156,7 @@ export const FacebookMessengerPopover: React.FC<FacebookMessengerPopoverProps> =
     .map((u) => ({
       id: u.id,
       name: u.name,
-      avatar: u.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+      avatar: u.avatar || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300',
       role: u.role,
       department: u.department || 'BUP Member',
       isOnline: true,

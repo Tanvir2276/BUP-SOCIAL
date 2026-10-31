@@ -113,7 +113,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClos
         role: user?.role || 'student',
         department: user?.department || 'Department of ICT',
         section: user?.section || 'Section A',
-        avatar: user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+        avatar: user?.avatar || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300',
       },
       likes: [],
       comments: [],

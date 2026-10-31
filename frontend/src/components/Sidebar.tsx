@@ -45,7 +45,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'reminders', label: 'Custom Reminders', icon: Clock },
     { id: 'clubs', label: 'Clubs & Events', icon: Users },
     { id: 'rides', label: 'RideShare & Travel', icon: Car, linkBupGo: true },
-    { id: 'messages', label: 'Chatbox', icon: MessageSquare, badge: 'Live' },
+    { id: 'messages', label: 'DM (Direct Messages)', icon: MessageSquare, badge: 'Live' },
     { id: 'lostfound', label: 'Lost & Found', icon: HelpCircle },
     { id: 'profile', label: 'Profile & Settings', icon: User },
   ];

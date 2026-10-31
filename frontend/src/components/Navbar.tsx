@@ -45,11 +45,11 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
   return (
     <>
       <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo & Brand */}
           <div
             onClick={() => setActiveTab('feed')}
-            className="cursor-pointer shrink-0 select-none"
+            className="cursor-pointer shrink-0 select-none max-w-[55%] sm:max-w-none"
           >
             <AnimatedBupLogo size="md" />
           </div>
@@ -61,7 +61,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
               { id: 'academics', label: 'Academics & Notices' },
               { id: 'routines', label: 'Routine Hub' },
               { id: 'clubs', label: 'Clubs & Events' },
-              { id: 'messages', label: 'Chatbox' },
+              { id: 'messages', label: 'DM' },
               { id: 'lostfound', label: 'Lost & Found' },
             ].map((tab) => (
               <button
@@ -79,12 +79,12 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
           </nav>
 
           {/* Action Tools & User Profile */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             {/* Campus Notification Center Popover (Classes, Exams, Notes) */}
             <div className="relative">
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className={`p-2 rounded-xl transition-colors relative ${
+                className={`p-1.5 sm:p-2 rounded-xl transition-colors relative ${
                   notificationsOpen
                     ? 'btn-bup-primary text-white shadow-sm'
                     : 'text-slate-600 dark:text-slate-300 hover:text-bup-700 dark:hover:text-bup-400 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -92,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
                 title="Campus Notifications (Classes, Exams, Notes)"
               >
                 <Bell className="w-4 h-4" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-500 ring-2 ring-white dark:ring-slate-900 animate-pulse" />
+                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-amber-500 ring-2 ring-white dark:ring-slate-900 animate-pulse" />
               </button>
 
               <NotificationCenterPopover
@@ -106,33 +106,33 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               title="Toggle Dark/Light Mode"
             >
               {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
             </button>
 
-            {/* Messenger Direct Shortcut to Chatbox */}
+            {/* Messenger Direct Shortcut to DM */}
             <button
               onClick={() => setActiveTab('messages')}
-              className={`p-2 rounded-xl transition-colors relative ${
+              className={`p-1.5 sm:p-2 rounded-xl transition-colors relative ${
                 activeTab === 'messages'
                   ? 'btn-bup-primary text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-300 hover:text-bup-700 dark:hover:text-bup-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
-              title="Open Chatbox (Messenger)"
+              title="Open DM (Direct Messages)"
             >
               <MessageSquare className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-blue-600 ring-2 ring-white dark:ring-slate-900" />
+              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-blue-600 ring-2 ring-white dark:ring-slate-900" />
             </button>
 
             {/* User Profile Pill */}
             <div className="relative">
               <button
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="flex items-center gap-2 p-1.5 pl-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors"
+                className="flex items-center gap-1.5 p-1 sm:p-1.5 sm:pl-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors"
               >
-                <div className="w-7 h-7 rounded-lg bg-bup-700 text-white flex items-center justify-center font-bold text-xs overflow-hidden">
+                <div className="w-7 h-7 rounded-lg bg-bup-700 text-white flex items-center justify-center font-bold text-xs overflow-hidden shrink-0">
                   {user?.avatar ? (
                     <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                   ) : (
@@ -147,7 +147,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
                     {user?.role === 'faculty' ? 'Faculty' : user?.studentId || 'Student'}
                   </p>
                 </div>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden xs:block" />
               </button>
 
               {/* Profile Dropdown */}

@@ -68,89 +68,208 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
   // Story modal state
   const [activeStory, setActiveStory] = useState<any | null>(null);
 
-  // Realistic Stories data
+  // Realistic BUP Campus Stories data
   const stories = [
     {
       id: 'create',
       isCreate: true,
       author: 'Add to Story',
       avatar: user?.avatar,
-      bg: 'bg-gradient-to-b from-blue-600 to-bup-900',
+      bg: 'bg-gradient-to-b from-bup-700 to-bup-900',
     },
     {
-      id: 's1',
+      id: 's-prize',
+      author: 'Safaytul Islam Rafi',
+      role: 'ICT Batch 24 CR',
+      avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
+      preview: 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=500',
+      title: 'National Tech Fest 🏆',
+      caption: 'Proud moment! Vice Chancellor presenting Championship Award to BUP CyberKnights at Bijoy Auditorium! 🇧🇩✨',
+      time: '1h ago',
+    },
+    {
+      id: 's-thesis',
+      author: 'Col Omar Faruque, PhD',
+      role: 'Dept Chairman',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+      preview: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500',
+      title: 'Thesis Defense 2026',
+      caption: 'BICE & BCSE final-year capstone presentations completed before External Board from BUET & DU. 🎓',
+      time: '3h ago',
+    },
+    {
+      id: 's-counsel',
+      author: 'BUP CPC Center',
+      role: 'Student Placement',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+      preview: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500',
+      title: 'CPC Mentorship Session',
+      caption: 'Interactive counseling on mental wellness, handling exam stress & corporate career readiness. 💡',
+      time: '5h ago',
+    },
+    {
+      id: 's-antorikkho',
+      author: 'Tanvir Naeem',
+      role: 'Batch 22 Scholar',
+      avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150',
+      preview: '/assets/bup_antorikkho_batch22.jpg',
+      title: 'অন্তরীক্ষ-২২ Fest ❤️',
+      caption: 'Unforgettable moments in red panjabi & sarees by BUP Central Lake! FST comrades for life! 🎓✨',
+      time: '7h ago',
+    },
+    {
+      id: 's-seminar',
+      author: 'Brig Gen Ataur Rahman',
+      role: 'Dean, FST',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+      preview: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=500',
+      title: 'AI in 4IR Seminar',
+      caption: 'Full-day academic seminar on Smart Defence & Quantum AI at Central Bijoy Auditorium. 🛡️',
+      time: '9h ago',
+    },
+    {
+      id: 's-robotics',
       author: 'BUP Robotics Club',
       role: 'Official Club',
       avatar: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=150',
-      preview: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400',
-      title: 'Robotics Workshop',
-      caption: 'FST Lab 402 Hands-on Microcontroller Workshop tomorrow at 3:00 PM! 🤖 Free registration for ICT & CSE.',
-      time: '2h ago',
-    },
-    {
-      id: 's2',
-      author: 'Dr. Md. Sabir Hossain',
-      role: 'Dept Chairman',
-      avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150',
-      preview: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400',
-      title: 'Midterm Examination',
-      caption: 'Spring 2026 Midterm schedule approved by Academic Council. Check Routine Hub for section timings.',
-      time: '4h ago',
-    },
-    {
-      id: 's3',
-      author: 'Munshi Tanvir Hossain',
-      role: 'Section B Lead',
-      avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150',
-      preview: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=400',
-      title: 'Campus Sunset',
-      caption: 'Evening golden hour breeze at BUP Central Lake after 4 hours of Data Structures lab! 🌅',
-      time: '6h ago',
-    },
-    {
-      id: 's4',
-      author: 'BUP InfoTech Club',
-      role: 'Official Club',
-      avatar: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=150',
-      preview: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400',
-      title: 'Tech Fest 2026',
-      caption: 'BUP National Tech Fest 2026 registration is officially LIVE! Hackathon prize pool: 1,50,000 BDT. 💻',
-      time: '8h ago',
-    },
-    {
-      id: 's5',
-      author: 'Asst. Prof. Nazneen',
-      role: 'Faculty Supervisor',
-      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
-      preview: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400',
-      title: 'Lab Manual Updated',
-      caption: 'Data Structures Lab Manual v2 uploaded on Academics Portal. Section A students please submit report.',
+      preview: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=500',
+      title: 'Robotics Workshop 🤖',
+      caption: 'Lab 402 Hands-on Autonomous Microcontroller and Drone telemetry workshop tomorrow at 3 PM! 🚀',
       time: '12h ago',
-    },
-    {
-      id: 's6',
-      author: 'BUP Sports Club',
-      role: 'Inter-Faculty Football',
-      avatar: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=150',
-      preview: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400',
-      title: 'FST Grand Final Win',
-      caption: 'Congratulations to FST Football Team on reaching the BUP Inter-Faculty Championship Finals! ⚽🏆',
-      time: '14h ago',
-    },
-    {
-      id: 's7',
-      author: 'BUP Cultural Forum',
-      role: 'Lakeside Spring Fest',
-      avatar: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=150',
-      preview: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400',
-      title: 'Bijoy Auditorium Night',
-      caption: 'Glimpse of musical rhythm & acoustic band performance at Central Lakeside Amphitheatre! 🎸✨',
-      time: '16h ago',
     },
   ];
 
-  // Default initial BUP campus posts for instant fallback
+  // Default initial authentic BUP campus posts
   const DEFAULT_INITIAL_POSTS = [
+    {
+      _id: 'post-prize-techfest',
+      id: 'post-prize-techfest',
+      title: 'বিজয় উল্লাস! BUP National Tech Fest 2026 Champion Award Ceremony 🏆',
+      content: 'Honorable Vice Chancellor Maj Gen Md Mahbub-ul Alam, ndc, afwc, psc, MPhil, PhD presenting the Championship Trophy to Team BUP-CyberKnights for their Smart Campus IoT & Security Innovation! Faculty of Science and Technology (FST) Dean and Department Chairman congratulated all finalist teams. Hard work, countless sleepless nights at Lab 402, and true teamwork paid off! Proud moment for BUP! 🇧🇩✨',
+      communityType: 'CAMPUS',
+      communityTarget: 'General Campus',
+      mediaType: 'IMAGE',
+      imageUrl: 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=900',
+      tags: ['#BUPPrizeGiving', '#TechFestChampion', '#FSTAwards', '#SmartBangladesh', '#BUPPride'],
+      createdAt: new Date(Date.now() - 1800000).toISOString(),
+      author: {
+        id: 'student-24549010064',
+        name: 'Safaytul Islam Rafi',
+        role: 'student',
+        studentId: '24549010064',
+        college: 'Notre Dame College',
+        livesIn: 'Uttara Sector 11, Dhaka',
+        hometown: 'Chattogram, Bangladesh',
+        instagram: 'rafi_bup',
+        motto: 'Engineering digital solutions for Smart Bangladesh 🇧🇩',
+        department: 'Dept of ICT (BICE-2024)',
+        avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
+      },
+      likes: [
+        { userId: 'u1', name: 'Tanvir Naeem' },
+        { userId: 'u2', name: 'Nusrat Jahan Nishi' },
+        { userId: 'u3', name: 'Mahir Faisal' },
+        { userId: 'u4', name: 'Anika Tahsin' },
+      ],
+      comments: [
+        {
+          id: 'c-pz-1',
+          content: 'Congratulations Rafi and team! FST is always on top! 👏🔥',
+          authorName: 'Tanvir Naeem',
+          createdAt: new Date(Date.now() - 1200000).toISOString(),
+        },
+        {
+          id: 'c-pz-2',
+          content: 'Outstanding achievement! Proud of our ICT scholars.',
+          authorName: 'Asst. Prof. Nazneen Akter',
+          createdAt: new Date(Date.now() - 600000).toISOString(),
+        },
+      ],
+      viewsCount: 2450,
+    },
+    {
+      _id: 'post-thesis-defense',
+      id: 'post-thesis-defense',
+      title: 'BICE & BCSE Spring 2026 Capstone Project & Final Year Thesis Defense 🎓📚',
+      content: 'Insightful thesis defense sessions today at FST Conference Room 302! Undergraduate researchers presented thesis topics ranging from Quantum Cryptography, Low-Latency 5G Beamforming to AI-driven Medical Imaging before the Department Evaluation Committee and External Examiners from BUET and DU. Heartiest congratulations to all presenting scholars on their defense completion!',
+      communityType: 'DEPARTMENT',
+      communityTarget: 'Department of ICT',
+      mediaType: 'IMAGE',
+      imageUrl: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=900',
+      tags: ['#ThesisDefense', '#BUPResearch', '#FSTSymposium', '#CapstoneProject', '#GraduationBound'],
+      createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
+      author: {
+        id: 'fac-ict-chair',
+        name: 'Col Mohammed Omar Faruque, PhD',
+        role: 'faculty',
+        department: 'Chairman, Dept of ICT, FST',
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+      },
+      likes: [
+        { userId: 'u1', name: 'Tanvir Naeem' },
+        { userId: 'u2', name: 'Safaytul Islam Rafi' },
+      ],
+      comments: [
+        {
+          id: 'c-th-1',
+          content: 'Thank you Sir for your constant guidance throughout our research journey! 🙏',
+          authorName: 'Nusrat Jahan Nishi',
+          createdAt: new Date(Date.now() - 3600000).toISOString(),
+        },
+      ],
+      viewsCount: 1820,
+    },
+    {
+      _id: 'post-cpc-counseling',
+      id: 'post-cpc-counseling',
+      title: 'BUP CPC: Navigating Academic Stress, Thesis Milestones & Corporate Career Pathways 🧭',
+      content: 'The Counselling and Placement Center (CPC) of BUP successfully conducted an interactive mentorship and mental wellness session titled "Thriving Beyond the Classroom". Dr. Shahed Rahman and guest corporate alumni shared strategies on handling final semester thesis pressure, balancing co-curricular activities, and acing tech interviews. Students from ICT, CSE and ES participated actively with fruitful open-floor discussions.',
+      communityType: 'CAMPUS',
+      communityTarget: 'Student Affairs',
+      mediaType: 'IMAGE',
+      imageUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=900',
+      tags: ['#BUPCounseling', '#CPCMentorship', '#StudentWellbeing', '#CareerGuidance', '#AcademicCare'],
+      createdAt: new Date(Date.now() - 3600000 * 4).toISOString(),
+      author: {
+        id: 'fac-ict-001',
+        name: 'Asst. Prof. Nazneen Akter',
+        role: 'faculty',
+        department: 'Department of ICT',
+        avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+      },
+      likes: [{ userId: 'u1', name: 'Sadia Rahman' }, { userId: 'u2', name: 'Anika Tahsin' }],
+      comments: [
+        {
+          id: 'c-cpc-1',
+          content: 'The session on thesis anxiety management was extremely helpful Ma\'am! ❤️',
+          authorName: 'Sadia Rahman',
+          createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
+        },
+      ],
+      viewsCount: 1390,
+    },
+    {
+      _id: 'post-seminar-ai',
+      id: 'post-seminar-ai',
+      title: 'Bijoy Auditorium: National Seminar on AI in 4IR & Smart Defence Systems 🛡️💡',
+      content: 'Faculty of Science & Technology organized a full-day seminar at the Bijoy Auditorium. Renowned industry experts, military tech researchers, and academicians shared groundbreaking perspectives on AI ethics, cyber-resilience, and defense data encryption. Special student Q&A session enriched the technical discourse.',
+      communityType: 'CAMPUS',
+      communityTarget: 'Faculty of Science and Technology',
+      mediaType: 'IMAGE',
+      imageUrl: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=900',
+      tags: ['#BUPSeminar', '#BijoyAuditorium', '#AIin4IR', '#CyberDefense', '#FSTEvent'],
+      createdAt: new Date(Date.now() - 3600000 * 6).toISOString(),
+      author: {
+        id: 'dean-fst-001',
+        name: 'Brigadier General Sufi Md Ataur Rahman, ndc, psc',
+        role: 'faculty',
+        department: 'Dean, Faculty of Science & Technology',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+      },
+      likes: [{ userId: 'u1', name: 'Tanvir Naeem' }, { userId: 'u2', name: 'Mahir Faisal' }],
+      comments: [],
+      viewsCount: 3120,
+    },
     {
       _id: 'post-antorikkho-22',
       id: 'post-antorikkho-22',
@@ -161,20 +280,26 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
       mediaType: 'IMAGE',
       imageUrl: '/assets/bup_antorikkho_batch22.jpg',
       tags: ['#অন্তরীক্ষ২২', '#BUPCampus', '#FSTBatchFest', '#RedPanjabiSaree', '#Memories'],
-      createdAt: new Date(Date.now() - 1800000).toISOString(),
+      createdAt: new Date(Date.now() - 3600000 * 8).toISOString(),
       author: {
-        id: 'student-tanvir-naeem',
+        id: 'student-24549010076',
         name: 'Tanvir Naeem',
         role: 'student',
+        studentId: '24549010076',
+        college: 'Dhaka College',
+        livesIn: 'Mirpur DOHS, Dhaka',
+        hometown: 'Cumilla, Bangladesh',
+        instagram: 'tanvir_naeeem',
+        motto: 'History only remembers how you finished.',
         department: 'Dept of ICT (BICE-2024)',
-        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+        avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150',
       },
       likes: [
-        { userId: 'u1', name: 'Munshi Tanvir' },
-        { userId: 'u2', name: 'Safaytul Islam Rafi' },
-        { userId: 'u3', name: 'Nusrat Jahan' },
-        { userId: 'u4', name: 'Anika' },
-        { userId: 'u5', name: 'Sadia' },
+        { userId: 'u1', name: 'Safaytul Islam Rafi' },
+        { userId: 'u2', name: 'Nusrat Jahan Nishi' },
+        { userId: 'u3', name: 'Mahir Faisal' },
+        { userId: 'u4', name: 'Anika Tahsin' },
+        { userId: 'u5', name: 'Sadia Rahman' },
       ],
       comments: [
         {
@@ -190,118 +315,7 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
           createdAt: new Date(Date.now() - 600000).toISOString(),
         },
       ],
-      viewsCount: 1680,
-    },
-    {
-      _id: 'post-init-1',
-      id: 'post-init-1',
-      title: 'ICE-3207: Software & Requirement Engineering SRS Guideline & Midterm Handout',
-      content: 'Dear students of BICE-2024 (Section A & B), please review the attached Software Requirement Specification (SRS) standard template and agile user-story breakdown for your upcoming semester project.',
-      communityType: 'DEPARTMENT',
-      communityTarget: 'Department of ICT',
-      mediaType: 'NOTE',
-      attachmentName: 'ICE3207_Software_Requirement_Engineering_SRS_Guide.pdf',
-      attachmentUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      tags: ['#BUPFST', '#ICE3207', '#StudyNotes', '#LectureMaterials'],
-      createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
-      author: {
-        id: 'fac-ict-001',
-        name: 'Asst. Prof. Nazneen Akter',
-        role: 'faculty',
-        department: 'Department of ICT',
-        avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
-      },
-      likes: [{ userId: 'u1', name: 'Tanvir' }, { userId: 'u2', name: 'Rafi' }],
-      comments: [
-        {
-          id: 'c1',
-          content: 'Thank you Ma\'am! The diagram breakdown on page 14 is very clear.',
-          authorName: 'Safaytul Islam Rafi',
-          createdAt: new Date(Date.now() - 3600000).toISOString(),
-        },
-      ],
-      viewsCount: 384,
-    },
-    {
-      _id: 'post-init-2',
-      id: 'post-init-2',
-      title: 'BUP Campus Sunset at Mirpur Cantonment Central Lake',
-      content: 'Golden hour after 4 intense hours of Web Technologies Lab! BUP campus always gives the most peaceful breeze after a hard coding day. 🌅',
-      communityType: 'CAMPUS',
-      communityTarget: 'General Campus',
-      mediaType: 'IMAGE',
-      imageUrl: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=900',
-      tags: ['#BUPLife', '#CampusVibes', '#ICTBatch24', '#Sunset'],
-      createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
-      author: {
-        id: 'student-tanvir',
-        name: 'Munshi Tanvir Hossain',
-        role: 'student',
-        department: 'Department of ICT',
-        avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150',
-      },
-      likes: [{ userId: 'u1', name: 'Anika' }, { userId: 'u2', name: 'Rafi' }, { userId: 'u3', name: 'Sadia' }],
-      comments: [
-        {
-          id: 'c2',
-          content: 'The lighting on Academic Block 2 is stunning! 🔥',
-          authorName: 'Anika Tahsin',
-          createdAt: new Date(Date.now() - 3600000 * 3).toISOString(),
-        },
-      ],
-      viewsCount: 512,
-    },
-    {
-      _id: 'post-init-3',
-      id: 'post-init-3',
-      title: 'ICE-3205: Full-Stack Web Architecture & Express / MySQL Lab Manual',
-      content: 'Here are the laboratory exercises and code snippets for Session 4 (Database Connection Pooling and JWT Authentication). Ensure you clone the repo and submit lab reports by Thursday.',
-      communityType: 'COURSE',
-      communityTarget: 'ICE-3205 (Web Technologies)',
-      mediaType: 'NOTE',
-      attachmentName: 'ICE3205_Web_Technologies_Lab_Exercises.pdf',
-      attachmentUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      tags: ['#WebTech', '#NodeJS', '#MySQL', '#BICE2024'],
-      createdAt: new Date(Date.now() - 3600000 * 8).toISOString(),
-      author: {
-        id: 'fac-ict-003',
-        name: 'Lec. Md. Istakiak Adnan Palash',
-        role: 'faculty',
-        department: 'Department of ICT',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-      },
-      likes: [{ userId: 'u1', name: 'Rafi' }],
-      comments: [],
-      viewsCount: 290,
-    },
-    {
-      _id: 'post-init-4',
-      id: 'post-init-4',
-      title: 'BUP Robotics Club: Autonomous Line Follower Testing in Hardware Lab',
-      content: 'Our team fine-tuning PID controller parameters on the custom Arduino robot for the upcoming National Robotics Olympiad 2026. Watch the smooth turning radius! 🤖',
-      communityType: 'CLUB',
-      communityTarget: 'BUP Robotics Club (BUPRC)',
-      mediaType: 'REEL',
-      mediaUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-      tags: ['#BUPRC', '#Robotics', '#HardwareLab', '#Engineering'],
-      createdAt: new Date(Date.now() - 3600000 * 12).toISOString(),
-      author: {
-        id: 'club-buprc',
-        name: 'BUP Robotics Club',
-        role: 'club_admin',
-        department: 'Department of ICT',
-        avatar: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=150',
-      },
-      likes: [{ userId: 'u1', name: 'Tanvir' }, { userId: 'u2', name: 'Dean' }],
-      comments: [
-        {
-          id: 'c3',
-          content: 'Keep up the good work! Represent BUP with excellence.',
-          authorName: 'Col Mohammed Omar Faruque, PhD',
-          createdAt: new Date(Date.now() - 3600000 * 10).toISOString(),
-        },
-      ],
-      viewsCount: 890,
+      viewsCount: 3890,
     },
   ];
 
@@ -466,22 +480,27 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
 
   return (
     <div className="max-w-6xl mx-auto px-2 sm:px-4 py-4 sm:py-6 space-y-5">
-      {/* Official BUP Admission & Research Alert Marquee (Req 8) */}
-      <div className="rounded-2xl bg-gradient-to-r from-blue-900 via-bup-navy to-indigo-950 text-white p-3 sm:p-3.5 shadow-md border border-blue-500/30 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white animate-pulse shrink-0">
+      {/* Official BUP Admission & Research Alert (Fully Responsive for Mobile & Desktop) */}
+      <div className="rounded-2xl bg-gradient-to-r from-[#072146] via-bup-navy to-[#0a192f] text-white p-3.5 sm:p-4 shadow-md border border-blue-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 overflow-hidden">
+        <div className="flex items-start sm:items-center gap-3 min-w-0">
+          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-500 text-white shrink-0 tracking-wider shadow-xs">
             ADMISSION 2026-27
           </span>
-          <p className="text-xs font-semibold text-blue-100 truncate">
-            <strong>FST Undergraduate Admission Circular:</strong> B.Sc. in ICT, CSE & ES. Written Test: 16 Jan 2027. Application Deadline: 20 Dec 2026.
-          </p>
+          <div className="min-w-0">
+            <h3 className="text-xs sm:text-sm font-bold text-white leading-tight">
+              FST Undergraduate Admission Circular (Spring 2027)
+            </h3>
+            <p className="text-[11px] text-blue-200/90 leading-tight mt-0.5">
+              B.Sc. in ICT, CSE & ES • Written Test: 16 Jan 2027 • Application Deadline: 20 Dec 2026
+            </p>
+          </div>
         </div>
 
         <a
           href="https://admission.bup.edu.bd"
           target="_blank"
           rel="noreferrer"
-          className="btn-motion btn-bup-gold text-[11px] font-bold px-3 py-1.5 rounded-xl whitespace-nowrap shrink-0 shadow-sm"
+          className="btn-motion btn-bup-gold text-xs font-bold px-4 py-2 rounded-xl text-center whitespace-nowrap shrink-0 shadow-sm"
         >
           Apply via admission.bup.edu.bd ↗
         </a>
@@ -492,28 +511,32 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
         <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
           {stories.map((story) => {
             if (story.isCreate) {
+              const hasValidAvatar = user?.avatar && !user.avatar.includes('photo-1534528741775-53994a69daeb');
               return (
                 <div
                   key={story.id}
                   onClick={() => setCreateModalOpen(true)}
-                  className="btn-motion w-28 sm:w-32 h-44 sm:h-48 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col cursor-pointer shrink-0 group"
+                  className="btn-motion w-24 sm:w-32 h-36 sm:h-48 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col cursor-pointer shrink-0 group"
                 >
-                  <div className="flex-1 bg-gradient-to-tr from-blue-700 via-bup-700 to-indigo-800 relative flex items-center justify-center overflow-hidden">
-                    {user?.avatar ? (
+                  <div className="flex-1 bg-gradient-to-tr from-bup-navy via-bup-700 to-emerald-700 relative flex items-center justify-center overflow-hidden">
+                    {hasValidAvatar ? (
                       <img
                         src={user.avatar}
                         alt=""
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
                       />
                     ) : (
-                      <Users className="w-10 h-10 text-white/50" />
+                      <div className="flex flex-col items-center justify-center p-2 text-white/90">
+                        <span className="text-lg font-black tracking-wider text-amber-400">BUP</span>
+                        <span className="text-[9px] uppercase tracking-widest text-emerald-300 font-bold">Story</span>
+                      </div>
                     )}
-                    <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-md">
-                      <Plus className="w-4 h-4 font-bold" />
+                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-600 text-white flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-md">
+                      <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 font-bold" />
                     </div>
                   </div>
-                  <div className="h-10 pt-4 pb-2 px-1 text-center bg-white dark:bg-slate-900">
-                    <p className="text-[11px] font-bold text-slate-800 dark:text-slate-200 truncate">Create Story</p>
+                  <div className="h-9 sm:h-10 pt-3 pb-1.5 px-1 text-center bg-white dark:bg-slate-900">
+                    <p className="text-[10px] sm:text-[11px] font-bold text-slate-800 dark:text-slate-200 truncate">Create Story</p>
                   </div>
                 </div>
               );

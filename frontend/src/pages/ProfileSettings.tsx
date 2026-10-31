@@ -101,6 +101,19 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
+  // Sync state when activeProfile or viewingUser changes
+  useEffect(() => {
+    if (viewingUser) {
+      setAvatarPreview(viewingUser.avatar || '');
+      setCoverPhoto(viewingUser.coverPhoto || '/assets/bup_antorikkho_batch22.jpg');
+      setThoughtStatus(viewingUser.thought || (viewingUser.role === 'faculty' ? 'Mentoring BUP scholars & research colloquium' : 'Excellence Through Knowledge 🎓'));
+    } else {
+      setAvatarPreview(user?.avatar || '');
+      setCoverPhoto(localStorage.getItem('bupsoc_cover_photo') || '/assets/bup_antorikkho_batch22.jpg');
+      setThoughtStatus(localStorage.getItem('bupsoc_user_thought') || 'Celebrating অন্তরীক্ষ-২২ with FST comrades 🎓');
+    }
+  }, [viewingUser, user]);
+
   // Thought Status Bubble
   const [thoughtStatus, setThoughtStatus] = useState<string>(() => {
     if (!isOwnProfile && viewingUser?.thought) return viewingUser.thought;
@@ -137,6 +150,15 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
   const [motto, setMotto] = useState<string>(
     localStorage.getItem('bupsoc_motto') || 'History only remembers how you finished.'
   );
+
+  // Dynamic Personal Information Details based on whether viewing own or another student's profile
+  const activeCollege = !isOwnProfile && viewingUser?.college ? viewingUser.college : college;
+  const activeLivesIn = !isOwnProfile && viewingUser?.livesIn ? viewingUser.livesIn : livesIn;
+  const activeHometown = !isOwnProfile && viewingUser?.hometown ? viewingUser.hometown : hometown;
+  const activeUniversity = !isOwnProfile && viewingUser?.university ? viewingUser.university : university;
+  const activeInstagram = !isOwnProfile && viewingUser?.instagram ? viewingUser.instagram : instagram;
+  const activeMotto = !isOwnProfile && viewingUser?.motto ? viewingUser.motto : motto;
+  const activeSchool = !isOwnProfile && viewingUser?.school ? viewingUser.school : school;
 
   // Edit Personal Information Modal / Form Mode
   const [editProfileMode, setEditProfileMode] = useState(false);
@@ -628,7 +650,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
           <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <p className="text-xs sm:text-sm italic font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
               <span className="text-amber-500 font-serif text-lg leading-none">“</span>
-              <span>{motto}</span>
+              <span>{activeMotto}</span>
               <span className="text-amber-500 font-serif text-lg leading-none">”</span>
             </p>
             <span className="text-[10px] text-slate-400 font-mono tracking-wider uppercase">
@@ -685,23 +707,23 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
               <div className="space-y-2.5 text-slate-600 dark:text-slate-300">
                 <div className="flex items-center gap-2.5">
                   <GraduationCap className="w-4 h-4 text-bup-600 shrink-0" />
-                  <span>Studies at <strong>{university}</strong></span>
+                  <span>Studies at <strong>{activeUniversity}</strong></span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <School className="w-4 h-4 text-slate-400 shrink-0" />
-                  <span>College: <strong>{college}</strong></span>
+                  <span>College: <strong>{activeCollege}</strong></span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <MapPin className="w-4 h-4 text-rose-500 shrink-0" />
-                  <span>Lives in <strong>{livesIn}</strong></span>
+                  <span>Lives in <strong>{activeLivesIn}</strong></span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <Home className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>From <strong>{hometown}</strong></span>
+                  <span>From <strong>{activeHometown}</strong></span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <AtSign className="w-4 h-4 text-sky-500 shrink-0" />
-                  <span>Instagram: <strong className="text-sky-600">@{instagram}</strong></span>
+                  <span>Instagram: <strong className="text-sky-600">@{activeInstagram}</strong></span>
                 </div>
               </div>
 

@@ -12,7 +12,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, setActiveTab })
     { id: 'academics', label: 'Academics', icon: BookOpen },
     { id: 'routines', label: 'Routines', icon: Calendar },
     { id: 'lostfound', label: 'Lost & Found', icon: HelpCircle },
-    { id: 'messages', label: 'Chatbox', icon: MessageSquare },
+    { id: 'messages', label: 'DM', icon: MessageSquare },
     { id: 'profile', label: 'Profile', icon: User },
   ];
 
