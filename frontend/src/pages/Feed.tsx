@@ -147,6 +147,47 @@ export const Feed: React.FC = () => {
   // Default initial BUP campus posts for instant fallback
   const DEFAULT_INITIAL_POSTS = [
     {
+      _id: 'post-antorikkho-22',
+      id: 'post-antorikkho-22',
+      title: 'স্মৃতির পাতায় অন্তরীক্ষ-২২ ❤️ BUP Campus Batch Fest Celebrations',
+      content: 'লাল পাঞ্জাবি আর শাড়ির মুগ্ধতায় পুরো বিইউপি ক্যাম্পাস মুখরিত! Faculty of Science and Technology (FST) এর অন্তরীক্ষ-২২ ব্যাচ ফেস্টের অবিস্মরণীয় মুহূর্তগুলো। একসাথে ক্লাস করা, ল্যাব টেস্টের প্যারা, ক্যাফেটেরিয়ার আড্ডা—সবকিছু মিলিয়ে জীবনের সেরা সময়গুলো কাটছে BUP-তে! 🎓✨🇧🇩',
+      communityType: 'CAMPUS',
+      communityTarget: 'General Campus',
+      mediaType: 'IMAGE',
+      imageUrl: '/assets/bup_antorikkho_batch22.jpg',
+      tags: ['#অন্তরীক্ষ২২', '#BUPCampus', '#FSTBatchFest', '#RedPanjabiSaree', '#Memories'],
+      createdAt: new Date(Date.now() - 1800000).toISOString(),
+      author: {
+        id: 'student-tanvir-naeem',
+        name: 'Tanvir Naeem',
+        role: 'student',
+        department: 'Dept of ICT (BICE-2024)',
+        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+      },
+      likes: [
+        { userId: 'u1', name: 'Munshi Tanvir' },
+        { userId: 'u2', name: 'Safaytul Islam Rafi' },
+        { userId: 'u3', name: 'Nusrat Jahan' },
+        { userId: 'u4', name: 'Anika' },
+        { userId: 'u5', name: 'Sadia' },
+      ],
+      comments: [
+        {
+          id: 'c-ant-1',
+          content: 'কী দারুণ মুহূর্ত ছিল ভাই! আমাদের অন্তরীক্ষ-২২ ব্যাচ ফেস্ট সত্যিই স্মরণীয় হয়ে থাকবে। ❤️',
+          authorName: 'Safaytul Islam Rafi',
+          createdAt: new Date(Date.now() - 1200000).toISOString(),
+        },
+        {
+          id: 'c-ant-2',
+          content: 'লাল রঙের পুরো ব্যানার আর মিলনমেলা একদম পারফেক্ট এসেছে! 👏',
+          authorName: 'Asst. Prof. Nazneen Akter',
+          createdAt: new Date(Date.now() - 600000).toISOString(),
+        },
+      ],
+      viewsCount: 1680,
+    },
+    {
       _id: 'post-init-1',
       id: 'post-init-1',
       title: 'ICE-3207: Software & Requirement Engineering SRS Guideline & Midterm Handout',

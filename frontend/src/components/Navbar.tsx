@@ -20,6 +20,7 @@ import { ReminderModal } from './ReminderModal';
 import { BupGoModal } from './BupGoModal';
 import { AnimatedBupLogo } from './AnimatedBupLogo';
 import { SecurityShieldModal } from './SecurityShieldModal';
+import { NotificationCenterPopover } from './NotificationCenterPopover';
 import { ShieldCheck } from 'lucide-react';
 
 interface NavbarProps {
@@ -36,6 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
   const [bupGoModalOpen, setBupGoModalOpen] = useState(false);
   const [securityModalOpen, setSecurityModalOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   const isFaculty = user?.role === 'faculty';
   const isAdmin = user?.role === 'admin';
@@ -78,15 +80,28 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
 
           {/* Action Tools & User Profile */}
           <div className="flex items-center gap-2">
-            {/* Custom Reminder Button */}
-            <button
-              onClick={() => setReminderModalOpen(true)}
-              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-bup-700 dark:hover:text-bup-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors relative"
-              title="Custom Reminder Settings (Time & Device)"
-            >
-              <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-500 ring-2 ring-white dark:ring-slate-900" />
-            </button>
+            {/* Campus Notification Center Popover (Classes, Exams, Notes) */}
+            <div className="relative">
+              <button
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                className={`p-2 rounded-xl transition-colors relative ${
+                  notificationsOpen
+                    ? 'btn-bup-primary text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-bup-700 dark:hover:text-bup-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+                title="Campus Notifications (Classes, Exams, Notes)"
+              >
+                <Bell className="w-4 h-4" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-500 ring-2 ring-white dark:ring-slate-900 animate-pulse" />
+              </button>
+
+              <NotificationCenterPopover
+                isOpen={notificationsOpen}
+                onClose={() => setNotificationsOpen(false)}
+                onNavigateTab={(tab) => setActiveTab(tab)}
+                onOpenReminderSettings={() => setReminderModalOpen(true)}
+              />
+            </div>
 
             {/* Theme Toggle */}
             <button

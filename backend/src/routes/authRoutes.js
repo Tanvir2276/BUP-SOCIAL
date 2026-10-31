@@ -347,4 +347,79 @@ router.put('/preferences', authenticateToken, async (req, res) => {
   }
 });
 
+// 7. Forgot Password (User Requirement #7: Request OTP)
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { identifier } = req.body;
+    if (!identifier) {
+      return res.status(400).json({ success: false, message: 'BUP Email, Student ID, or Mobile is required.' });
+    }
+
+    const trimmed = identifier.trim().toLowerCase();
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: trimmed },
+          { studentId: identifier.trim() },
+          { facultyId: identifier.trim() },
+        ],
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'No registered BUP account found with this identifier.' });
+    }
+
+    const { rawOtp, expiresAt } = await issueOtp(user.email);
+
+    return res.json({
+      success: true,
+      message: `Password recovery verification code sent to ${user.email}.`,
+      email: user.email,
+      name: user.name,
+      demoOtpCode: rawOtp,
+      expiresAt,
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// 8. Reset Password (User Requirement #7: Verify OTP + Update in MySQL)
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Email, OTP code, and new password are required.' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 6 characters.' });
+    }
+
+    await verifySubmittedOtp(email, otp);
+
+    const user = await prisma.user.findUnique({
+      where: { email: email.toLowerCase().trim() },
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User account not found.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashedPassword },
+    });
+
+    return res.json({
+      success: true,
+      message: 'Password successfully reset! You can now log in with your new password.',
+    });
+  } catch (err) {
+    return res.status(400).json({ success: false, message: err.message });
+  }
+});
+
 export default router;

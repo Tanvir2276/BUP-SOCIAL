@@ -23,6 +23,8 @@ import {
   Timer,
   X,
   Check,
+  Volume2,
+  Smartphone,
 } from 'lucide-react';
 import { apiFetch } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
@@ -904,6 +906,22 @@ export const Routines: React.FC = () => {
   // Master routine state + overrides stored in localStorage
   const [routineList, setRoutineList] = useState<RoutineSlot[]>(MASTER_ICT_ROUTINE);
   const [reminderSet, setReminderSet] = useState<Record<string, boolean>>({});
+  const [alarmModalSlot, setAlarmModalSlot] = useState<RoutineSlot | null>(null);
+  const [alarmMinutes, setAlarmMinutes] = useState<number>(15);
+  const [alarmSound, setAlarmSound] = useState<boolean>(true);
+  const [alarmBrowserNotification, setAlarmBrowserNotification] = useState<boolean>(true);
+  const [alarmInApp, setAlarmInApp] = useState<boolean>(true);
+  const [alarmSuccessMsg, setAlarmSuccessMsg] = useState<string | null>(null);
+
+  // Load saved alarms from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('bupsoc_routine_alarms');
+      if (stored) {
+        setReminderSet(JSON.parse(stored));
+      }
+    } catch (e) {}
+  }, []);
 
   // Faculty Routine Edit Modal State
   const [editingSlot, setEditingSlot] = useState<RoutineSlot | null>(null);
@@ -1021,13 +1039,70 @@ export const Routines: React.FC = () => {
     setEditingSlot(null);
   };
 
-  const toggleClassAlarm = (id: string, courseCode: string) => {
-    setReminderSet((prev) => ({ ...prev, [id]: !prev[id] }));
-    alert(
-      `Custom Alarm Active: You will receive notification 15 minutes before ${courseCode} on ${
-        user?.reminderSettings?.deviceType || 'your mobile & desktop'
-      }.`
-    );
+  const playAlarmChime = () => {
+    try {
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.6);
+    } catch (e) {
+      console.error('Audio chime error:', e);
+    }
+  };
+
+  const openAlarmModal = (slot: RoutineSlot) => {
+    setAlarmModalSlot(slot);
+    setAlarmSuccessMsg(null);
+  };
+
+  const handleSaveAlarm = () => {
+    if (!alarmModalSlot) return;
+
+    const slotId = alarmModalSlot.id;
+    const isNowActive = !reminderSet[slotId];
+    const updated = { ...reminderSet, [slotId]: isNowActive };
+    setReminderSet(updated);
+    localStorage.setItem('bupsoc_routine_alarms', JSON.stringify(updated));
+
+    if (isNowActive) {
+      if (alarmSound) playAlarmChime();
+
+      if (alarmBrowserNotification && 'Notification' in window && Notification.permission !== 'granted') {
+        Notification.requestPermission();
+      }
+
+      // Add to notifications center storage
+      try {
+        const storedNotifs = localStorage.getItem('bupsoc_notifications');
+        const notifs = storedNotifs ? JSON.parse(storedNotifs) : [];
+        notifs.unshift({
+          id: `alarm_${slotId}_${Date.now()}`,
+          category: 'Classes',
+          title: `Class Reminder: ${alarmModalSlot.courseCode}`,
+          description: `${alarmModalSlot.courseTitle} scheduled for ${alarmModalSlot.day} at ${alarmModalSlot.timeSlot} in Room ${alarmModalSlot.room}. Reminder set ${alarmMinutes} mins before class.`,
+          time: 'Just now',
+          unread: true,
+          actionLabel: 'View Routine',
+        });
+        localStorage.setItem('bupsoc_notifications', JSON.stringify(notifs.slice(0, 30)));
+      } catch (e) {}
+
+      setAlarmSuccessMsg(`Alarm active! You will be reminded ${alarmMinutes} minutes before class.`);
+      setTimeout(() => {
+        setAlarmModalSlot(null);
+        setAlarmSuccessMsg(null);
+      }, 1500);
+    } else {
+      setAlarmModalSlot(null);
+    }
   };
 
   const handlePrintRoutine = () => {
@@ -1321,15 +1396,15 @@ export const Routines: React.FC = () => {
 
                         <button
                           type="button"
-                          onClick={() => toggleClassAlarm(slot.id, slot.courseCode)}
+                          onClick={() => openAlarmModal(slot)}
                           className={`btn-motion py-2.5 px-3.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
                             hasAlarm
-                              ? 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border border-amber-300'
-                              : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-amber-50'
+                              ? 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 shadow-sm'
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-amber-50 hover:text-amber-800'
                           }`}
                         >
-                          <Bell className={`w-3.5 h-3.5 ${hasAlarm ? 'fill-amber-500 text-amber-500' : 'text-slate-400'}`} />
-                          <span>{hasAlarm ? 'Alarm Set' : 'Set Alarm'}</span>
+                          <Bell className={`w-3.5 h-3.5 ${hasAlarm ? 'fill-amber-500 text-amber-500 animate-pulse' : 'text-slate-400'}`} />
+                          <span>{hasAlarm ? 'Alarm Active ✓' : 'Set Alarm'}</span>
                         </button>
                       </div>
                     </div>
@@ -1877,6 +1952,145 @@ export const Routines: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* 4. Class Alarm & Notification Reminder Modal */}
+      {alarmModalSlot && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-2xl bg-amber-100 dark:bg-amber-950/60 flex items-center justify-center text-amber-600">
+                  <Bell className="w-5 h-5 fill-amber-500" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
+                    Class Reminder & Sound Alarm
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-mono">BUP Timetable Alert Engine</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setAlarmModalSlot(null)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Selected Class Snapshot */}
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 space-y-1.5 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-extrabold text-bup-700 dark:text-blue-400 text-sm">
+                  {alarmModalSlot.courseCode}
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300">
+                  Room: {alarmModalSlot.room}
+                </span>
+              </div>
+              <p className="font-bold text-slate-900 dark:text-white leading-tight">
+                {alarmModalSlot.courseTitle}
+              </p>
+              <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 pt-1">
+                <span className="flex items-center gap-1 font-mono">
+                  <Clock className="w-3.5 h-3.5 text-amber-500" />
+                  {alarmModalSlot.day} • {alarmModalSlot.timeSlot}
+                </span>
+              </div>
+            </div>
+
+            {/* Reminder Lead Time Selection */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
+                Remind Me Before Class:
+              </label>
+              <div className="grid grid-cols-4 gap-2">
+                {[5, 10, 15, 30].map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setAlarmMinutes(m)}
+                    className={`py-2 rounded-xl text-xs font-bold border transition-all ${
+                      alarmMinutes === m
+                        ? 'btn-bup-primary text-white border-blue-600 shadow-sm'
+                        : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    {m} min
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Notification Channels */}
+            <div className="space-y-2 pt-1 text-xs">
+              <label className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <Volume2 className="w-4 h-4 text-emerald-500" />
+                  <span>Audible Campus Chime Beep</span>
+                </span>
+                <input
+                  type="checkbox"
+                  checked={alarmSound}
+                  onChange={(e) => setAlarmSound(e.target.checked)}
+                  className="rounded text-bup-600 focus:ring-bup-500"
+                />
+              </label>
+
+              <label className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <Smartphone className="w-4 h-4 text-blue-500" />
+                  <span>Browser & Desktop Push Alert</span>
+                </span>
+                <input
+                  type="checkbox"
+                  checked={alarmBrowserNotification}
+                  onChange={(e) => setAlarmBrowserNotification(e.target.checked)}
+                  className="rounded text-bup-600 focus:ring-bup-500"
+                />
+              </label>
+            </div>
+
+            {/* Sound Chime Test Button */}
+            <button
+              type="button"
+              onClick={playAlarmChime}
+              className="w-full py-2 rounded-xl border border-dashed border-amber-300 dark:border-amber-700 bg-amber-50/60 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-amber-100 transition-colors"
+            >
+              <Volume2 className="w-3.5 h-3.5" />
+              <span>Preview Alarm Audio Chime</span>
+            </button>
+
+            {/* Success Message */}
+            {alarmSuccessMsg && (
+              <div className="p-2.5 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-xs font-bold text-center animate-fadeIn">
+                ✓ {alarmSuccessMsg}
+              </div>
+            )}
+
+            {/* Modal Actions */}
+            <div className="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+              <button
+                type="button"
+                onClick={() => setAlarmModalSlot(null)}
+                className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-slate-100"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveAlarm}
+                className={`flex-1 py-2.5 rounded-xl text-white text-xs font-bold shadow-md transition-all ${
+                  reminderSet[alarmModalSlot.id]
+                    ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-900/20'
+                    : 'btn-bup-primary shadow-bup-700/20'
+                }`}
+              >
+                {reminderSet[alarmModalSlot.id] ? 'Deactivate Alarm' : 'Save & Activate Alarm'}
+              </button>
+            </div>
           </div>
         </div>
       )}
