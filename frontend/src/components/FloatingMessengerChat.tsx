@@ -155,15 +155,15 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
     return (
       <div
         onClick={() => setIsMinimized(false)}
-        className="fixed bottom-5 right-6 z-50 cursor-pointer group animate-in slide-in-from-bottom duration-200"
+        className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-50 cursor-pointer group animate-in slide-in-from-bottom duration-200"
       >
         <div className="relative">
           <img
             src={chat.avatar}
             alt={chat.name}
-            className="w-14 h-14 rounded-full object-cover border-2 border-blue-500 shadow-2xl hover:scale-105 transition-transform"
+            className="w-14 h-14 rounded-full object-cover border-2 border-bup-600 shadow-2xl hover:scale-105 transition-transform bg-white"
           />
-          <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#31a24c] ring-2 ring-white dark:ring-slate-900" />
+          <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -179,26 +179,26 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
   }
 
   return (
-    <div className="fixed bottom-0 right-4 sm:right-8 z-50 w-[330px] sm:w-[360px] h-[450px] bg-[#242526] rounded-t-2xl shadow-2xl border border-white/10 flex flex-col overflow-hidden font-sans animate-in slide-in-from-bottom duration-200">
+    <div className="fixed bottom-16 sm:bottom-0 right-2 sm:right-6 z-50 w-[calc(100vw-16px)] sm:w-[360px] max-w-[360px] h-[460px] bg-white dark:bg-slate-900 rounded-2xl sm:rounded-b-none shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden font-sans animate-in slide-in-from-bottom duration-200">
       {/* 1. Header: Avatar + Name + Video/Audio Call + Minimize + Close */}
-      <div className="px-3 py-2.5 bg-[#242526] border-b border-white/10 flex items-center justify-between text-white shadow-sm">
+      <div className="px-3.5 py-2.5 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between text-slate-900 dark:text-white shadow-xs">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="relative shrink-0">
-            <img src={chat.avatar} alt={chat.name} className="w-9 h-9 rounded-full object-cover" />
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#31a24c] ring-2 ring-[#242526]" />
+            <img src={chat.avatar} alt={chat.name} className="w-8 h-8 rounded-full object-cover bg-slate-100" />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
           </div>
 
           <div className="min-w-0">
-            <h4 className="font-bold text-sm text-[#e4e6eb] truncate leading-tight">{chat.name}</h4>
-            <p className="text-[10px] text-[#31a24c] font-medium leading-tight">Active now</p>
+            <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate leading-tight">{chat.name}</h4>
+            <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium leading-tight">Active now</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-1 text-[#2d88ff]">
+        <div className="flex items-center gap-0.5 text-slate-500 dark:text-slate-400">
           <button
             type="button"
             onClick={() => alert(`Initiating secure audio call with ${chat.name}...`)}
-            className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#b0b3b8] hover:text-[#2d88ff]"
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-bup-700"
             title="Audio call"
           >
             <Phone className="w-4 h-4" />
@@ -207,7 +207,7 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
           <button
             type="button"
             onClick={() => alert(`Starting video call with ${chat.name}...`)}
-            className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#b0b3b8] hover:text-[#2d88ff]"
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-bup-700"
             title="Video call"
           >
             <Video className="w-4 h-4" />
@@ -216,7 +216,7 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
           <button
             type="button"
             onClick={() => setIsMinimized(true)}
-            className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#b0b3b8] hover:text-white"
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-slate-800 dark:hover:text-white"
             title="Minimize"
           >
             <Minus className="w-4 h-4" />
@@ -225,7 +225,7 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#b0b3b8] hover:text-white"
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-slate-800 dark:hover:text-white"
             title="Close chat"
           >
             <X className="w-4 h-4" />
@@ -234,12 +234,12 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
       </div>
 
       {/* 2. Messages Body */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-[#18191a]">
+      <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-slate-50 dark:bg-slate-950">
         <div className="text-center py-2">
-          <img src={chat.avatar} alt="" className="w-14 h-14 rounded-full mx-auto mb-1.5 object-cover" />
-          <p className="font-bold text-xs text-[#e4e6eb]">{chat.name}</p>
-          <p className="text-[10px] text-[#b0b3b8]">{chat.department}</p>
-          <span className="text-[9px] text-[#2d88ff] font-mono mt-0.5 inline-block">
+          <img src={chat.avatar} alt="" className="w-12 h-12 rounded-full mx-auto mb-1.5 object-cover shadow-xs" />
+          <p className="font-bold text-xs text-slate-900 dark:text-white">{chat.name}</p>
+          <p className="text-[10px] text-slate-500">{chat.department}</p>
+          <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-mono mt-0.5 inline-block">
             End-to-End Encrypted (AES-256)
           </span>
         </div>
@@ -253,9 +253,9 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
                 <img src={chat.avatar} alt="" className="w-7 h-7 rounded-full object-cover shrink-0 mb-1" />
               )}
 
-              <div className="max-w-[78%]">
+              <div className="max-w-[80%]">
                 {m.type === 'image' ? (
-                  <div className="rounded-2xl overflow-hidden border border-white/10 shadow-md">
+                  <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
                     <img src={m.content} alt="Attachment" className="max-h-48 object-cover w-full" />
                   </div>
                 ) : m.type === 'sticker' ? (
@@ -264,14 +264,14 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
                   <div
                     className={`px-3.5 py-2 rounded-2xl text-xs leading-relaxed ${
                       isMe
-                        ? 'bg-[#0084ff] text-white rounded-br-sm'
-                        : 'bg-[#3a3b3c] text-[#e4e6eb] rounded-bl-sm'
+                        ? 'btn-bup-primary text-white rounded-br-xs shadow-xs'
+                        : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-bl-xs'
                     }`}
                   >
                     {m.content}
                   </div>
                 )}
-                <span className="text-[9px] text-[#b0b3b8] px-1 mt-0.5 block text-right font-mono">
+                <span className="text-[9px] text-slate-400 px-1 mt-0.5 block text-right font-mono">
                   {m.timestamp}
                 </span>
               </div>
@@ -283,7 +283,7 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
 
       {/* Emoji / Sticker Trays */}
       {showEmojiPicker && (
-        <div className="p-2 bg-[#242526] border-t border-white/10 flex items-center justify-around text-lg">
+        <div className="p-2 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-around text-lg">
           {EMOJI_PRESETS.map((emoji) => (
             <button
               key={emoji}
@@ -298,7 +298,7 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
       )}
 
       {showStickers && (
-        <div className="p-2 bg-[#242526] border-t border-white/10 flex items-center justify-around text-2xl">
+        <div className="p-2 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-around text-2xl">
           {STICKER_PRESETS.map((stk) => (
             <button
               key={stk.id}
@@ -314,7 +314,7 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
       )}
 
       {/* 3. Input Toolbar: Plus, Photo, Sticker, Input "Aa", Thumbs Up */}
-      <div className="p-2.5 bg-[#242526] border-t border-white/10 flex items-center gap-1.5 text-[#2d88ff]">
+      <div className="p-2 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center gap-1.5 text-slate-500">
         <input
           type="file"
           ref={fileInputRef}
@@ -328,7 +328,7 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#b0b3b8] hover:text-[#2d88ff]"
+          className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-bup-700"
           title="Attach a photo"
         >
           <ImageIcon className="w-4 h-4" />
@@ -341,7 +341,7 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
             setShowStickers(!showStickers);
             setShowEmojiPicker(false);
           }}
-          className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#b0b3b8] hover:text-[#2d88ff]"
+          className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-bup-700"
           title="Choose a sticker"
         >
           <span className="text-sm">👾</span>
@@ -357,7 +357,7 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
               if (e.key === 'Enter') handleSendMessage();
             }}
             placeholder="Aa"
-            className="w-full pl-3 pr-8 py-1.5 rounded-full bg-[#3a3b3c] text-white placeholder-[#b0b3b8] text-xs outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full pl-3 pr-8 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 text-xs border border-slate-200 dark:border-slate-700 outline-none focus:ring-1 focus:ring-bup-600"
           />
 
           <button
@@ -366,7 +366,7 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
               setShowEmojiPicker(!showEmojiPicker);
               setShowStickers(false);
             }}
-            className="absolute right-2.5 text-[#b0b3b8] hover:text-[#2d88ff]"
+            className="absolute right-2.5 text-slate-400 hover:text-bup-700"
           >
             <Smile className="w-4 h-4" />
           </button>
@@ -377,19 +377,19 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
           <button
             type="button"
             onClick={() => handleSendMessage()}
-            className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#2d88ff]"
+            className="p-1.5 rounded-full btn-bup-primary text-white"
             title="Send"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-3.5 h-3.5" />
           </button>
         ) : (
           <button
             type="button"
             onClick={() => handleSendMessage('👍', 'sticker')}
-            className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#2d88ff] hover:scale-110 transition-transform"
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-blue-600 hover:scale-110 transition-transform"
             title="Send a Like"
           >
-            <ThumbsUp className="w-4 h-4 fill-[#2d88ff]" />
+            <ThumbsUp className="w-4 h-4 fill-blue-600" />
           </button>
         )}
       </div>

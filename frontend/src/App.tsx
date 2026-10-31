@@ -75,7 +75,12 @@ export const App: React.FC = () => {
           {activeTab === 'clubs' && <ClubsEvents />}
           {activeTab === 'rides' && <RideShare />}
           {activeTab === 'messages' && <Messages />}
-          {activeTab === 'lostfound' && <LostFound />}
+          {activeTab === 'lostfound' && (
+            <LostFound
+              onOpenChat={(chat) => setActiveFloatingChat(chat)}
+              onNavigateTab={(tab) => setActiveTab(tab)}
+            />
+          )}
           {activeTab === 'profile' && <ProfileSettings />}
         </main>
       </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BookOpen, Calendar, Car, MessageSquare, User } from 'lucide-react';
+import { Home, BookOpen, Calendar, HelpCircle, MessageSquare, User } from 'lucide-react';
 
 interface BottomNavProps {
   activeTab: string;
@@ -11,8 +11,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, setActiveTab })
     { id: 'feed', label: 'Feed', icon: Home },
     { id: 'academics', label: 'Academics', icon: BookOpen },
     { id: 'routines', label: 'Routines', icon: Calendar },
-    { id: 'rides', label: 'Rides', icon: Car },
-    { id: 'messages', label: 'Chat', icon: MessageSquare },
+    { id: 'lostfound', label: 'Lost & Found', icon: HelpCircle },
+    { id: 'messages', label: 'Chatbox', icon: MessageSquare },
     { id: 'profile', label: 'Profile', icon: User },
   ];
 
