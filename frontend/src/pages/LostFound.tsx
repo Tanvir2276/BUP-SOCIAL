@@ -22,9 +22,10 @@ import { useAuth } from '../context/AuthContext';
 interface LostFoundProps {
   onOpenChat?: (chat: any) => void;
   onNavigateTab?: (tab: string) => void;
+  onViewProfile?: (user: any) => void;
 }
 
-export const LostFound: React.FC<LostFoundProps> = ({ onOpenChat, onNavigateTab }) => {
+export const LostFound: React.FC<LostFoundProps> = ({ onOpenChat, onNavigateTab, onViewProfile }) => {
   const { user } = useAuth();
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -371,6 +372,26 @@ export const LostFound: React.FC<LostFoundProps> = ({ onOpenChat, onNavigateTab 
 
             {/* Direct Communication Channels */}
             <div className="space-y-2 pt-1">
+              {/* Option 0: View Campus Profile */}
+              {onViewProfile && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const reporter = {
+                      name: contactModalItem.reporterName || 'BUP Member',
+                      role: contactModalItem.reporterRole || 'student',
+                      department: 'BUP Campus Member',
+                    };
+                    setContactModalItem(null);
+                    onViewProfile(reporter);
+                  }}
+                  className="w-full btn-motion p-3 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:border-bup-500 shadow-xs"
+                >
+                  <ExternalLink className="w-4 h-4 text-bup-600" />
+                  <span>View Member's Campus Profile</span>
+                </button>
+              )}
+
               {/* Option 1: Live Chat via BUP Chatbox */}
               <button
                 type="button"

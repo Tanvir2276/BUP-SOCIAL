@@ -19,6 +19,7 @@ interface FloatingMessengerChatProps {
   chat: ChatThread | null;
   onClose: () => void;
   onMaximize: () => void;
+  onViewProfile?: (user: any) => void;
 }
 
 interface MessageItem {
@@ -44,6 +45,7 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
   chat,
   onClose,
   onMaximize,
+  onViewProfile,
 }) => {
   const { user } = useAuth();
   const [isMinimized, setIsMinimized] = useState(false);
@@ -182,14 +184,20 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
     <div className="fixed bottom-16 sm:bottom-0 right-2 sm:right-6 z-50 w-[calc(100vw-16px)] sm:w-[360px] max-w-[360px] h-[460px] bg-white dark:bg-slate-900 rounded-2xl sm:rounded-b-none shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden font-sans animate-in slide-in-from-bottom duration-200">
       {/* 1. Header: Avatar + Name + Video/Audio Call + Minimize + Close */}
       <div className="px-3.5 py-2.5 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between text-slate-900 dark:text-white shadow-xs">
-        <div className="flex items-center gap-2.5 min-w-0">
+        <div
+          onClick={() => onViewProfile && onViewProfile(chat)}
+          className="flex items-center gap-2.5 min-w-0 cursor-pointer group"
+          title={`View ${chat.name}'s profile`}
+        >
           <div className="relative shrink-0">
-            <img src={chat.avatar} alt={chat.name} className="w-8 h-8 rounded-full object-cover bg-slate-100" />
+            <img src={chat.avatar} alt={chat.name} className="w-8 h-8 rounded-full object-cover bg-slate-100 group-hover:ring-2 group-hover:ring-bup-500 transition-all" />
             <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
           </div>
 
           <div className="min-w-0">
-            <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate leading-tight">{chat.name}</h4>
+            <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate leading-tight group-hover:text-bup-600 dark:group-hover:text-bup-400 group-hover:underline">
+              {chat.name}
+            </h4>
             <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium leading-tight">Active now</p>
           </div>
         </div>

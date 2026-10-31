@@ -13,6 +13,7 @@ import { ClubsEvents } from './pages/ClubsEvents';
 import { Messages } from './pages/Messages';
 import { LostFound } from './pages/LostFound';
 import { ProfileSettings } from './pages/ProfileSettings';
+import { CustomReminders } from './pages/CustomReminders';
 import { FloatingMessengerChat } from './components/FloatingMessengerChat';
 import { ChatThread } from './components/FacebookMessengerPopover';
 
@@ -22,6 +23,21 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState('feed');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeFloatingChat, setActiveFloatingChat] = useState<ChatThread | null>(null);
+  const [viewingProfileUser, setViewingProfileUser] = useState<any | null>(null);
+
+  const handleNavigateTab = (tab: string) => {
+    if (tab === 'profile') {
+      setViewingProfileUser(null);
+    }
+    setActiveTab(tab);
+  };
+
+  const handleViewProfile = (userObj: any) => {
+    if (!userObj) return;
+    setViewingProfileUser(userObj);
+    setActiveTab('profile');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   if (loading) {
     return (
@@ -50,7 +66,7 @@ export const App: React.FC = () => {
       {/* Top Facebook-Style Navigation Bar */}
       <Navbar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleNavigateTab}
         onSelectChat={(chat) => setActiveFloatingChat(chat)}
       />
 
@@ -59,34 +75,57 @@ export const App: React.FC = () => {
         {/* Left Collapsible Facebook-Style Sidebar */}
         <Sidebar
           activeTab={activeTab}
-          setActiveTab={setActiveTab}
+          setActiveTab={handleNavigateTab}
           collapsed={sidebarCollapsed}
           setCollapsed={setSidebarCollapsed}
         />
 
         {/* Center Dynamic Content Area */}
         <main className="flex-1 min-w-0 p-3 sm:p-5 lg:p-6 animate-in fade-in duration-200">
-          {activeTab === 'feed' && <Feed />}
-          {activeTab === 'academics' && <Academics />}
-          {activeTab === 'notices' && <Academics />}
-          {activeTab === 'communities' && <Feed />}
+          {activeTab === 'feed' && (
+            <Feed
+              onViewProfile={handleViewProfile}
+              onOpenChat={(chat) => setActiveFloatingChat(chat)}
+            />
+          )}
+          {activeTab === 'academics' && <Academics onViewProfile={handleViewProfile} />}
+          {activeTab === 'notices' && <Academics onViewProfile={handleViewProfile} />}
+          {activeTab === 'communities' && (
+            <Feed
+              onViewProfile={handleViewProfile}
+              onOpenChat={(chat) => setActiveFloatingChat(chat)}
+            />
+          )}
           {activeTab === 'routines' && <Routines />}
-          {activeTab === 'reminders' && <ProfileSettings />}
+          {activeTab === 'reminders' && (
+            <CustomReminders onNavigateRoutine={() => handleNavigateTab('routines')} />
+          )}
           {activeTab === 'clubs' && <ClubsEvents />}
           {activeTab === 'rides' && <RideShare />}
-          {activeTab === 'messages' && <Messages />}
+          {activeTab === 'messages' && <Messages onViewProfile={handleViewProfile} />}
           {activeTab === 'lostfound' && (
             <LostFound
               onOpenChat={(chat) => setActiveFloatingChat(chat)}
-              onNavigateTab={(tab) => setActiveTab(tab)}
+              onNavigateTab={(tab) => handleNavigateTab(tab)}
+              onViewProfile={handleViewProfile}
             />
           )}
-          {activeTab === 'profile' && <ProfileSettings />}
+          {activeTab === 'profile' && (
+            <ProfileSettings
+              viewingUser={viewingProfileUser}
+              onBack={() => {
+                setViewingProfileUser(null);
+                handleNavigateTab('feed');
+              }}
+              onOpenChat={(chat) => setActiveFloatingChat(chat)}
+              onViewProfile={handleViewProfile}
+            />
+          )}
         </main>
       </div>
 
       {/* Mobile Bottom Navigation Bar */}
-      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      <BottomNav activeTab={activeTab} setActiveTab={handleNavigateTab} />
 
       {/* Floating Messenger Chatbox Window (Facebook Style - User Screenshot Req) */}
       <FloatingMessengerChat
@@ -94,8 +133,9 @@ export const App: React.FC = () => {
         onClose={() => setActiveFloatingChat(null)}
         onMaximize={() => {
           setActiveFloatingChat(null);
-          setActiveTab('messages');
+          handleNavigateTab('messages');
         }}
+        onViewProfile={handleViewProfile}
       />
     </div>
   );

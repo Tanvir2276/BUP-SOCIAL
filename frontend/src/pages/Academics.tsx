@@ -114,7 +114,11 @@ const FST_RESEARCH_PAPERS = [
   },
 ];
 
-export const Academics: React.FC = () => {
+interface AcademicsProps {
+  onViewProfile?: (user: any) => void;
+}
+
+export const Academics: React.FC<AcademicsProps> = ({ onViewProfile }) => {
   const { user } = useAuth();
 
   // Active top tab in Academics: 'courses' | 'faculty' | 'research' | 'admissions' | 'cgpa'
@@ -482,9 +486,22 @@ export const Academics: React.FC = () => {
             {FST_FACULTY_LIST.map((fac, idx) => (
               <div
                 key={idx}
-                className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex items-start gap-4 hover:border-bup-500 transition-all"
+                onClick={() =>
+                  onViewProfile &&
+                  onViewProfile({
+                    name: fac.name,
+                    role: 'faculty',
+                    designation: fac.role,
+                    department: fac.dept,
+                    avatar: fac.avatar,
+                    bio: `${fac.role} at ${fac.dept}. Specialization: ${fac.specialty}`,
+                    room: fac.room,
+                  })
+                }
+                className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex items-start gap-4 hover:border-bup-500 hover:shadow-md cursor-pointer transition-all group"
+                title={`Click to view ${fac.name}'s profile`}
               >
-                <div className="w-16 h-16 rounded-2xl bg-bup-700 text-white font-bold overflow-hidden shrink-0 shadow-md">
+                <div className="w-16 h-16 rounded-2xl bg-bup-700 text-white font-bold overflow-hidden shrink-0 shadow-md group-hover:scale-105 group-hover:ring-2 group-hover:ring-bup-500 transition-all">
                   <img src={fac.avatar} alt={fac.name} className="w-full h-full object-cover" />
                 </div>
 
@@ -496,7 +513,7 @@ export const Academics: React.FC = () => {
                     <span className="text-[10px] text-slate-400 font-mono">{fac.room}</span>
                   </div>
 
-                  <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white truncate">
+                  <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white group-hover:text-bup-600 dark:group-hover:text-bup-400 group-hover:underline underline-offset-2 transition-colors truncate">
                     {fac.name}
                   </h4>
                   <p className="text-[11px] font-semibold text-bup-700 dark:text-blue-400">

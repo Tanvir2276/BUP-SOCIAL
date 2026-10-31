@@ -41,7 +41,12 @@ const REACTIONS = [
   { id: 'wow', label: 'Wow', emoji: '😮', color: 'text-purple-600' },
 ];
 
-export const Feed: React.FC = () => {
+interface FeedProps {
+  onViewProfile?: (user: any) => void;
+  onOpenChat?: (chat: any) => void;
+}
+
+export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
   const { user } = useAuth();
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -640,10 +645,14 @@ export const Feed: React.FC = () => {
                     key={post._id}
                     className="bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200/90 dark:border-slate-800 transition-all hover:border-slate-300 dark:hover:border-slate-700 relative"
                   >
-                    {/* Author Info & Verified Badges */}
+                    {/* Author Info & Verified Badges (Clickable -> Navigates to User Profile) */}
                     <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-bup-700 text-white font-black flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                      <div
+                        onClick={() => onViewProfile && onViewProfile(post.author)}
+                        className="flex items-center gap-3 cursor-pointer group select-none"
+                        title={`View ${post.author?.name || 'user'}'s profile`}
+                      >
+                        <div className="w-10 h-10 rounded-2xl bg-bup-700 text-white font-black flex items-center justify-center overflow-hidden shrink-0 shadow-sm group-hover:scale-105 group-hover:ring-2 group-hover:ring-bup-500 transition-all">
                           {post.author?.avatar ? (
                             <img src={post.author.avatar} alt="" className="w-full h-full object-cover" />
                           ) : (
@@ -652,7 +661,7 @@ export const Feed: React.FC = () => {
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-extrabold text-xs text-slate-900 dark:text-white">
+                            <span className="font-extrabold text-xs text-slate-900 dark:text-white group-hover:text-bup-600 dark:group-hover:text-bup-400 group-hover:underline underline-offset-2 transition-colors">
                               {post.author?.name}
                             </span>
                             {/* Verified Badge */}
@@ -668,7 +677,7 @@ export const Feed: React.FC = () => {
                               </span>
                             )}
                           </div>
-                          <p className="text-[10px] text-slate-400">
+                          <p className="text-[10px] text-slate-400 group-hover:text-slate-500 transition-colors">
                             {post.author?.department || 'Department of ICT'} • {new Date(post.createdAt).toLocaleDateString()}
                           </p>
                         </div>
@@ -869,12 +878,32 @@ export const Feed: React.FC = () => {
                                 className="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/50 flex items-start justify-between gap-2 text-xs group"
                               >
                                 <div className="flex items-start gap-2">
-                                  <div className="w-6 h-6 rounded-lg bg-bup-700 text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
+                                  <div
+                                    onClick={() =>
+                                      onViewProfile &&
+                                      onViewProfile({
+                                        name: comment.authorName,
+                                        id: comment.authorId,
+                                        role: comment.authorRole,
+                                      })
+                                    }
+                                    className="w-6 h-6 rounded-lg bg-bup-700 text-white font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5 cursor-pointer hover:ring-2 hover:ring-bup-500"
+                                  >
                                     {comment.authorName?.charAt(0) || 'U'}
                                   </div>
                                   <div>
                                     <div className="flex items-center gap-1.5">
-                                      <span className="font-bold text-[11px] text-slate-900 dark:text-white">
+                                      <span
+                                        onClick={() =>
+                                          onViewProfile &&
+                                          onViewProfile({
+                                            name: comment.authorName,
+                                            id: comment.authorId,
+                                            role: comment.authorRole,
+                                          })
+                                        }
+                                        className="font-bold text-[11px] text-slate-900 dark:text-white cursor-pointer hover:text-bup-600 dark:hover:text-bup-400 hover:underline"
+                                      >
                                         {comment.authorName}
                                       </span>
                                       {comment.authorRole === 'faculty' && (

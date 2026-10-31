@@ -239,7 +239,11 @@ const PRESET_IMAGES = [
   },
 ];
 
-export const Messages: React.FC = () => {
+interface MessagesProps {
+  onViewProfile?: (user: any) => void;
+}
+
+export const Messages: React.FC<MessagesProps> = ({ onViewProfile }) => {
   const { user } = useAuth();
 
   const [contacts, setContacts] = useState<any[]>(INITIAL_BUP_THREADS);
@@ -817,36 +821,42 @@ export const Messages: React.FC = () => {
                     <ChevronLeft className="w-5 h-5 text-bup-700 dark:text-emerald-400" />
                   </button>
 
-                  <div className="relative shrink-0">
-                    <div className="w-10 h-10 rounded-full bg-bup-700 text-white flex items-center justify-center font-bold text-sm shadow-sm overflow-hidden">
-                      {selectedContact.avatar ? (
-                        <img src={selectedContact.avatar} alt="" className="w-full h-full object-cover" />
-                      ) : (
-                        selectedContact.name?.charAt(0)
+                  <div
+                    onClick={() => onViewProfile && onViewProfile(selectedContact)}
+                    className="flex items-center gap-2.5 min-w-0 cursor-pointer group"
+                    title={`View ${selectedContact.name}'s profile`}
+                  >
+                    <div className="relative shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-bup-700 text-white flex items-center justify-center font-bold text-sm shadow-sm overflow-hidden group-hover:scale-105 group-hover:ring-2 group-hover:ring-bup-500 transition-all">
+                        {selectedContact.avatar ? (
+                          <img src={selectedContact.avatar} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          selectedContact.name?.charAt(0)
+                        )}
+                      </div>
+                      {selectedContact.active && (
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-2 ring-white dark:ring-slate-900" />
                       )}
                     </div>
-                    {selectedContact.active && (
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-2 ring-white dark:ring-slate-900" />
-                    )}
-                  </div>
 
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-sm font-extrabold text-slate-900 dark:text-white leading-tight truncate">
-                        {selectedContact.name}
-                      </h4>
-                      {selectedContact.role === 'faculty' && (
-                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 shrink-0">
-                          Faculty
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-sm font-extrabold text-slate-900 dark:text-white leading-tight truncate group-hover:text-bup-600 dark:group-hover:text-bup-400 group-hover:underline">
+                          {selectedContact.name}
+                        </h4>
+                        {selectedContact.role === 'faculty' && (
+                          <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 shrink-0">
+                            Faculty
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium truncate">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                        <span className="truncate">
+                          {selectedContact.active ? 'Active now' : 'Active recently'} • End-to-End Encrypted
                         </span>
-                      )}
+                      </p>
                     </div>
-                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium truncate">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                      <span className="truncate">
-                        {selectedContact.active ? 'Active now' : 'Active recently'} • End-to-End Encrypted
-                      </span>
-                    </p>
                   </div>
                 </div>
 
