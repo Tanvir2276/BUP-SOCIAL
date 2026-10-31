@@ -285,14 +285,34 @@ router.get('/me', authenticateToken, async (req, res) => {
   }
 });
 
-// 6. Update Preferences (Custom Reminders: time & device, favorite clubs, course preferences)
+// 6. Update Preferences & Profile Details
 router.put('/preferences', authenticateToken, async (req, res) => {
   try {
-    const { reminderSettings, favoriteClubs, coursePreferences, bio, section } = req.body;
+    const {
+      name,
+      reminderSettings,
+      favoriteClubs,
+      coursePreferences,
+      bio,
+      section,
+      college,
+      school,
+      livesIn,
+      hometown,
+      instagram,
+      motto,
+    } = req.body;
 
     const dataToUpdate = {};
+    if (name !== undefined) dataToUpdate.name = name;
     if (bio !== undefined) dataToUpdate.bio = bio;
     if (section !== undefined) dataToUpdate.sectionName = section;
+    if (college !== undefined) dataToUpdate.college = college;
+    if (school !== undefined) dataToUpdate.school = school;
+    if (livesIn !== undefined) dataToUpdate.livesIn = livesIn;
+    if (hometown !== undefined) dataToUpdate.hometown = hometown;
+    if (instagram !== undefined) dataToUpdate.instagram = instagram;
+    if (motto !== undefined) dataToUpdate.motto = motto;
 
     if (reminderSettings) {
       if (reminderSettings.leadTimeMinutes !== undefined) dataToUpdate.leadTimeMinutes = reminderSettings.leadTimeMinutes;
@@ -340,6 +360,12 @@ router.put('/preferences', authenticateToken, async (req, res) => {
         favoriteClubs: updatedUser.favoriteClubs ? JSON.parse(updatedUser.favoriteClubs) : [],
         coursePreferences: updatedUser.coursePreferences ? JSON.parse(updatedUser.coursePreferences) : [],
         bio: updatedUser.bio,
+        college: updatedUser.college,
+        school: updatedUser.school,
+        livesIn: updatedUser.livesIn,
+        hometown: updatedUser.hometown,
+        instagram: updatedUser.instagram,
+        motto: updatedUser.motto,
       },
     });
   } catch (err) {

@@ -400,7 +400,23 @@ export const Login: React.FC<LoginProps> = ({ onNavigateRegister }) => {
               <span className="text-[9px] font-mono text-amber-700 dark:text-amber-300">samia@bup.edu.bd • faculty123</span>
             </button>
 
-            {/* Student 1: Rafi (BICE-2024 CR) */}
+            {/* Student 1: Tanvir Naeem */}
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('tanvir@bup.edu.bd', 'bup123', 'student')}
+              className="btn-motion p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50/80 dark:hover:bg-blue-950/40 border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 text-left transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-extrabold text-slate-900 dark:text-white">Tanvir Naeem</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                  Batch 22 Scholar
+                </span>
+              </div>
+              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">Dept of ICT (BICE-2024) • Section B</span>
+              <span className="text-[9px] font-mono text-blue-600 dark:text-blue-400">tanvir@bup.edu.bd • bup123</span>
+            </button>
+
+            {/* Student 2: Rafi (BICE-2024 CR) */}
             <button
               type="button"
               onClick={() => handleQuickDemo('rafi@bup.edu.bd', 'bup123', 'student')}
@@ -408,60 +424,44 @@ export const Login: React.FC<LoginProps> = ({ onNavigateRegister }) => {
             >
               <div className="flex items-center justify-between">
                 <span className="font-extrabold text-slate-900 dark:text-white">Safaytul Islam Rafi</span>
-                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300">
                   Student CR
                 </span>
               </div>
-              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">BICE-2024 • Section A (3rd Yr)</span>
-              <span className="text-[9px] font-mono text-blue-600 dark:text-blue-400">rafi@bup.edu.bd • bup123</span>
+              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">BICE-2024 • Section A (Notre Dame)</span>
+              <span className="text-[9px] font-mono text-emerald-600 dark:text-emerald-400">rafi@bup.edu.bd • bup123</span>
             </button>
 
-            {/* Student 2: Tanvir (BICE-2024 Lead) */}
+            {/* Student 3: Nusrat Jahan Nishi */}
             <button
               type="button"
-              onClick={() => handleQuickDemo('tanvir@bup.edu.bd', 'bup123', 'student')}
+              onClick={() => handleQuickDemo('nishi@bup.edu.bd', 'bup123', 'student')}
               className="btn-motion p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50/80 dark:hover:bg-blue-950/40 border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 text-left transition-all"
             >
               <div className="flex items-center justify-between">
-                <span className="font-extrabold text-slate-900 dark:text-white">Munshi Tanvir Hossain</span>
-                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300">
-                  Section B Lead
-                </span>
-              </div>
-              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">BICE-2024 • Section B (3rd Yr)</span>
-              <span className="text-[9px] font-mono text-blue-600 dark:text-blue-400">tanvir@bup.edu.bd • bup123</span>
-            </button>
-
-            {/* Student 3: Anika Tahsin (BICE-2025) */}
-            <button
-              type="button"
-              onClick={() => handleQuickDemo('anika@bup.edu.bd', 'bup123', 'student')}
-              className="btn-motion p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50/80 dark:hover:bg-blue-950/40 border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 text-left transition-all"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-extrabold text-slate-900 dark:text-white">Anika Tahsin</span>
+                <span className="font-extrabold text-slate-900 dark:text-white">Nusrat Jahan Nishi</span>
                 <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-teal-100 text-teal-700 dark:bg-teal-900/50 dark:text-teal-300">
-                  Student (2nd Yr)
+                  Researcher (Holy Cross)
                 </span>
               </div>
-              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">BICE-2025 • Section A (2nd Yr)</span>
-              <span className="text-[9px] font-mono text-teal-600 dark:text-teal-400">anika@bup.edu.bd • bup123</span>
+              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">Dept of ICT • Section B</span>
+              <span className="text-[9px] font-mono text-teal-600 dark:text-teal-400">nishi@bup.edu.bd • bup123</span>
             </button>
 
-            {/* Student 4: Sadia Rahman (BICE-2026) */}
+            {/* Student 4: Mahir Faisal */}
             <button
               type="button"
-              onClick={() => handleQuickDemo('sadia@bup.edu.bd', 'bup123', 'student')}
+              onClick={() => handleQuickDemo('mahir@bup.edu.bd', 'bup123', 'student')}
               className="btn-motion p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50/80 dark:hover:bg-blue-950/40 border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 text-left transition-all"
             >
               <div className="flex items-center justify-between">
-                <span className="font-extrabold text-slate-900 dark:text-white">Sadia Rahman</span>
+                <span className="font-extrabold text-slate-900 dark:text-white">Mahir Faisal</span>
                 <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">
-                  Student (1st Yr)
+                  CSE Coder (Rajuk)
                 </span>
               </div>
-              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">BICE-2026 • Section B (1st Yr)</span>
-              <span className="text-[9px] font-mono text-indigo-600 dark:text-indigo-400">sadia@bup.edu.bd • bup123</span>
+              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">Dept of CSE • Tech Fest Finalist</span>
+              <span className="text-[9px] font-mono text-indigo-600 dark:text-indigo-400">mahir@bup.edu.bd • bup123</span>
             </button>
           </div>
         </div>

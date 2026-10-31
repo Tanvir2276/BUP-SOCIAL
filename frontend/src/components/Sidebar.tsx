@@ -1,24 +1,19 @@
 import React from 'react';
 import {
-  Home,
   Users,
-  BookOpen,
   Megaphone,
-  Calendar,
   Clock,
-  Bell,
-  MessageSquare,
-  Car,
-  Compass,
-  HelpCircle,
-  Bookmark,
   User,
-  ShieldCheck,
   ChevronLeft,
   ChevronRight,
-  ExternalLink,
+  Flag,
+  BookOpen,
+  FileText,
+  Download,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { generateAndDownloadNoteDocument } from '../utils/documentGenerator';
 
 interface SidebarProps {
   activeTab: string;
@@ -36,23 +31,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { user } = useAuth();
   const isFaculty = user?.role === 'faculty';
 
+  // Left sidebar items focused on high-utility campus academic tools
+  // Top-nav duplicates (feed, routines, clubs, lostfound, dm, rides) cleanly replaced per user request
   const navItems = [
-    { id: 'feed', label: 'News Feed', icon: Home, badge: 'Live' },
-    { id: 'academics', label: 'Courses & Sections', icon: BookOpen },
     { id: 'notices', label: 'Faculty Notices', icon: Megaphone, badge: 'New' },
     { id: 'communities', label: 'Academic Communities', icon: Users },
-    { id: 'routines', label: 'Routine Hub', icon: Calendar },
+    { id: 'pages', label: 'Campus Pages & Groups', icon: Flag, badge: 'Hub' },
     { id: 'reminders', label: 'Custom Reminders', icon: Clock },
-    { id: 'clubs', label: 'Clubs & Events', icon: Users },
-    { id: 'rides', label: 'RideShare & Travel', icon: Car, linkBupGo: true },
-    { id: 'messages', label: 'DM (Direct Messages)', icon: MessageSquare, badge: 'Live' },
-    { id: 'lostfound', label: 'Lost & Found', icon: HelpCircle },
+    { id: 'routines', label: 'AI Study Notes & Library', icon: BookOpen, badge: 'OBE' },
     { id: 'profile', label: 'Profile & Settings', icon: User },
   ];
 
+  const handleQuickDownloadNotes = () => {
+    generateAndDownloadNoteDocument({
+      title: 'ICE-2207 Computer Networks Comprehensive Lecture Handout',
+      courseCode: 'ICE-2207',
+      courseTitle: 'Computer Networks & Internetworking',
+      facultyName: 'Lecturer Sharmeen Jahan Seema',
+      department: 'Department of ICT (FST)',
+    });
+  };
+
   return (
     <aside
-      className={`hidden md:flex flex-col border-r border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md transition-all duration-300 z-30 shrink-0 sticky top-16 h-[calc(100vh-4rem)] ${
+      className={`hidden md:flex flex-col border-r border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md transition-all duration-300 z-30 shrink-0 sticky top-16 self-start h-[calc(100vh-4rem)] ${
         collapsed ? 'w-20' : 'w-64'
       }`}
     >
@@ -135,26 +137,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
         })}
       </div>
 
-      {/* BUP-GO Live Bridge Quick Launcher at bottom of sidebar */}
+      {/* BUP AI Study Notes & Digital Handouts Fast Launcher */}
       {!collapsed && (
         <div className="p-3 border-t border-slate-100 dark:border-slate-800">
-          <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md space-y-1.5">
+          <div className="p-3 rounded-2xl bg-gradient-to-r from-bup-navy via-bup-900 to-indigo-900 text-white shadow-md space-y-1.5 border border-blue-500/30">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold tracking-wider uppercase opacity-90">BUP-GO Ride System</span>
-              <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse" />
+              <span className="text-[10px] font-extrabold tracking-wider uppercase text-amber-400 flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-amber-400" />
+                <span>AI Study Notes Hub</span>
+              </span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             </div>
-            <p className="text-[11px] leading-tight font-medium opacity-90">
-              Direct access to live BUP-GO campus rides!
+            <p className="text-[11px] leading-tight font-medium opacity-90 text-blue-100">
+              Verified OBE handouts, formula guides & semester routine documents.
             </p>
-            <a
-              href="https://bup-go-project-8njl.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-950 bg-white hover:bg-emerald-50 px-2.5 py-1 rounded-xl transition-colors mt-1"
+            <button
+              onClick={handleQuickDownloadNotes}
+              className="inline-flex items-center gap-1.5 text-[11px] font-extrabold text-slate-950 bg-amber-400 hover:bg-amber-300 px-3 py-1.5 rounded-xl transition-all shadow-sm active:scale-95 mt-1"
             >
-              <span>Launch BUP-GO</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
+              <Download className="w-3.5 h-3.5 text-slate-950" />
+              <span>Download Notes Handout</span>
+            </button>
           </div>
         </div>
       )}

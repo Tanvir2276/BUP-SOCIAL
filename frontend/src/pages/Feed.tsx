@@ -571,8 +571,8 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
         </div>
       </div>
 
-      {/* Main Grid: Feed + Campus Pulse Sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Main Grid: Feed + Campus Pulse Sidebar (items-start ensures sticky works cleanly) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left / Center: Feed Stream (8 Cols) */}
         <div className="lg:col-span-8 space-y-5">
           {/* Top Banner & Quick Creator */}
@@ -980,8 +980,8 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
           )}
         </div>
 
-        {/* Right: Campus Live Pulse & Trending Sidebar (4 Cols) */}
-        <div className="lg:col-span-4 space-y-4">
+        {/* Right: Campus Live Pulse & Trending Sidebar (Sticky & Fixed on Scroll) */}
+        <div className="lg:col-span-4 space-y-4 sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-none">
           {/* 1. Live Active Counter Card */}
           <div className="glass-panel rounded-3xl p-5 border border-emerald-500/20 shadow-sm relative overflow-hidden">
             <div className="flex items-center justify-between mb-3">

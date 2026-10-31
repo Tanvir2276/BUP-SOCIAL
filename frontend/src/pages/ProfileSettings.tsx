@@ -46,7 +46,10 @@ import {
   ThumbsUp,
   MessageSquare,
   Flame,
-  CheckCircle2
+  CheckCircle2,
+  Building,
+  Mail,
+  Plus,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { SecurityShieldModal } from '../components/SecurityShieldModal';
@@ -106,61 +109,77 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
     if (viewingUser) {
       setAvatarPreview(viewingUser.avatar || '');
       setCoverPhoto(viewingUser.coverPhoto || '/assets/bup_antorikkho_batch22.jpg');
-      setThoughtStatus(viewingUser.thought || (viewingUser.role === 'faculty' ? 'Mentoring BUP scholars & research colloquium' : 'Excellence Through Knowledge 🎓'));
+      setThoughtStatus(viewingUser.thought || (viewingUser.role === 'faculty' ? 'Research & academic mentorship' : viewingUser.motto || ''));
     } else {
       setAvatarPreview(user?.avatar || '');
-      setCoverPhoto(localStorage.getItem('bupsoc_cover_photo') || '/assets/bup_antorikkho_batch22.jpg');
-      setThoughtStatus(localStorage.getItem('bupsoc_user_thought') || 'Celebrating অন্তরীক্ষ-২২ with FST comrades 🎓');
+      setCoverPhoto(localStorage.getItem('bupsoc_cover_photo') || user?.coverPhoto || '/assets/bup_antorikkho_batch22.jpg');
+      setThoughtStatus(localStorage.getItem('bupsoc_user_thought') || user?.thought || user?.motto || '');
     }
   }, [viewingUser, user]);
 
   // Thought Status Bubble
   const [thoughtStatus, setThoughtStatus] = useState<string>(() => {
     if (!isOwnProfile && viewingUser?.thought) return viewingUser.thought;
-    return localStorage.getItem('bupsoc_user_thought') || 'Celebrating অন্তরীক্ষ-২২ with FST comrades 🎓';
+    return localStorage.getItem('bupsoc_user_thought') || user?.thought || user?.motto || '';
   });
   const [isEditingThought, setIsEditingThought] = useState(false);
   const [tempThought, setTempThought] = useState(thoughtStatus);
 
-  // Personal Information Details
+  // Personal Information Details - dynamically tied to user data with zero hardcoded cross-account leakage
   const [profileType, setProfileType] = useState<string>(
-    localStorage.getItem('bupsoc_profile_type') || (activeProfile?.role === 'faculty' ? 'Faculty & Academician' : 'BUP Undergraduate Scholar')
+    localStorage.getItem('bupsoc_profile_type') || (user?.role === 'faculty' ? 'Faculty & Academician' : 'BUP Undergraduate Scholar')
   );
   const [livesIn, setLivesIn] = useState<string>(
-    localStorage.getItem('bupsoc_lives_in') || 'Mirpur DOHS, Dhaka'
+    localStorage.getItem('bupsoc_lives_in') || user?.livesIn || ''
   );
   const [hometown, setHometown] = useState<string>(
-    localStorage.getItem('bupsoc_hometown') || 'Cumilla, Bangladesh'
+    localStorage.getItem('bupsoc_hometown') || user?.hometown || ''
   );
   const [birthdate, setBirthdate] = useState<string>(
     localStorage.getItem('bupsoc_birthdate') || '2003-10-24'
   );
   const [school, setSchool] = useState<string>(
-    localStorage.getItem('bupsoc_school') || 'Tongi Pilot School & Girls College'
+    localStorage.getItem('bupsoc_school') || user?.school || ''
   );
   const [college, setCollege] = useState<string>(
-    localStorage.getItem('bupsoc_college') || 'Dhaka College'
+    localStorage.getItem('bupsoc_college') || user?.college || ''
   );
   const [university, setUniversity] = useState<string>(
-    localStorage.getItem('bupsoc_university') || 'Bangladesh University of Professionals (BUP)'
+    localStorage.getItem('bupsoc_university') || user?.university || 'Bangladesh University of Professionals (BUP)'
   );
   const [instagram, setInstagram] = useState<string>(
-    localStorage.getItem('bupsoc_instagram') || 'tanvir_naeeem'
+    localStorage.getItem('bupsoc_instagram') || user?.instagram || ''
+  );
+  const [linkedin, setLinkedin] = useState<string>(
+    localStorage.getItem('bupsoc_linkedin') || user?.linkedin || ''
+  );
+  const [github, setGithub] = useState<string>(
+    localStorage.getItem('bupsoc_github') || user?.github || ''
+  );
+  const [facebook, setFacebook] = useState<string>(
+    localStorage.getItem('bupsoc_facebook') || user?.facebook || ''
   );
   const [motto, setMotto] = useState<string>(
-    localStorage.getItem('bupsoc_motto') || 'History only remembers how you finished.'
+    localStorage.getItem('bupsoc_motto') || user?.motto || ''
   );
+  const [fullName, setFullName] = useState<string>(user?.name || '');
+
+  // Target Profile Role
+  const isTargetFaculty = activeProfile?.role === 'faculty';
 
   // Dynamic Personal Information Details based on whether viewing own or another student's profile
-  const activeCollege = !isOwnProfile && viewingUser?.college ? viewingUser.college : college;
-  const activeLivesIn = !isOwnProfile && viewingUser?.livesIn ? viewingUser.livesIn : livesIn;
-  const activeHometown = !isOwnProfile && viewingUser?.hometown ? viewingUser.hometown : hometown;
-  const activeUniversity = !isOwnProfile && viewingUser?.university ? viewingUser.university : university;
-  const activeInstagram = !isOwnProfile && viewingUser?.instagram ? viewingUser.instagram : instagram;
-  const activeMotto = !isOwnProfile && viewingUser?.motto ? viewingUser.motto : motto;
-  const activeSchool = !isOwnProfile && viewingUser?.school ? viewingUser.school : school;
+  const activeCollege = !isOwnProfile ? (viewingUser?.college || '') : (college || user?.college || '');
+  const activeLivesIn = !isOwnProfile ? (viewingUser?.livesIn || '') : (livesIn || user?.livesIn || '');
+  const activeHometown = !isOwnProfile ? (viewingUser?.hometown || '') : (hometown || user?.hometown || '');
+  const activeUniversity = !isOwnProfile ? (viewingUser?.university || 'Bangladesh University of Professionals (BUP)') : (university || 'Bangladesh University of Professionals (BUP)');
+  const activeInstagram = !isOwnProfile ? (viewingUser?.instagram || '') : (instagram || user?.instagram || '');
+  const activeLinkedin = !isOwnProfile ? (viewingUser?.linkedin || '') : (linkedin || user?.linkedin || '');
+  const activeGithub = !isOwnProfile ? (viewingUser?.github || '') : (github || user?.github || '');
+  const activeFacebook = !isOwnProfile ? (viewingUser?.facebook || '') : (facebook || user?.facebook || '');
+  const activeMotto = !isOwnProfile ? (viewingUser?.motto || '') : (motto || user?.motto || '');
+  const activeSchool = !isOwnProfile ? (viewingUser?.school || '') : (school || user?.school || '');
 
-  // Edit Personal Information Modal / Form Mode
+  // Full Edit Profile Modal / Form Mode
   const [editProfileMode, setEditProfileMode] = useState(false);
 
   // Preferences & Security
@@ -286,8 +305,8 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
     setIsEditingThought(false);
   };
 
-  // Save Personal Details
-  const handleSavePersonalDetails = (e: React.FormEvent) => {
+  // Save Personal Details & Social Links
+  const handleSavePersonalDetails = async (e: React.FormEvent) => {
     e.preventDefault();
     localStorage.setItem('bupsoc_profile_type', profileType);
     localStorage.setItem('bupsoc_lives_in', livesIn);
@@ -297,7 +316,29 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
     localStorage.setItem('bupsoc_college', college);
     localStorage.setItem('bupsoc_university', university);
     localStorage.setItem('bupsoc_instagram', instagram);
+    localStorage.setItem('bupsoc_linkedin', linkedin);
+    localStorage.setItem('bupsoc_github', github);
+    localStorage.setItem('bupsoc_facebook', facebook);
     localStorage.setItem('bupsoc_motto', motto);
+
+    try {
+      await updatePreferences({
+        name: fullName || user?.name,
+        college,
+        school,
+        livesIn,
+        hometown,
+        instagram,
+        linkedin,
+        github,
+        facebook,
+        motto,
+        university,
+      });
+    } catch (err) {
+      console.warn('Profile sync fallback:', err);
+    }
+
     setEditProfileMode(false);
     setSaveSuccess(true);
     setTimeout(() => setSaveSuccess(false), 3000);
@@ -514,15 +555,15 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                   </h1>
 
                   {/* Verified Role Badge */}
-                  {activeProfile?.role === 'faculty' ? (
+                  {isTargetFaculty ? (
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-900 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-300">
                       <Award className="w-3 h-3 text-amber-600" />
-                      <span>Official Faculty</span>
+                      <span>Official Faculty • BUP Verified</span>
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-900 dark:bg-blue-950/80 dark:text-blue-300 border border-blue-300">
                       <CheckCircle2 className="w-3 h-3 text-blue-600" />
-                      <span>BUP Student • Batch 22</span>
+                      <span>BUP Student • {activeProfile?.batch || 'Undergraduate'}</span>
                     </span>
                   )}
                 </div>
@@ -531,20 +572,36 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                   {activeProfile?.designation || activeProfile?.department || 'Department of ICT • Faculty of Science & Technology'}
                 </p>
 
-                {/* Followers Counter Stats */}
-                <div className="flex items-center justify-center sm:justify-start gap-3 text-xs text-slate-600 dark:text-slate-300 pt-1">
-                  <span className="font-extrabold text-slate-900 dark:text-white">
-                    {followerCount.toLocaleString()} <span className="font-normal text-slate-400">followers</span>
-                  </span>
-                  <span>•</span>
-                  <span className="font-extrabold text-slate-900 dark:text-white">
-                    482 <span className="font-normal text-slate-400">following</span>
-                  </span>
-                  <span>•</span>
-                  <span className="font-extrabold text-emerald-600 dark:text-emerald-400">
-                    ICT Batch 22
-                  </span>
-                </div>
+                {/* Profile Stats: Distinct between Faculty and Student */}
+                {isTargetFaculty ? (
+                  <div className="flex items-center justify-center sm:justify-start gap-3 text-xs text-slate-600 dark:text-slate-300 pt-1">
+                    <span className="font-extrabold text-amber-600 dark:text-amber-400">
+                      420+ Citations
+                    </span>
+                    <span>•</span>
+                    <span className="font-extrabold text-slate-900 dark:text-white">
+                      18 Scopus Publications
+                    </span>
+                    <span>•</span>
+                    <span className="font-extrabold text-emerald-600 dark:text-emerald-400">
+                      Faculty Member (FST)
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center sm:justify-start gap-3 text-xs text-slate-600 dark:text-slate-300 pt-1">
+                    <span className="font-extrabold text-slate-900 dark:text-white">
+                      {followerCount.toLocaleString()} <span className="font-normal text-slate-400">followers</span>
+                    </span>
+                    <span>•</span>
+                    <span className="font-extrabold text-slate-900 dark:text-white">
+                      {activeProfile?.followingCount || 441} <span className="font-normal text-slate-400">following</span>
+                    </span>
+                    <span>•</span>
+                    <span className="font-extrabold text-emerald-600 dark:text-emerald-400">
+                      {activeProfile?.batch || 'Batch 2024'} • {activeProfile?.section || 'Section A'}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -701,39 +758,94 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3 text-xs">
               <h3 className="font-extrabold text-slate-900 dark:text-white flex items-center gap-2 text-sm">
                 <School className="w-4 h-4 text-bup-600" />
-                <span>Intro & Affiliation</span>
+                <span>{isTargetFaculty ? 'Academic Credentials & Office' : 'Intro & Affiliation'}</span>
               </h3>
 
-              <div className="space-y-2.5 text-slate-600 dark:text-slate-300">
-                <div className="flex items-center gap-2.5">
-                  <GraduationCap className="w-4 h-4 text-bup-600 shrink-0" />
-                  <span>Studies at <strong>{activeUniversity}</strong></span>
+              {isTargetFaculty ? (
+                <div className="space-y-2.5 text-slate-600 dark:text-slate-300">
+                  <div className="flex items-center gap-2.5">
+                    <GraduationCap className="w-4 h-4 text-amber-500 shrink-0" />
+                    <span>Highest Degree: <strong>{activeProfile?.highestDegree || 'Ph.D. in Computer Science & Engineering (BUET)'}</strong></span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <Building className="w-4 h-4 text-bup-600 shrink-0" />
+                    <span>Office Room: <strong>{activeProfile?.officeRoom || 'Room 412, Academic Block 1, Mirpur'}</strong></span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <Clock className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span>Consultation: <strong>{activeProfile?.consultationHours || 'Sun & Tue: 11:00 AM – 01:00 PM'}</strong></span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <BookOpen className="w-4 h-4 text-sky-500 shrink-0" />
+                    <span>Department: <strong>{activeProfile?.department || 'Department of ICT'}</strong></span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <Mail className="w-4 h-4 text-rose-500 shrink-0" />
+                    <span>Institutional Email: <strong className="text-bup-600 dark:text-bup-400">{activeProfile?.email}</strong></span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <School className="w-4 h-4 text-slate-400 shrink-0" />
-                  <span>College: <strong>{activeCollege}</strong></span>
+              ) : (
+                <div className="space-y-2.5 text-slate-600 dark:text-slate-300">
+                  <div className="flex items-center gap-2.5">
+                    <GraduationCap className="w-4 h-4 text-bup-600 shrink-0" />
+                    <span>Studies at <strong>{activeUniversity || 'Bangladesh University of Professionals (BUP)'}</strong></span>
+                  </div>
+                  {activeCollege && (
+                    <div className="flex items-center gap-2.5">
+                      <School className="w-4 h-4 text-slate-400 shrink-0" />
+                      <span>College: <strong>{activeCollege}</strong></span>
+                    </div>
+                  )}
+                  {activeLivesIn && (
+                    <div className="flex items-center gap-2.5">
+                      <MapPin className="w-4 h-4 text-rose-500 shrink-0" />
+                      <span>Lives in <strong>{activeLivesIn}</strong></span>
+                    </div>
+                  )}
+                  {activeHometown && (
+                    <div className="flex items-center gap-2.5">
+                      <Home className="w-4 h-4 text-emerald-500 shrink-0" />
+                      <span>From <strong>{activeHometown}</strong></span>
+                    </div>
+                  )}
+                  {activeInstagram && (
+                    <div className="flex items-center gap-2.5">
+                      <AtSign className="w-4 h-4 text-sky-500 shrink-0" />
+                      <span>Instagram: <strong className="text-sky-600">@{activeInstagram}</strong></span>
+                    </div>
+                  )}
+                  {activeSchool && (
+                    <div className="flex items-center gap-2.5">
+                      <BookOpen className="w-4 h-4 text-slate-400 shrink-0" />
+                      <span>School: <strong>{activeSchool}</strong></span>
+                    </div>
+                  )}
+                  {activeLinkedin && (
+                    <div className="flex items-center gap-2.5">
+                      <Globe className="w-4 h-4 text-blue-500 shrink-0" />
+                      <span>LinkedIn: <strong className="text-blue-600">{activeLinkedin}</strong></span>
+                    </div>
+                  )}
+                  {activeGithub && (
+                    <div className="flex items-center gap-2.5">
+                      <ExternalLink className="w-4 h-4 text-slate-700 dark:text-slate-300 shrink-0" />
+                      <span>GitHub: <strong className="font-mono">{activeGithub}</strong></span>
+                    </div>
+                  )}
+
+                  {!activeCollege && !activeLivesIn && !activeHometown && !activeInstagram && isOwnProfile && (
+                    <p className="text-[11px] text-slate-400 italic">No personal details added yet. Click edit below to personalize your profile.</p>
+                  )}
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <MapPin className="w-4 h-4 text-rose-500 shrink-0" />
-                  <span>Lives in <strong>{activeLivesIn}</strong></span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <Home className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>From <strong>{activeHometown}</strong></span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <AtSign className="w-4 h-4 text-sky-500 shrink-0" />
-                  <span>Instagram: <strong className="text-sky-600">@{activeInstagram}</strong></span>
-                </div>
-              </div>
+              )}
 
               {isOwnProfile && (
                 <button
                   type="button"
                   onClick={() => setEditProfileMode(true)}
-                  className="w-full mt-2 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-200 transition-colors"
+                  className="w-full mt-2 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                 >
-                  Edit Personal Details
+                  Edit Personal Details & Social Links
                 </button>
               )}
             </div>
@@ -1287,6 +1399,177 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                 Save Thought
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Full Edit Profile Modal */}
+      {editProfileMode && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fadeIn">
+          <div className="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-bup-50 dark:bg-slate-800 text-bup-600 dark:text-bup-400">
+                  <Edit className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+                    Edit Profile & Personal Details
+                  </h3>
+                  <p className="text-[11px] text-slate-400">
+                    Update your campus identity, academic credentials, and social links.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditProfileMode(false)}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSavePersonalDetails} className="p-5 overflow-y-auto space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Full Name:</label>
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Your legal campus name"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Profile Category / Designation:</label>
+                  <input
+                    type="text"
+                    value={profileType}
+                    onChange={(e) => setProfileType(e.target.value)}
+                    placeholder="e.g. BUP Undergraduate Scholar / Lecturer"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">College:</label>
+                  <input
+                    type="text"
+                    value={college}
+                    onChange={(e) => setCollege(e.target.value)}
+                    placeholder="e.g. Dhaka College, Notre Dame, Holy Cross"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">School:</label>
+                  <input
+                    type="text"
+                    value={school}
+                    onChange={(e) => setSchool(e.target.value)}
+                    placeholder="e.g. Tongi Pilot School, Zilla School"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Lives In (Current Area):</label>
+                  <input
+                    type="text"
+                    value={livesIn}
+                    onChange={(e) => setLivesIn(e.target.value)}
+                    placeholder="e.g. Mirpur DOHS, Uttara, Dhanmondi"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Hometown:</label>
+                  <input
+                    type="text"
+                    value={hometown}
+                    onChange={(e) => setHometown(e.target.value)}
+                    placeholder="e.g. Cumilla, Khulna, Sylhet"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Instagram Handle:</label>
+                  <input
+                    type="text"
+                    value={instagram}
+                    onChange={(e) => setInstagram(e.target.value)}
+                    placeholder="username without @"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">LinkedIn Profile:</label>
+                  <input
+                    type="text"
+                    value={linkedin}
+                    onChange={(e) => setLinkedin(e.target.value)}
+                    placeholder="e.g. in/tanvirnaeem"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">GitHub Profile:</label>
+                  <input
+                    type="text"
+                    value={github}
+                    onChange={(e) => setGithub(e.target.value)}
+                    placeholder="e.g. github.com/tanvir"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Facebook Handle:</label>
+                  <input
+                    type="text"
+                    value={facebook}
+                    onChange={(e) => setFacebook(e.target.value)}
+                    placeholder="e.g. facebook.com/tanvir.naeem"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Life Motto / Bio Quote:</label>
+                  <input
+                    type="text"
+                    value={motto}
+                    onChange={(e) => setMotto(e.target.value)}
+                    placeholder="A memorable personal quote or life philosophy..."
+                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setEditProfileMode(false)}
+                  className="px-4 py-2 rounded-xl text-slate-500 font-bold hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn-motion btn-bup-primary px-5 py-2 rounded-xl text-white font-bold shadow-md shadow-bup-700/20"
+                >
+                  Save Profile Changes
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -94,7 +94,7 @@ async function seedIctScheduleAndUsers() {
       designation: 'Lecturer in Computer Networks',
       departmentCode: 'ICT',
       isVerified: true,
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300',
       bio: 'Instructor: Computer Network (ICE-2207).',
     },
     {

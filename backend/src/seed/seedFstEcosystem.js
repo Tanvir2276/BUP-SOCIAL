@@ -153,7 +153,7 @@ async function main() {
       soundEnabled: true,
       coursePreferences: JSON.stringify(['ICT-1101', 'ICT-2201', 'ICT-2202', 'ICT-2203', 'CSE-3101']),
       favoriteClubs: JSON.stringify(['BUP InfoTech Club (BUPITC)', 'BUP Robotics Club (BUPRC)']),
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300',
       bio: 'Class Representative, Department of ICT (FST Batch 2024, Section A). Core author of BUP Social project proposal.',
     },
     {

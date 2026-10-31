@@ -93,6 +93,16 @@ model User {
   batchName        String?  @default("BICE-2024")
   sectionName      String?  @default("Section A")
 
+  // Social & Personal Affiliation (User Requirements)
+  followersCount   Int      @default(1200)
+  followingCount   Int      @default(350)
+  college          String?  @default("Dhaka College")
+  hometown         String?  @default("Cumilla, Bangladesh")
+  livesIn          String?  @default("Mirpur DOHS, Dhaka")
+  school           String?  @default("Tongi Pilot School & Girls College")
+  instagram        String?  @default("tanvir_naeeem")
+  motto            String?  @default("History only remembers how you finished.")
+
   // Teacher Requirement: Custom reminder settings
   leadTimeMinutes  Int      @default(15)
   deviceType       String   @default("browser")

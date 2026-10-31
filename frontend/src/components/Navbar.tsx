@@ -21,18 +21,21 @@ import { BupGoModal } from './BupGoModal';
 import { AnimatedBupLogo } from './AnimatedBupLogo';
 import { SecurityShieldModal } from './SecurityShieldModal';
 import { NotificationCenterPopover } from './NotificationCenterPopover';
+import { CampusSearchModal } from './CampusSearchModal';
 import { ShieldCheck } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onSelectChat?: (chat: any) => void;
+  onViewProfile?: (user: any) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelectChat }) => {
+export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelectChat, onViewProfile }) => {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [reminderModalOpen, setReminderModalOpen] = useState(false);
   const [bupGoModalOpen, setBupGoModalOpen] = useState(false);
   const [securityModalOpen, setSecurityModalOpen] = useState(false);
@@ -61,7 +64,6 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
               { id: 'academics', label: 'Academics & Notices' },
               { id: 'routines', label: 'Routine Hub' },
               { id: 'clubs', label: 'Clubs & Events' },
-              { id: 'messages', label: 'DM' },
               { id: 'lostfound', label: 'Lost & Found' },
             ].map((tab) => (
               <button
@@ -80,6 +82,23 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
 
           {/* Action Tools & User Profile */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            {/* Campus Global Search Trigger */}
+            <button
+              onClick={() => setSearchModalOpen(true)}
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/70 dark:bg-slate-800/80 hover:border-bup-500 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all shadow-xs"
+              title="Search students, faculty, pages, groups..."
+            >
+              <Search className="w-3.5 h-3.5 text-bup-600 dark:text-bup-400" />
+              <span>Search BUP Campus...</span>
+            </button>
+            <button
+              onClick={() => setSearchModalOpen(true)}
+              className="sm:hidden p-1.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              title="Search BUP Campus"
+            >
+              <Search className="w-4 h-4 text-bup-600" />
+            </button>
+
             {/* Campus Notification Center Popover (Classes, Exams, Notes) */}
             <div className="relative">
               <button
@@ -212,6 +231,17 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
 
       {/* 3-Level Security Telemetry Modal */}
       <SecurityShieldModal isOpen={securityModalOpen} onClose={() => setSecurityModalOpen(false)} />
+
+      {/* Global Campus Search Modal (Students, Faculty, Pages, Groups) */}
+      <CampusSearchModal
+        isOpen={searchModalOpen}
+        onClose={() => setSearchModalOpen(false)}
+        onSelectUser={(u) => {
+          if (onViewProfile) onViewProfile(u);
+          else setActiveTab('profile');
+        }}
+        onNavigateTab={(tab) => setActiveTab(tab)}
+      />
     </>
   );
 };

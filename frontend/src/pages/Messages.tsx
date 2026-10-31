@@ -23,6 +23,7 @@ import {
 import { apiFetch } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { encryptE2EE, decryptE2EE } from '../utils/cryptoE2EE';
+import { ALL_100_BANGALDESHI_STUDENTS } from '../data/bangladeshiStudents';
 
 // Authentic BUP Campus & Faculty DM Threads
 const INITIAL_BUP_THREADS = [
@@ -203,6 +204,28 @@ const STICKER_LIST = [
   { id: 'win', label: 'Victory', emoji: '🏆' },
 ];
 
+const MERGED_INITIAL_CONTACTS = [
+  ...INITIAL_BUP_THREADS,
+  ...ALL_100_BANGALDESHI_STUDENTS.map((s) => ({
+    _id: s.id,
+    name: s.name,
+    role: s.role,
+    studentId: s.studentId,
+    college: s.college,
+    livesIn: s.livesIn,
+    hometown: s.hometown,
+    instagram: s.instagram,
+    department: `${s.department} (${s.batch})`,
+    designation: s.designation,
+    avatar: s.avatar,
+    lastMessage: s.motto,
+    time: 'Online',
+    unread: false,
+    active: true,
+    category: 'All',
+  })).filter((s) => !INITIAL_BUP_THREADS.some((t) => t.name.toLowerCase() === s.name.toLowerCase()))
+];
+
 interface MessagesProps {
   onViewProfile?: (user: any) => void;
 }
@@ -210,7 +233,7 @@ interface MessagesProps {
 export const Messages: React.FC<MessagesProps> = ({ onViewProfile }) => {
   const { user } = useAuth();
 
-  const [contacts, setContacts] = useState<any[]>(INITIAL_BUP_THREADS);
+  const [contacts, setContacts] = useState<any[]>(MERGED_INITIAL_CONTACTS);
   const [selectedContact, setSelectedContact] = useState<any | null>(INITIAL_BUP_THREADS[0]);
   const [messages, setMessages] = useState<any[]>([]);
   const [decryptedTexts, setDecryptedTexts] = useState<Record<string, string>>({});

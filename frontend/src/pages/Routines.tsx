@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { apiFetch } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { generateAndDownloadNoteDocument, generateAndDownloadRoutineDocument } from '../utils/documentGenerator';
 
 // Master Class Routine Database from the Official BUP Dept of ICT Schedule (July-Dec 2026)
 export interface RoutineSlot {
@@ -1214,14 +1215,14 @@ export const Routines: React.FC = () => {
             <span>Print Schedule</span>
           </button>
 
-          <a
-            href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
-            download="BUP_ICT_Class_Routine_2026.pdf"
+          <button
+            type="button"
+            onClick={() => generateAndDownloadRoutineDocument(selectedBatch, selectedSection)}
             className="btn-motion btn-bup-primary text-xs font-bold text-white flex items-center gap-1.5 px-4 py-2.5 rounded-2xl shadow-md shadow-bup-700/20"
           >
             <Download className="w-4 h-4" />
             <span>Download Official Routine (PDF)</span>
-          </a>
+          </button>
         </div>
       </div>
 
@@ -1479,16 +1480,22 @@ export const Routines: React.FC = () => {
                 <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
                   <span className="text-[11px] text-slate-400">{mat.size} • {mat.downloads} downloads</span>
 
-                  <a
-                    href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
-                    download={mat.fileTitle}
-                    target="_blank"
-                    rel="noreferrer"
+                  <button
+                    type="button"
+                    onClick={() =>
+                      generateAndDownloadNoteDocument({
+                        title: mat.courseTitle,
+                        courseCode: mat.courseCode,
+                        courseTitle: mat.courseTitle,
+                        facultyName: mat.author,
+                        department: 'Department of ICT (FST)',
+                      })
+                    }
                     className="btn-motion btn-bup-gold px-3.5 py-1.5 rounded-xl font-bold flex items-center gap-1.5 shadow-sm text-xs"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Download Note</span>
-                  </a>
+                  </button>
                 </div>
               </div>
             ))}

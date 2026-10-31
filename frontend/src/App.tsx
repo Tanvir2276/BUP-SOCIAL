@@ -14,6 +14,7 @@ import { Messages } from './pages/Messages';
 import { LostFound } from './pages/LostFound';
 import { ProfileSettings } from './pages/ProfileSettings';
 import { CustomReminders } from './pages/CustomReminders';
+import { PagesGroups } from './pages/PagesGroups';
 import { FloatingMessengerChat } from './components/FloatingMessengerChat';
 import { ChatThread } from './components/FacebookMessengerPopover';
 
@@ -68,10 +69,11 @@ export const App: React.FC = () => {
         activeTab={activeTab}
         setActiveTab={handleNavigateTab}
         onSelectChat={(chat) => setActiveFloatingChat(chat)}
+        onViewProfile={handleViewProfile}
       />
 
       {/* Main Container with Sidebar + Content */}
-      <div className="flex-1 flex max-w-7xl w-full mx-auto">
+      <div className="flex-1 flex max-w-7xl w-full mx-auto items-start">
         {/* Left Collapsible Facebook-Style Sidebar */}
         <Sidebar
           activeTab={activeTab}
@@ -100,6 +102,7 @@ export const App: React.FC = () => {
           {activeTab === 'reminders' && (
             <CustomReminders onNavigateRoutine={() => handleNavigateTab('routines')} />
           )}
+          {activeTab === 'pages' && <PagesGroups />}
           {activeTab === 'clubs' && <ClubsEvents />}
           {activeTab === 'rides' && <RideShare />}
           {activeTab === 'messages' && <Messages onViewProfile={handleViewProfile} />}

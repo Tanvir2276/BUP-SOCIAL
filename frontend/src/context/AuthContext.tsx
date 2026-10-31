@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { apiFetch, setAuthToken, clearAuthToken, getAuthToken } from '../utils/api';
+import { ALL_100_BANGALDESHI_STUDENTS } from '../data/bangladeshiStudents';
 
 export interface User {
   id: string;
@@ -21,8 +22,16 @@ export interface User {
   livesIn?: string;
   hometown?: string;
   school?: string;
+  university?: string;
   instagram?: string;
+  linkedin?: string;
+  github?: string;
+  facebook?: string;
   motto?: string;
+  thought?: string;
+  officeRoom?: string;
+  consultationHours?: string;
+  highestDegree?: string;
   reminderSettings?: {
     leadTimeMinutes: number;
     deviceType: string;
@@ -41,14 +50,7 @@ interface AuthContextType {
   login: (identifier: string, password: string, roleHint?: string) => Promise<User>;
   register: (formData: any) => Promise<{ requiresOtp: boolean; demoOtpCode?: string; user?: User }>;
   verifyOtp: (email: string, otp: string) => Promise<User>;
-  updatePreferences: (updates: {
-    avatar?: string;
-    reminderSettings?: any;
-    favoriteClubs?: string[];
-    coursePreferences?: string[];
-    bio?: string;
-    section?: string;
-  }) => Promise<void>;
+  updatePreferences: (updates: Partial<User> & Record<string, any>) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -185,7 +187,7 @@ export const DEMO_USERS_MAP: Record<string, User> = {
     facultyId: 'FAC-ICT-008',
     designation: 'Lecturer in Computer Networks',
     department: 'Department of ICT',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300',
     isVerified: true,
     coursePreferences: ['ICE-2207', 'ICE-2208'],
   },
@@ -368,7 +370,7 @@ export const DEMO_USERS_MAP: Record<string, User> = {
     program: 'BBA in Marketing',
     batch: 'BBA-2024',
     section: 'Section B',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+    avatar: 'https://images.unsplash.com/photo-1534751516642-a171edd26cb0?w=300',
     coverPhoto: '/assets/bup_antorikkho_batch22.jpg',
     college: 'BAF Shaheen College',
     livesIn: 'Mohakhali DOHS, Dhaka',
@@ -454,6 +456,14 @@ export const DEMO_USERS_MAP: Record<string, User> = {
     favoriteClubs: ['BUP IEEE Student Branch'],
   },
 };
+
+// Auto-register all 100 Authentic Bangladeshi Students into DEMO_USERS_MAP
+ALL_100_BANGALDESHI_STUDENTS.forEach((student) => {
+  DEMO_USERS_MAP[student.email.toLowerCase()] = student as any;
+  if (student.studentId) {
+    DEMO_USERS_MAP[student.studentId.toLowerCase()] = student as any;
+  }
+});
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);

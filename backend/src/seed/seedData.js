@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from '../config/prisma.js';
+import { get100BangladeshiStudentsSeedData } from './seed100BangladeshiStudents.js';
 
 export const seedDatabase = async () => {
   console.log('🌱 Starting 1,000 Users & Facebook-Style Media Seeding for BUP Social (BUPSoCo)...');
@@ -108,7 +109,7 @@ export const seedDatabase = async () => {
       soundEnabled: true,
       coursePreferences: JSON.stringify(['ICT-2201', 'ICT-2202', 'CSE-3101']),
       favoriteClubs: JSON.stringify(['BUP InfoTech Club (BUPITC)', 'BUP Robotics Club (BUPRC)']),
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
       bio: 'BICE-2024 | Competitive Programmer, Algorithm Enthusiast & Section A Lead.',
     },
     {
@@ -240,7 +241,13 @@ export const seedDatabase = async () => {
   const profNazneen = createdCore[4];
   const profSaha = createdCore[5];
 
-  // 6. Bulk Generate 1,000 Realistic BUP Students (User Requirement #3)
+  // 6. Insert 100 Authentic Bangladeshi Male & Female Students (User Specification)
+  console.log('⚡ Inserting 100 Authentic Bangladeshi Students into MySQL...');
+  const bd100Students = get100BangladeshiStudentsSeedData(studentPass);
+  await prisma.user.createMany({ data: bd100Students, skipDuplicates: true });
+  console.log(`✅ 100 Authentic Bangladeshi Students successfully seeded in MySQL!`);
+
+  // 7. Bulk Generate Additional BUP Students
   console.log('⚡ Generating 1,000 realistic BUP user accounts in MySQL...');
   const firstNames = [
     'Anika', 'Tanvir', 'Fahim', 'Nusrat', 'Sadia', 'Mehzabin', 'Abrar', 'Safayat',
@@ -263,7 +270,7 @@ export const seedDatabase = async () => {
     { code: 'IR', prog: 'BSS in Int. Relations', faculty: 'Faculty of Security & Strategic Studies (FSSS)' },
   ];
   const avatars = [
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+    'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
     'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
     'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
     'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150',
