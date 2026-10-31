@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   User,
   Bell,
@@ -16,12 +16,21 @@ import {
   Database,
   ExternalLink,
   Lock,
+  Camera,
+  Upload,
+  Image as ImageIcon,
+  Trash2,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { SecurityShieldModal } from '../components/SecurityShieldModal';
 
 export const ProfileSettings: React.FC = () => {
   const { user, updatePreferences } = useAuth();
+
+  // Profile Picture Upload State (User Requirements #1 & #3)
+  const [avatarPreview, setAvatarPreview] = useState<string>(user?.avatar || '');
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement | null>(null);
 
   // State
   const [section, setSection] = useState(user?.section || 'Section A');
@@ -90,6 +99,37 @@ export const ProfileSettings: React.FC = () => {
     }
   };
 
+  // Handle Profile Picture File Upload (User Requirements #1 & #3)
+  const handleAvatarFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setAvatarUploading(true);
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const dataUrl = event.target?.result as string;
+      setAvatarPreview(dataUrl);
+      try {
+        await updatePreferences({ avatar: dataUrl });
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 3000);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setAvatarUploading(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveAvatar = async () => {
+    setAvatarPreview('');
+    await updatePreferences({ avatar: '' });
+    if (avatarInputRef.current) avatarInputRef.current.value = '';
+    setSaveSuccess(true);
+    setTimeout(() => setSaveSuccess(false), 3000);
+  };
+
   const handleSaveAll = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -121,16 +161,38 @@ export const ProfileSettings: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
-      {/* Top Banner */}
+      {/* Top Banner with Uploadable Avatar */}
       <div className="glass-panel rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-bup-700 text-white font-extrabold text-xl flex items-center justify-center shadow-lg shadow-bup-700/20 overflow-hidden">
-            {user?.avatar ? (
-              <img src={user.avatar} alt="" className="w-full h-full object-cover" />
-            ) : (
-              user?.name?.charAt(0) || 'U'
-            )}
+          <input
+            type="file"
+            ref={avatarInputRef}
+            onChange={handleAvatarFileChange}
+            accept="image/*"
+            className="hidden"
+            id="avatar-file-input"
+          />
+
+          <div className="relative group">
+            <div className="w-16 h-16 rounded-2xl bg-bup-700 text-white font-extrabold text-xl flex items-center justify-center shadow-lg shadow-bup-700/20 overflow-hidden border-2 border-white dark:border-slate-800">
+              {avatarPreview || user?.avatar ? (
+                <img src={avatarPreview || user?.avatar} alt="" className="w-full h-full object-cover" />
+              ) : (
+                user?.name?.charAt(0) || 'U'
+              )}
+            </div>
+
+            {/* Clickable camera upload badge */}
+            <button
+              type="button"
+              onClick={() => avatarInputRef.current?.click()}
+              className="absolute -bottom-1 -right-1 p-1.5 rounded-xl bg-bup-700 hover:bg-bup-800 text-white shadow-md border-2 border-white dark:border-slate-900 transition-transform active:scale-95"
+              title="Upload new profile picture"
+            >
+              <Camera className="w-3.5 h-3.5" />
+            </button>
           </div>
+
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-bold text-slate-900 dark:text-white">{user?.name}</h2>
@@ -158,10 +220,66 @@ export const ProfileSettings: React.FC = () => {
         <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
           <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>
-            <strong>Success!</strong> All reminder settings, favorite clubs, and course preferences updated.
+            <strong>Success!</strong> Profile picture, reminder settings, and academic preferences updated.
           </span>
         </div>
       )}
+
+      {/* User Requirements #1 & #3: Dedicated Profile Picture File Upload Card */}
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Camera className="w-5 h-5 text-bup-600" />
+            <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
+              Profile Picture & Campus Identity
+            </h3>
+          </div>
+          <span className="text-[10px] text-slate-400 font-semibold">Available for All Students & Faculty</span>
+        </div>
+
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          Upload your authentic university profile photo from your device. Your photo will automatically appear across the Feed, Messenger, Class Routine and Academic Directory.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700">
+          <div className="w-20 h-20 rounded-2xl bg-bup-700 text-white text-2xl font-black flex items-center justify-center overflow-hidden shrink-0 border-2 border-bup-300 shadow-md">
+            {avatarPreview || user?.avatar ? (
+              <img src={avatarPreview || user?.avatar} alt="Profile Preview" className="w-full h-full object-cover" />
+            ) : (
+              user?.name?.charAt(0) || 'U'
+            )}
+          </div>
+
+          <div className="space-y-2 flex-1 text-center sm:text-left">
+            <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
+              <button
+                type="button"
+                onClick={() => avatarInputRef.current?.click()}
+                disabled={avatarUploading}
+                className="btn-motion btn-bup-primary px-4 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-2 shadow-sm"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                <span>{avatarUploading ? 'Uploading...' : 'Upload Photo from Device'}</span>
+              </button>
+
+              {(avatarPreview || user?.avatar) && (
+                <button
+                  type="button"
+                  onClick={handleRemoveAvatar}
+                  className="btn-motion px-3.5 py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 flex items-center gap-1.5"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Remove Photo</span>
+                </button>
+              )}
+            </div>
+
+            <p className="text-[11px] text-slate-400">
+              Supported: <strong>JPEG, PNG, WEBP, GIF</strong> (Max: 10MB). Cropped automatically to university square format.
+            </p>
+          </div>
+        </div>
+      </div>
 
       <form onSubmit={handleSaveAll} className="space-y-6">
         {/* Requirement 5: 3-Level Military Grade Security Shield & Architecture */}

@@ -674,45 +674,148 @@ export const Academics: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 5: CGPA CALCULATOR (Req 6) */}
+      {/* TAB 5: WORKABLE INTERACTIVE CGPA CALCULATOR (User Req #4) */}
       {academicTab === 'cgpa' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 animate-fadeIn">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5 animate-fadeIn">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
             <div>
               <h3 className="font-extrabold text-base text-slate-900 dark:text-white flex items-center gap-2">
                 <Calculator className="w-5 h-5 text-bup-600" />
-                <span>BUP Semester GPA & CGPA Calculator</span>
+                <span>BUP Semester GPA & Cumulative CGPA Calculator</span>
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Calculate your semester grade points based on official BUP grading scale (4.00 max scale).
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Select official BUP department courses, adjust credits (0.75 - 4.0), and calculate exact grade points based on official BUP grading ordinance.
               </p>
             </div>
 
             {/* Calculated Result Card */}
-            <div className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-bup-700 to-blue-700 text-white flex items-center gap-3 shadow-md">
-              <span className="text-xs uppercase tracking-wider font-bold">Estimated GPA:</span>
-              <span className="text-2xl font-black">{calculatedCgpa}</span>
-              <span className="text-xs opacity-75">/ 4.00</span>
+            <div className="px-5 py-3 rounded-2xl bg-gradient-to-r from-bup-700 via-blue-700 to-indigo-800 text-white flex items-center gap-4 shadow-lg shadow-bup-700/20 shrink-0">
+              <div>
+                <span className="text-[10px] uppercase tracking-wider font-extrabold block text-blue-200">
+                  Semester GPA
+                </span>
+                <span className="text-2xl sm:text-3xl font-black">{calculatedCgpa}</span>
+                <span className="text-xs text-blue-200"> / 4.00</span>
+              </div>
+              <div className="border-l border-white/20 pl-3">
+                <span className="text-[10px] uppercase tracking-wider font-bold block text-blue-200">Academic Standing</span>
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-white/20 inline-block mt-0.5">
+                  {Number(calculatedCgpa) >= 3.75
+                    ? '🌟 First Class (Distinction)'
+                    : Number(calculatedCgpa) >= 3.0
+                    ? '✓ First Class'
+                    : Number(calculatedCgpa) >= 2.5
+                    ? 'Second Class'
+                    : 'Passing'}
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Courses Table */}
-          <div className="space-y-2">
+          {/* Quick Preset Selector */}
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
+              Enrolled Course Roster ({cgpaCourses.length} Courses):
+            </span>
+
+            <button
+              type="button"
+              onClick={() => {
+                setCgpaCourses([
+                  ...cgpaCourses,
+                  { name: 'ICE-3205: Web Technologies', credit: 3.0, gradePoint: 4.0 },
+                ]);
+              }}
+              className="btn-motion btn-bup-primary px-3.5 py-1.5 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 shadow-sm"
+            >
+              <span>+ Add Course</span>
+            </button>
+          </div>
+
+          {/* Courses Dynamic Table */}
+          <div className="space-y-2.5">
             {cgpaCourses.map((c, i) => (
               <div
                 key={i}
-                className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs hover:border-bup-400 transition-all"
               >
-                <span className="font-bold text-slate-800 dark:text-slate-200 flex-1">{c.name}</span>
+                {/* Course Name Selection or Custom Text */}
+                <div className="flex-1 min-w-0">
+                  <label className="text-[10px] text-slate-400 block mb-1 font-semibold">Course Code & Title:</label>
+                  <select
+                    value={c.name}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      // Auto-suggest default credit if standard lab or theory
+                      let defaultCr = c.credit;
+                      if (val.includes('Laboratory') || val.includes('Lab')) {
+                        defaultCr = val.includes('0.75') ? 0.75 : 1.5;
+                      } else if (val.includes('Mathematics') || val.includes('ICE-') || val.includes('CSE-')) {
+                        defaultCr = 3.0;
+                      }
+                      setCgpaCourses((prev) =>
+                        prev.map((item, idx) => (idx === i ? { ...item, name: val, credit: defaultCr } : item))
+                      );
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-semibold outline-none"
+                  >
+                    <option value="ICE-3201: Microprocessor and Computer Architecture">ICE-3201: Microprocessor and Computer Architecture (3.0 Cr)</option>
+                    <option value="ICE-3202: Microprocessor and Computer Architecture Lab">ICE-3202: Microprocessor and Computer Architecture Lab (1.5 Cr)</option>
+                    <option value="ICE-3203: Microwave Engineering and Antenna">ICE-3203: Microwave Engineering and Antenna (3.0 Cr)</option>
+                    <option value="ICE-3204: Microwave Engineering and Antenna Lab">ICE-3204: Microwave Engineering and Antenna Lab (0.75 Cr)</option>
+                    <option value="ICE-3205: Web Technologies">ICE-3205: Web Technologies (3.0 Cr)</option>
+                    <option value="ICE-3206: Web Technologies Laboratory">ICE-3206: Web Technologies Laboratory (1.5 Cr)</option>
+                    <option value="ICE-3207: Software and Requirement Engineering">ICE-3207: Software and Requirement Engineering (3.0 Cr)</option>
+                    <option value="ICE-3208: Software and Requirement Engineering Lab">ICE-3208: Software and Requirement Engineering Lab (1.5 Cr)</option>
+                    <option value="ICE-3209: Statistics and Research Methodology">ICE-3209: Statistics and Research Methodology (1.5 Cr)</option>
+                    <option value="ICE-2201: Data Structure">ICE-2201: Data Structure (3.0 Cr)</option>
+                    <option value="ICE-2202: Data Structure Laboratory">ICE-2202: Data Structure Laboratory (1.5 Cr)</option>
+                    <option value="ICE-2203: Database Management System">ICE-2203: Database Management System (3.0 Cr)</option>
+                    <option value="ICE-2204: Database Management System Lab">ICE-2204: Database Management System Lab (1.5 Cr)</option>
+                    <option value="ICE-2205: Signals and Systems">ICE-2205: Signals and Systems (3.0 Cr)</option>
+                    <option value="ICE-2206: Object Oriented Design & Programming-II Lab">ICE-2206: Object Oriented Design & Programming-II Lab (1.5 Cr)</option>
+                    <option value="MATH-2207: Mathematics-IV (Vector Analysis & Complex Variables)">MATH-2207: Mathematics-IV (Vector Analysis) (3.0 Cr)</option>
+                    <option value="ICE-2207: Computer Network">ICE-2207: Computer Network (3.0 Cr)</option>
+                    <option value="ICE-2208: Computer Network Laboratory">ICE-2208: Computer Network Laboratory (0.75 Cr)</option>
+                    <option value="ICE-1203: Electronic Devices and Circuit">ICE-1203: Electronic Devices and Circuit (3.0 Cr)</option>
+                    <option value="ICE-1204: Electronic Devices and Circuit Lab">ICE-1204: Electronic Devices and Circuit Lab (1.5 Cr)</option>
+                    <option value="ICE-1205: Structured Programming">ICE-1205: Structured Programming (3.0 Cr)</option>
+                    <option value="ICE-1206: Structured Programming Lab">ICE-1206: Structured Programming Lab (1.5 Cr)</option>
+                    <option value="MATH-1205: Mathematics-II (Differential Equations)">MATH-1205: Mathematics-II (Differential Equations) (3.0 Cr)</option>
+                    <option value="ENG-1202: Communicative English">ENG-1202: Communicative English (1.5 Cr)</option>
+                    <option value="ICE-1207: Discrete Mathematics">ICE-1207: Discrete Mathematics (3.0 Cr)</option>
+                    <option value="GED-1203: Statistics and Probability">GED-1203: Statistics and Probability (3.0 Cr)</option>
+                    <option value="MICE-5101: Advanced Machine Learning">MICE-5101: Advanced Machine Learning (3.0 Cr)</option>
+                    <option value="MICE-5102: Information and Cyber Security">MICE-5102: Information and Cyber Security (3.0 Cr)</option>
+                  </select>
+                </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
+                  {/* Credit Selector */}
                   <div>
-                    <label className="text-[10px] text-slate-400 block">Credits:</label>
-                    <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{c.credit}</span>
+                    <label className="text-[10px] text-slate-400 block mb-1 font-semibold">Credit Value:</label>
+                    <select
+                      value={c.credit}
+                      onChange={(e) => {
+                        const val = parseFloat(e.target.value);
+                        setCgpaCourses((prev) =>
+                          prev.map((item, idx) => (idx === i ? { ...item, credit: val } : item))
+                        );
+                      }}
+                      className="px-2.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 font-bold font-mono outline-none"
+                    >
+                      <option value={0.75}>0.75 Cr</option>
+                      <option value={1.0}>1.00 Cr</option>
+                      <option value={1.5}>1.50 Cr</option>
+                      <option value={2.0}>2.00 Cr</option>
+                      <option value={3.0}>3.00 Cr</option>
+                      <option value={4.0}>4.00 Cr</option>
+                    </select>
                   </div>
 
+                  {/* Grade Point Selector */}
                   <div>
-                    <label className="text-[10px] text-slate-400 block">Grade Point:</label>
+                    <label className="text-[10px] text-slate-400 block mb-1 font-semibold">Earned Grade:</label>
                     <select
                       value={c.gradePoint}
                       onChange={(e) => {
@@ -721,27 +824,65 @@ export const Academics: React.FC = () => {
                           prev.map((item, idx) => (idx === i ? { ...item, gradePoint: val } : item))
                         );
                       }}
-                      className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-mono"
+                      className="px-2.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 font-bold font-mono outline-none"
                     >
-                      <option value="4.00">A+ (4.00)</option>
-                      <option value="3.75">A (3.75)</option>
-                      <option value="3.50">A- (3.50)</option>
-                      <option value="3.25">B+ (3.25)</option>
-                      <option value="3.00">B (3.00)</option>
-                      <option value="2.75">B- (2.75)</option>
-                      <option value="2.50">C+ (2.50)</option>
-                      <option value="2.25">C (2.25)</option>
-                      <option value="2.00">D (2.00)</option>
-                      <option value="0.00">F (0.00)</option>
+                      <option value={4.00}>A+ (4.00) 80%+</option>
+                      <option value={3.75}>A (3.75) 75-79%</option>
+                      <option value={3.50}>A- (3.50) 70-74%</option>
+                      <option value={3.25}>B+ (3.25) 65-69%</option>
+                      <option value={3.00}>B (3.00) 60-64%</option>
+                      <option value={2.75}>B- (2.75) 55-59%</option>
+                      <option value={2.50}>C+ (2.50) 50-54%</option>
+                      <option value={2.25}>C (2.25) 45-49%</option>
+                      <option value={2.00}>D (2.00) 40-44%</option>
+                      <option value={0.00}>F (0.00) Below 40%</option>
                     </select>
+                  </div>
+
+                  {/* Delete Course Row */}
+                  <div className="pt-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (cgpaCourses.length <= 1) {
+                          alert('At least one course is required in semester GPA calculator.');
+                          return;
+                        }
+                        setCgpaCourses((prev) => prev.filter((_, idx) => idx !== i));
+                      }}
+                      className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl"
+                      title="Remove Course"
+                    >
+                      ✕
+                    </button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-[11px] text-blue-800 dark:text-blue-300">
-            Total Enrolled Credits: <strong>{totalCredits}</strong> | Total Grade Points Earned: <strong>{totalGradePoints.toFixed(2)}</strong>
+          {/* Summary Footer */}
+          <div className="p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-blue-950 dark:text-blue-200">
+            <div>
+              Total Enrolled Credits: <strong className="font-mono text-sm">{totalCredits.toFixed(2)}</strong> | Total Grade Points: <strong className="font-mono text-sm">{totalGradePoints.toFixed(2)}</strong>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setCgpaCourses([
+                  { name: 'ICE-3201: Microprocessor and Computer Architecture', credit: 3.0, gradePoint: 4.0 },
+                  { name: 'ICE-3202: Microprocessor and Computer Architecture Lab', credit: 1.5, gradePoint: 4.0 },
+                  { name: 'ICE-3205: Web Technologies', credit: 3.0, gradePoint: 3.75 },
+                  { name: 'ICE-3206: Web Technologies Laboratory', credit: 1.5, gradePoint: 4.0 },
+                  { name: 'ICE-3207: Software and Requirement Engineering', credit: 3.0, gradePoint: 3.75 },
+                  { name: 'ICE-3208: Software and Requirement Engineering Lab', credit: 1.5, gradePoint: 4.0 },
+                ]);
+              }}
+              className="text-bup-700 dark:text-blue-400 font-bold hover:underline"
+            >
+              Reset to Standard BICE Semester Courses ↺
+            </button>
           </div>
         </div>
       )}

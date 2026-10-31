@@ -122,6 +122,26 @@ export const Feed: React.FC = () => {
       caption: 'Data Structures Lab Manual v2 uploaded on Academics Portal. Section A students please submit report.',
       time: '12h ago',
     },
+    {
+      id: 's6',
+      author: 'BUP Sports Club',
+      role: 'Inter-Faculty Football',
+      avatar: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=150',
+      preview: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400',
+      title: 'FST Grand Final Win',
+      caption: 'Congratulations to FST Football Team on reaching the BUP Inter-Faculty Championship Finals! ⚽🏆',
+      time: '14h ago',
+    },
+    {
+      id: 's7',
+      author: 'BUP Cultural Forum',
+      role: 'Lakeside Spring Fest',
+      avatar: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=150',
+      preview: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400',
+      title: 'Bijoy Auditorium Night',
+      caption: 'Glimpse of musical rhythm & acoustic band performance at Central Lakeside Amphitheatre! 🎸✨',
+      time: '16h ago',
+    },
   ];
 
   // Default initial BUP campus posts for instant fallback

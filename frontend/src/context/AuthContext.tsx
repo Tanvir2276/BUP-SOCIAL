@@ -35,6 +35,7 @@ interface AuthContextType {
   register: (formData: any) => Promise<{ requiresOtp: boolean; demoOtpCode?: string; user?: User }>;
   verifyOtp: (email: string, otp: string) => Promise<User>;
   updatePreferences: (updates: {
+    avatar?: string;
     reminderSettings?: any;
     favoriteClubs?: string[];
     coursePreferences?: string[];
@@ -144,6 +145,66 @@ export const DEMO_USERS_MAP: Record<string, User> = {
     avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300',
     isVerified: true,
     coursePreferences: ['ICE-2205', 'ICE-3202'],
+  },
+  'maynul@bup.edu.bd': {
+    id: 'fac-ict-006',
+    name: 'Assistant Professor Md. Maynul Islam',
+    email: 'maynul@bup.edu.bd',
+    role: 'faculty',
+    facultyId: 'FAC-ICT-006',
+    designation: 'Assistant Professor in Optical Communication',
+    department: 'Department of ICT',
+    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300',
+    isVerified: true,
+    coursePreferences: ['ICE-4105', 'ICE-4106'],
+  },
+  'pranto@bup.edu.bd': {
+    id: 'fac-ict-007',
+    name: 'Lecturer Md. Appel Mahmud Pranto',
+    email: 'pranto@bup.edu.bd',
+    role: 'faculty',
+    facultyId: 'FAC-ICT-007',
+    designation: 'Lecturer in Structured Programming',
+    department: 'Department of ICT',
+    avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=300',
+    isVerified: true,
+    coursePreferences: ['ICE-1205', 'ICE-1206'],
+  },
+  'sharmeen_seema@bup.edu.bd': {
+    id: 'fac-ict-008',
+    name: 'Lecturer Sharmeen Jahan Seema',
+    email: 'sharmeen_seema@bup.edu.bd',
+    role: 'faculty',
+    facultyId: 'FAC-ICT-008',
+    designation: 'Lecturer in Computer Networks',
+    department: 'Department of ICT',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+    isVerified: true,
+    coursePreferences: ['ICE-2207', 'ICE-2208'],
+  },
+  'jfraisa@bup.edu.bd': {
+    id: 'fac-ict-009',
+    name: 'Lecturer Jasiya Fairiz Raisa',
+    email: 'jfraisa@bup.edu.bd',
+    role: 'faculty',
+    facultyId: 'FAC-ICT-009',
+    designation: 'Lecturer in Artificial Intelligence',
+    department: 'Department of ICT',
+    avatar: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=300',
+    isVerified: true,
+    coursePreferences: ['ICE-4107', 'ICE-4108'],
+  },
+  'chairman.datascience@bup.edu.bd': {
+    id: 'fac-ds-chair',
+    name: 'Col Awal Uddin Ahmed, psc',
+    email: 'chairman.datascience@bup.edu.bd',
+    role: 'faculty',
+    facultyId: 'FAC-DS-CHAIR',
+    designation: 'Chairman, Dept of Data Science',
+    department: 'Department of Data Science',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300',
+    isVerified: true,
+    coursePreferences: ['ICE-1203', 'ICE-1204'],
   },
   'rafi@bup.edu.bd': {
     id: 'student-24549010064',
@@ -325,7 +386,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     throw new Error('Login failed');
   };
 
+  // Cache pending registration for client OTP verification fallback
+  const [pendingRegData, setPendingRegData] = useState<any>(null);
+
   const register = async (formData: any) => {
+    setPendingRegData(formData);
     try {
       const res = await apiFetch('/auth/register', {
         method: 'POST',
@@ -372,13 +437,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.warn('Verify OTP fallback');
     }
 
+    const role = pendingRegData?.role || (email.includes('faculty') ? 'faculty' : 'student');
     const verifiedUser: User = {
       id: 'verified-' + Date.now(),
-      name: email.split('@')[0],
+      name: pendingRegData?.name || email.split('@')[0].toUpperCase(),
       email,
-      role: 'student',
+      role: role as any,
+      studentId: role === 'student' ? pendingRegData?.studentId || '24549010064' : undefined,
+      facultyId: role === 'faculty' ? pendingRegData?.facultyId || 'FAC-ICT-001' : undefined,
+      designation: role === 'faculty' ? pendingRegData?.designation || 'Assistant Professor' : 'Student',
+      department: pendingRegData?.department || 'Department of ICT',
+      section: pendingRegData?.section || 'Section A',
       isVerified: true,
+      avatar: pendingRegData?.role === 'faculty'
+        ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300'
+        : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
     };
+
+    // Save to demo users map and localStorage
+    DEMO_USERS_MAP[email.toLowerCase().trim()] = verifiedUser;
+    setAuthToken('token_bup_' + Date.now());
     setUser(verifiedUser);
     localStorage.setItem('bupsoc_active_user', JSON.stringify(verifiedUser));
     return verifiedUser;
