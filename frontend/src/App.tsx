@@ -13,12 +13,15 @@ import { ClubsEvents } from './pages/ClubsEvents';
 import { Messages } from './pages/Messages';
 import { LostFound } from './pages/LostFound';
 import { ProfileSettings } from './pages/ProfileSettings';
+import { FloatingMessengerChat } from './components/FloatingMessengerChat';
+import { ChatThread } from './components/FacebookMessengerPopover';
 
 export const App: React.FC = () => {
   const { user, loading } = useAuth();
   const [authView, setAuthView] = useState<'login' | 'register'>('login');
   const [activeTab, setActiveTab] = useState('feed');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [activeFloatingChat, setActiveFloatingChat] = useState<ChatThread | null>(null);
 
   if (loading) {
     return (
@@ -45,7 +48,11 @@ export const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-100/70 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors pb-16 lg:pb-0">
       {/* Top Facebook-Style Navigation Bar */}
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Navbar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onSelectChat={(chat) => setActiveFloatingChat(chat)}
+      />
 
       {/* Main Container with Sidebar + Content */}
       <div className="flex-1 flex max-w-7xl w-full mx-auto">
@@ -75,6 +82,16 @@ export const App: React.FC = () => {
 
       {/* Mobile Bottom Navigation Bar */}
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+
+      {/* Floating Messenger Chatbox Window (Facebook Style - User Screenshot Req) */}
+      <FloatingMessengerChat
+        chat={activeFloatingChat}
+        onClose={() => setActiveFloatingChat(null)}
+        onMaximize={() => {
+          setActiveFloatingChat(null);
+          setActiveTab('messages');
+        }}
+      />
     </div>
   );
 };

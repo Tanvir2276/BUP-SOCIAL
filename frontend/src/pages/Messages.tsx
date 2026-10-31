@@ -108,6 +108,7 @@ export const Messages: React.FC = () => {
   const [decryptedTexts, setDecryptedTexts] = useState<Record<string, string>>({});
   const [inputText, setInputText] = useState('');
   const [searchContact, setSearchContact] = useState('');
+  const [activeChatFilter, setActiveChatFilter] = useState<'All' | 'Unread' | 'Groups' | 'Communities'>('All');
   const [sending, setSending] = useState(false);
   const [showRawCrypto, setShowRawCrypto] = useState(false);
 
@@ -117,6 +118,7 @@ export const Messages: React.FC = () => {
   const [showGifPicker, setShowGifPicker] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [customImageUrl, setCustomImageUrl] = useState('');
+  const directFileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Selected preview image
   const [previewMediaUrl, setPreviewMediaUrl] = useState<string | null>(null);
@@ -339,80 +341,110 @@ export const Messages: React.FC = () => {
 
       {/* Main Messaging Window (Messenger Style) */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-0 h-[650px] bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
-        {/* Left: Contact List (4 Cols) */}
-        <div className="md:col-span-4 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full bg-slate-50/70 dark:bg-slate-950/40">
-          {/* Header & Search */}
-          <div className="p-3.5 border-b border-slate-200 dark:border-slate-800 space-y-2">
+        {/* Left: Contact List (4 Cols) - Facebook Messenger Desktop Sidebar (User Screenshot Req) */}
+        <div className="md:col-span-4 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full bg-white dark:bg-[#242526]">
+          {/* Header & Options */}
+          <div className="p-3.5 pb-2 border-b border-slate-100 dark:border-white/10 space-y-2.5">
             <div className="flex items-center justify-between">
-              <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">Chats</h3>
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
-                {contacts.length} Contacts
-              </span>
+              <h3 className="text-xl font-black text-slate-900 dark:text-white">Chats</h3>
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
+                  {contacts.length}
+                </span>
+              </div>
             </div>
 
+            {/* Pill Search: 'Search Messenger' */}
             <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
+              <Search className="w-3.5 h-3.5 text-slate-400 dark:text-[#b0b3b8] absolute left-3.5 top-3" />
               <input
                 type="text"
                 value={searchContact}
                 onChange={(e) => setSearchContact(e.target.value)}
-                placeholder="Search students, faculty..."
-                className="w-full pl-9 pr-3 py-2 rounded-xl text-xs border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-bup-600"
+                placeholder="Search Messenger"
+                className="w-full pl-9 pr-3 py-2 rounded-full text-xs border border-slate-200 dark:border-transparent bg-slate-100 dark:bg-[#3a3b3c] text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#b0b3b8] outline-none focus:ring-1 focus:ring-blue-500"
               />
+            </div>
+
+            {/* Filter Pills: All, Unread, Groups, Communities */}
+            <div className="flex items-center gap-1.5 overflow-x-auto text-xs font-bold scrollbar-none pt-0.5">
+              {(['All', 'Unread', 'Groups', 'Communities'] as const).map((filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  onClick={() => setActiveChatFilter(filter)}
+                  className={`px-3 py-1.5 rounded-full text-[11px] transition-colors whitespace-nowrap ${
+                    activeChatFilter === filter
+                      ? 'bg-blue-100 text-blue-700 dark:bg-[#2d88ff]/20 dark:text-[#2d88ff]'
+                      : 'bg-slate-100 dark:bg-[#3a3b3c] text-slate-600 dark:text-[#e4e6eb] hover:bg-slate-200 dark:hover:bg-[#4e4f50]'
+                  }`}
+                >
+                  {filter}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Contact scrollable list */}
-          <div className="flex-1 overflow-y-auto p-2 space-y-1">
-            {filteredContacts.map((contact) => {
+          <div className="flex-1 overflow-y-auto p-2 space-y-0.5">
+            {filteredContacts.map((contact, idx) => {
               const isSelected = selectedContact?._id === contact._id;
               const isFaculty = contact.role === 'faculty';
+              const isUnread = idx === 0 || idx === 1;
 
               return (
                 <div
                   key={contact._id}
                   onClick={() => setSelectedContact(contact)}
-                  className={`p-2.5 rounded-2xl cursor-pointer transition-all flex items-center justify-between gap-2.5 ${
+                  className={`p-2.5 rounded-2xl cursor-pointer transition-all flex items-center justify-between gap-3 ${
                     isSelected
                       ? 'bg-bup-700 text-white shadow-md shadow-bup-700/20'
-                      : 'hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-200'
+                      : 'hover:bg-slate-100 dark:hover:bg-[#3a3b3c] text-slate-700 dark:text-slate-200'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div className="relative shrink-0">
-                      <div
-                        className={`w-9 h-9 rounded-2xl flex items-center justify-center font-bold text-xs shadow-sm overflow-hidden ${
-                          isSelected ? 'bg-white/20 text-white' : 'bg-bup-700 text-white'
-                        }`}
-                      >
+                      <div className="w-12 h-12 rounded-full overflow-hidden bg-bup-700 text-white flex items-center justify-center font-bold text-sm shadow-sm">
                         {contact.avatar ? (
                           <img src={contact.avatar} alt="" className="w-full h-full object-cover" />
                         ) : (
                           contact.name?.charAt(0)
                         )}
                       </div>
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute -bottom-0.5 -right-0.5 ring-2 ring-white dark:ring-slate-900" />
+                      {/* Facebook Messenger Green Active Online Dot */}
+                      <span className="w-3.5 h-3.5 rounded-full bg-[#31a24c] absolute bottom-0 right-0 ring-2 ring-white dark:ring-[#242526]" />
                     </div>
 
                     <div className="min-w-0">
-                      <p className="font-bold text-xs truncate leading-tight">{contact.name}</p>
-                      <p className={`text-[10px] truncate ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>
-                        {isFaculty ? `${contact.designation || 'Faculty'}` : `${contact.section || 'Section A'}`}
+                      <p className="font-bold text-sm truncate leading-tight text-slate-900 dark:text-white">
+                        {contact.name}
+                      </p>
+                      <p className={`text-xs truncate mt-0.5 ${isSelected ? 'text-blue-100' : 'text-slate-400 dark:text-[#b0b3b8]'}`}>
+                        {idx === 0
+                          ? 'You sent a photo. · 12m'
+                          : idx === 1
+                          ? 'Software Lab report submission deadline... · 23m'
+                          : `${isFaculty ? contact.designation || 'Faculty' : contact.section || 'Student'}`}
                       </p>
                     </div>
                   </div>
 
-                  {isFaculty && (
-                    <span
-                      className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${
-                        isSelected
-                          ? 'bg-white/20 text-white'
-                          : 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300'
-                      }`}
-                    >
-                      Faculty
-                    </span>
-                  )}
+                  <div className="shrink-0 flex items-center gap-1.5">
+                    {isFaculty && (
+                      <span
+                        className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${
+                          isSelected
+                            ? 'bg-white/20 text-white'
+                            : 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300'
+                        }`}
+                      >
+                        Faculty
+                      </span>
+                    )}
+                    {isUnread && !isSelected && (
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#2d88ff] inline-block" />
+                    )}
+                  </div>
                 </div>
               );
             })}

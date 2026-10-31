@@ -20,14 +20,16 @@ import { ReminderModal } from './ReminderModal';
 import { BupGoModal } from './BupGoModal';
 import { AnimatedBupLogo } from './AnimatedBupLogo';
 import { SecurityShieldModal } from './SecurityShieldModal';
+import { FacebookMessengerPopover, ChatThread } from './FacebookMessengerPopover';
 import { ShieldCheck } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  onSelectChat?: (chat: ChatThread) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
+export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelectChat }) => {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
@@ -35,6 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
   const [bupGoModalOpen, setBupGoModalOpen] = useState(false);
   const [securityModalOpen, setSecurityModalOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [messengerOpen, setMessengerOpen] = useState(false);
 
   const isFaculty = user?.role === 'faculty';
   const isAdmin = user?.role === 'admin';
@@ -95,6 +98,32 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
             >
               {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
             </button>
+
+            {/* Facebook Messenger Dropdown (User Screenshot Req) */}
+            <div className="relative">
+              <button
+                onClick={() => setMessengerOpen(!messengerOpen)}
+                className={`p-2 rounded-xl transition-colors relative ${
+                  messengerOpen
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-bup-700 dark:hover:text-bup-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+                title="Chats"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-blue-600 ring-2 ring-white dark:ring-slate-900" />
+              </button>
+
+              <FacebookMessengerPopover
+                isOpen={messengerOpen}
+                onClose={() => setMessengerOpen(false)}
+                onSelectChat={(thread) => {
+                  if (onSelectChat) onSelectChat(thread);
+                  else setActiveTab('messages');
+                }}
+                onOpenFullMessenger={() => setActiveTab('messages')}
+              />
+            </div>
 
             {/* User Profile Pill */}
             <div className="relative">

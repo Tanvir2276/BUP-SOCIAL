@@ -1,0 +1,398 @@
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  X,
+  Minus,
+  Phone,
+  Video,
+  Smile,
+  Image as ImageIcon,
+  Send,
+  ThumbsUp,
+  Paperclip,
+  Maximize2,
+  Lock,
+} from 'lucide-react';
+import { ChatThread } from './FacebookMessengerPopover';
+import { useAuth } from '../context/AuthContext';
+
+interface FloatingMessengerChatProps {
+  chat: ChatThread | null;
+  onClose: () => void;
+  onMaximize: () => void;
+}
+
+interface MessageItem {
+  id: string;
+  senderId: string;
+  senderName: string;
+  content: string;
+  timestamp: string;
+  type?: 'text' | 'image' | 'sticker';
+}
+
+const EMOJI_PRESETS = ['👍', '❤️', '😂', '🔥', '🎓', '💻', '👏', '🎉'];
+
+const STICKER_PRESETS = [
+  { id: 'like', emoji: '👍', label: 'Like' },
+  { id: 'love', emoji: '❤️', label: 'Love' },
+  { id: 'grad', emoji: '🎓', label: 'BUP Grad' },
+  { id: 'code', emoji: '💻', label: 'Code Lab' },
+  { id: 'fire', emoji: '🔥', label: 'Fire' },
+];
+
+export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
+  chat,
+  onClose,
+  onMaximize,
+}) => {
+  const { user } = useAuth();
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [inputText, setInputText] = useState('');
+  const [messages, setMessages] = useState<MessageItem[]>([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showStickers, setShowStickers] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  // Initialize conversation messages from localStorage or defaults
+  useEffect(() => {
+    if (!chat) return;
+
+    const storageKey = `bupsoc_chat_${chat.id}`;
+    const stored = localStorage.getItem(storageKey);
+    if (stored) {
+      try {
+        setMessages(JSON.parse(stored));
+      } catch (e) {
+        setMessages([]);
+      }
+    } else {
+      // Default realistic starter messages
+      const initial: MessageItem[] = [
+        {
+          id: 'm1',
+          senderId: chat.id,
+          senderName: chat.name,
+          content: chat.lastMessage.includes('·')
+            ? 'Salam! Did you check the updated schedule in Routine Hub?'
+            : chat.lastMessage,
+          timestamp: '10:45 AM',
+        },
+      ];
+      setMessages(initial);
+      localStorage.setItem(storageKey, JSON.stringify(initial));
+    }
+  }, [chat?.id]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  if (!chat) return null;
+
+  const handleSendMessage = (textToSend?: string, type: 'text' | 'image' | 'sticker' = 'text') => {
+    const text = (textToSend || inputText).trim();
+    if (!text) return;
+
+    const newMsg: MessageItem = {
+      id: 'msg-' + Date.now(),
+      senderId: user?.id || 'me',
+      senderName: user?.name || 'You',
+      content: text,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      type,
+    };
+
+    const updated = [...messages, newMsg];
+    setMessages(updated);
+    setInputText('');
+    setShowEmojiPicker(false);
+    setShowStickers(false);
+
+    const storageKey = `bupsoc_chat_${chat.id}`;
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+
+    // Simulated Smart Reply from Faculty / Student Contact
+    setTimeout(() => {
+      let replyContent = 'Received! Thank you for the update. Let me check and get back to you.';
+      if (chat.role === 'faculty') {
+        replyContent = 'Noted. Please make sure to review the lecture notes and lab exercise guidelines on the Academics Hub.';
+      } else if (text.toLowerCase().includes('routine') || text.toLowerCase().includes('class')) {
+        replyContent = 'Yeah, check the Routine Hub tab! Room ST 504 and LAB1 Annex timings are updated.';
+      } else if (text.toLowerCase().includes('note') || text.toLowerCase().includes('pdf')) {
+        replyContent = 'You can download the PDF directly from the Course Materials Hub under Routines!';
+      }
+
+      const replyMsg: MessageItem = {
+        id: 'reply-' + Date.now(),
+        senderId: chat.id,
+        senderName: chat.name,
+        content: replyContent,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        type: 'text',
+      };
+
+      const finalMessages = [...updated, replyMsg];
+      setMessages(finalMessages);
+      localStorage.setItem(storageKey, JSON.stringify(finalMessages));
+    }, 1200);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result as string;
+      handleSendMessage(dataUrl, 'image');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Minimized Floating Chat Head Bubble
+  if (isMinimized) {
+    return (
+      <div
+        onClick={() => setIsMinimized(false)}
+        className="fixed bottom-5 right-6 z-50 cursor-pointer group animate-in slide-in-from-bottom duration-200"
+      >
+        <div className="relative">
+          <img
+            src={chat.avatar}
+            alt={chat.name}
+            className="w-14 h-14 rounded-full object-cover border-2 border-blue-500 shadow-2xl hover:scale-105 transition-transform"
+          />
+          <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#31a24c] ring-2 ring-white dark:ring-slate-900" />
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-slate-800 text-white flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed bottom-0 right-4 sm:right-8 z-50 w-[330px] sm:w-[360px] h-[450px] bg-[#242526] rounded-t-2xl shadow-2xl border border-white/10 flex flex-col overflow-hidden font-sans animate-in slide-in-from-bottom duration-200">
+      {/* 1. Header: Avatar + Name + Video/Audio Call + Minimize + Close */}
+      <div className="px-3 py-2.5 bg-[#242526] border-b border-white/10 flex items-center justify-between text-white shadow-sm">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="relative shrink-0">
+            <img src={chat.avatar} alt={chat.name} className="w-9 h-9 rounded-full object-cover" />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#31a24c] ring-2 ring-[#242526]" />
+          </div>
+
+          <div className="min-w-0">
+            <h4 className="font-bold text-sm text-[#e4e6eb] truncate leading-tight">{chat.name}</h4>
+            <p className="text-[10px] text-[#31a24c] font-medium leading-tight">Active now</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1 text-[#2d88ff]">
+          <button
+            type="button"
+            onClick={() => alert(`Initiating secure audio call with ${chat.name}...`)}
+            className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#b0b3b8] hover:text-[#2d88ff]"
+            title="Audio call"
+          >
+            <Phone className="w-4 h-4" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => alert(`Starting video call with ${chat.name}...`)}
+            className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#b0b3b8] hover:text-[#2d88ff]"
+            title="Video call"
+          >
+            <Video className="w-4 h-4" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsMinimized(true)}
+            className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#b0b3b8] hover:text-white"
+            title="Minimize"
+          >
+            <Minus className="w-4 h-4" />
+          </button>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#b0b3b8] hover:text-white"
+            title="Close chat"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* 2. Messages Body */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-[#18191a]">
+        <div className="text-center py-2">
+          <img src={chat.avatar} alt="" className="w-14 h-14 rounded-full mx-auto mb-1.5 object-cover" />
+          <p className="font-bold text-xs text-[#e4e6eb]">{chat.name}</p>
+          <p className="text-[10px] text-[#b0b3b8]">{chat.department}</p>
+          <span className="text-[9px] text-[#2d88ff] font-mono mt-0.5 inline-block">
+            End-to-End Encrypted (AES-256)
+          </span>
+        </div>
+
+        {messages.map((m) => {
+          const isMe = m.senderId === user?.id || m.senderId === 'me';
+
+          return (
+            <div key={m.id} className={`flex items-end gap-2 ${isMe ? 'justify-end' : 'justify-start'}`}>
+              {!isMe && (
+                <img src={chat.avatar} alt="" className="w-7 h-7 rounded-full object-cover shrink-0 mb-1" />
+              )}
+
+              <div className="max-w-[78%]">
+                {m.type === 'image' ? (
+                  <div className="rounded-2xl overflow-hidden border border-white/10 shadow-md">
+                    <img src={m.content} alt="Attachment" className="max-h-48 object-cover w-full" />
+                  </div>
+                ) : m.type === 'sticker' ? (
+                  <div className="text-4xl py-1">{m.content}</div>
+                ) : (
+                  <div
+                    className={`px-3.5 py-2 rounded-2xl text-xs leading-relaxed ${
+                      isMe
+                        ? 'bg-[#0084ff] text-white rounded-br-sm'
+                        : 'bg-[#3a3b3c] text-[#e4e6eb] rounded-bl-sm'
+                    }`}
+                  >
+                    {m.content}
+                  </div>
+                )}
+                <span className="text-[9px] text-[#b0b3b8] px-1 mt-0.5 block text-right font-mono">
+                  {m.timestamp}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Emoji / Sticker Trays */}
+      {showEmojiPicker && (
+        <div className="p-2 bg-[#242526] border-t border-white/10 flex items-center justify-around text-lg">
+          {EMOJI_PRESETS.map((emoji) => (
+            <button
+              key={emoji}
+              type="button"
+              onClick={() => handleSendMessage(emoji, 'text')}
+              className="hover:scale-125 transition-transform p-1"
+            >
+              {emoji}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {showStickers && (
+        <div className="p-2 bg-[#242526] border-t border-white/10 flex items-center justify-around text-2xl">
+          {STICKER_PRESETS.map((stk) => (
+            <button
+              key={stk.id}
+              type="button"
+              onClick={() => handleSendMessage(stk.emoji, 'sticker')}
+              className="hover:scale-125 transition-transform p-1"
+              title={stk.label}
+            >
+              {stk.emoji}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* 3. Input Toolbar: Plus, Photo, Sticker, Input "Aa", Thumbs Up */}
+      <div className="p-2.5 bg-[#242526] border-t border-white/10 flex items-center gap-1.5 text-[#2d88ff]">
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImageUpload}
+          accept="image/*"
+          className="hidden"
+          id="chatbox-file-upload"
+        />
+
+        {/* Photo Upload Icon */}
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#b0b3b8] hover:text-[#2d88ff]"
+          title="Attach a photo"
+        >
+          <ImageIcon className="w-4 h-4" />
+        </button>
+
+        {/* Sticker Icon */}
+        <button
+          type="button"
+          onClick={() => {
+            setShowStickers(!showStickers);
+            setShowEmojiPicker(false);
+          }}
+          className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#b0b3b8] hover:text-[#2d88ff]"
+          title="Choose a sticker"
+        >
+          <span className="text-sm">👾</span>
+        </button>
+
+        {/* Text Input Field with Aa placeholder */}
+        <div className="flex-1 relative flex items-center">
+          <input
+            type="text"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSendMessage();
+            }}
+            placeholder="Aa"
+            className="w-full pl-3 pr-8 py-1.5 rounded-full bg-[#3a3b3c] text-white placeholder-[#b0b3b8] text-xs outline-none focus:ring-1 focus:ring-blue-500"
+          />
+
+          <button
+            type="button"
+            onClick={() => {
+              setShowEmojiPicker(!showEmojiPicker);
+              setShowStickers(false);
+            }}
+            className="absolute right-2.5 text-[#b0b3b8] hover:text-[#2d88ff]"
+          >
+            <Smile className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Send Arrow OR Facebook Thumbs Up */}
+        {inputText.trim() ? (
+          <button
+            type="button"
+            onClick={() => handleSendMessage()}
+            className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#2d88ff]"
+            title="Send"
+          >
+            <Send className="w-4 h-4" />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => handleSendMessage('👍', 'sticker')}
+            className="p-1.5 hover:bg-[#3a3b3c] rounded-full text-[#2d88ff] hover:scale-110 transition-transform"
+            title="Send a Like"
+          >
+            <ThumbsUp className="w-4 h-4 fill-[#2d88ff]" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
