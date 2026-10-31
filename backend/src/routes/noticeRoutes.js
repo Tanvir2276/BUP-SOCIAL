@@ -98,16 +98,24 @@ router.post('/', authenticateToken, requireFacultyOrAdmin, async (req, res) => {
     const scopeKey = (scope || 'SECTION').toUpperCase();
     const urgKey = (urgency || 'NORMAL').toUpperCase();
 
+    const VALID_CATEGORIES = ['GENERAL', 'DEPARTMENT', 'COURSE', 'SECTION', 'EXAM', 'CLASS_CANCEL', 'ASSIGNMENT', 'ROUTINE'];
+    const VALID_SCOPES = ['ALL', 'DEPARTMENT', 'COURSE', 'SECTION', 'CAMPUS'];
+    const VALID_URGENCIES = ['NORMAL', 'IMPORTANT', 'CRITICAL', 'URGENT'];
+
+    const safeCategory = VALID_CATEGORIES.includes(catKey) ? catKey : 'GENERAL';
+    const safeScope = VALID_SCOPES.includes(scopeKey) ? scopeKey : 'SECTION';
+    const safeUrgency = VALID_URGENCIES.includes(urgKey) ? urgKey : 'NORMAL';
+
     const notice = await prisma.facultyNotice.create({
       data: {
         title,
         content,
-        category: catKey in prisma.NoticeCategory ? catKey : 'GENERAL',
-        scope: scopeKey in prisma.NoticeScope ? scopeKey : 'SECTION',
+        category: safeCategory,
+        scope: safeScope,
         departmentCode: (departmentCode || 'ICT').toUpperCase(),
         courseCode: (courseCode || 'ALL').toUpperCase(),
         sectionName: sectionName || 'ALL',
-        urgency: urgKey in prisma.UrgencyLevel ? urgKey : 'NORMAL',
+        urgency: safeUrgency,
         attachmentName: attachmentName || null,
         attachmentUrl: attachmentUrl || null,
         authorId: req.user.id,

@@ -24,6 +24,8 @@ export const Register: React.FC<RegisterProps> = ({ onNavigateLogin }) => {
   const [role, setRole] = useState<'student' | 'faculty'>('student');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('01769021800');
+  const [otpChannel, setOtpChannel] = useState<'email' | 'phone'>('email');
   const [password, setPassword] = useState('');
   const [studentId, setStudentId] = useState('');
   const [facultyId, setFacultyId] = useState('');
@@ -40,7 +42,7 @@ export const Register: React.FC<RegisterProps> = ({ onNavigateLogin }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !password) {
+    if (!name || !email || !password || (otpChannel === 'phone' && !phone)) {
       setError('Please fill in all mandatory fields.');
       return;
     }
@@ -52,6 +54,8 @@ export const Register: React.FC<RegisterProps> = ({ onNavigateLogin }) => {
       const res = await register({
         name,
         email,
+        phone,
+        otpChannel,
         password,
         role,
         studentId: role === 'student' ? studentId || '24549010064' : undefined,
@@ -63,7 +67,7 @@ export const Register: React.FC<RegisterProps> = ({ onNavigateLogin }) => {
       });
 
       if (res.requiresOtp) {
-        setDemoCode(res.demoOtpCode || '');
+        setDemoCode(res.demoOtpCode || '245064');
         setOtpModalOpen(true);
       }
     } catch (err: any) {
@@ -81,6 +85,8 @@ export const Register: React.FC<RegisterProps> = ({ onNavigateLogin }) => {
     const res = await register({
       name,
       email,
+      phone,
+      otpChannel,
       password,
       role,
       studentId,
@@ -148,6 +154,40 @@ export const Register: React.FC<RegisterProps> = ({ onNavigateLogin }) => {
             </div>
           </div>
 
+          {/* OTP Verification Method Selector (User Requirement #2) */}
+          <div>
+            <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              Select OTP Delivery Channel
+            </label>
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <button
+                type="button"
+                onClick={() => setOtpChannel('email')}
+                className={`py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                  otpChannel === 'email'
+                    ? 'bg-bup-700 text-white border-bup-700 shadow-sm'
+                    : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                }`}
+              >
+                <Mail className="w-4 h-4" />
+                <span>BUP Email OTP</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setOtpChannel('phone')}
+                className={`py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                  otpChannel === 'phone'
+                    ? 'bg-bup-700 text-white border-bup-700 shadow-sm'
+                    : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                }`}
+              >
+                <span className="text-base">📱</span>
+                <span>Mobile SMS OTP</span>
+              </button>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">BUP Email</label>
@@ -165,18 +205,35 @@ export const Register: React.FC<RegisterProps> = ({ onNavigateLogin }) => {
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Password</label>
+              <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                {otpChannel === 'phone' ? 'Mobile Number (SMS)' : 'Contact Number'}
+              </label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <span className="text-xs text-slate-400 absolute left-3.5 top-3 font-semibold">+880</span>
                 <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
-                  required
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="17XXXXXXXX"
+                  className="w-full pl-14 pr-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                  required={otpChannel === 'phone'}
                 />
               </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Password</label>
+            <div className="relative">
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-bup-600"
+                required
+              />
             </div>
           </div>
 
@@ -268,6 +325,8 @@ export const Register: React.FC<RegisterProps> = ({ onNavigateLogin }) => {
       <OtpModal
         isOpen={otpModalOpen}
         email={email}
+        phoneNumber={`+880 ${phone}`}
+        deliveryChannel={otpChannel}
         demoOtpCode={demoCode}
         onClose={() => setOtpModalOpen(false)}
         onVerify={handleVerifyOtp}

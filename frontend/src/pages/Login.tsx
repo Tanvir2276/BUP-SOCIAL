@@ -185,21 +185,43 @@ export const Login: React.FC<LoginProps> = ({ onNavigateRegister }) => {
           </button>
         </form>
 
-        {/* 6 Demo Fast-Login Accounts */}
+        {/* Demo Fast-Login Accounts with Category Filter */}
         <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800">
           <div className="flex items-center justify-between mb-2.5">
             <p className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-spin" /> 1-Click Demo Accounts (Dean, Faculty & Student CRs):
+              <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-spin" /> 1-Click Demo Accounts (Faculty & Students):
             </p>
-            <span className="text-[10px] text-slate-400 font-mono">BUP FST Verified</span>
+            <span className="text-[10px] text-slate-400 font-mono">BUP FST Official</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px]">
-            {/* Account 1: Dean FST */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] max-h-72 overflow-y-auto pr-1">
+            {/* Account: Chairman ICT */}
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('chairman.ict@bup.edu.bd', 'faculty123', 'faculty')}
+              className="btn-motion p-2.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/40 hover:bg-amber-100 border border-amber-300 dark:border-amber-800 text-left transition-all col-span-1 sm:col-span-2 shadow-sm"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-extrabold text-amber-950 dark:text-amber-100">
+                  Col Mohammed Omar Faruque, PhD
+                </span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-200 text-amber-900 dark:bg-amber-900/60 dark:text-amber-300">
+                  Chairman, Dept of ICT
+                </span>
+              </div>
+              <span className="text-amber-800/90 dark:text-amber-400 block mt-0.5">
+                MATH-2207, MATH-1205 Course Head • Routine & Academic Lead
+              </span>
+              <span className="text-[9px] font-mono text-amber-700 dark:text-amber-300">
+                chairman.ict@bup.edu.bd • faculty123
+              </span>
+            </button>
+
+            {/* Account: Dean FST */}
             <button
               type="button"
               onClick={() => handleQuickDemo('dean.fst@bup.edu.bd', 'faculty123', 'faculty')}
-              className="btn-motion p-2.5 rounded-xl bg-purple-50/70 dark:bg-purple-950/30 hover:bg-purple-100/80 dark:hover:bg-purple-900/40 border border-purple-200 dark:border-purple-800/60 text-left transition-all col-span-1 sm:col-span-2"
+              className="btn-motion p-2.5 rounded-xl bg-purple-50/70 dark:bg-purple-950/30 hover:bg-purple-100/80 border border-purple-200 dark:border-purple-800/60 text-left transition-all col-span-1 sm:col-span-2"
             >
               <div className="flex items-center justify-between">
                 <span className="font-extrabold text-purple-950 dark:text-purple-100">
@@ -217,39 +239,71 @@ export const Login: React.FC<LoginProps> = ({ onNavigateRegister }) => {
               </span>
             </button>
 
-            {/* Account 2: Dr. Sabir Hossain */}
-            <button
-              type="button"
-              onClick={() => handleQuickDemo('sabir@bup.edu.bd', 'faculty123', 'faculty')}
-              className="btn-motion p-2.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 hover:bg-amber-100/80 dark:hover:bg-amber-900/40 border border-amber-200 dark:border-amber-800/60 hover:border-amber-300 text-left transition-all"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-extrabold text-amber-950 dark:text-amber-100">Dr. Md. Sabir Hossain</span>
-                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-200 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300">
-                  Dept Chairman
-                </span>
-              </div>
-              <span className="text-amber-800/80 dark:text-amber-400 block mt-0.5">Chairman, Dept of CSE (FST)</span>
-              <span className="text-[9px] font-mono text-amber-700 dark:text-amber-300">sabir@bup.edu.bd • faculty123</span>
-            </button>
-
-            {/* Account 3: Asst. Prof. Nazneen */}
+            {/* Account: Asst. Prof. Nazneen Akhter */}
             <button
               type="button"
               onClick={() => handleQuickDemo('nazneen@bup.edu.bd', 'faculty123', 'faculty')}
-              className="btn-motion p-2.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 hover:bg-amber-100/80 dark:hover:bg-amber-900/40 border border-amber-200 dark:border-amber-800/60 hover:border-amber-300 text-left transition-all"
+              className="btn-motion p-2.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 hover:bg-amber-100/80 border border-amber-200 dark:border-amber-800/60 hover:border-amber-300 text-left transition-all"
             >
               <div className="flex items-center justify-between">
                 <span className="font-extrabold text-amber-950 dark:text-amber-100">Asst. Prof. Nazneen</span>
                 <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-200 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300">
-                  Supervisor
+                  Faculty (ICE-3207)
                 </span>
               </div>
-              <span className="text-amber-800/80 dark:text-amber-400 block mt-0.5">Dept of ICT Coordinator</span>
+              <span className="text-amber-800/80 dark:text-amber-400 block mt-0.5">Software & Req Engineering</span>
               <span className="text-[9px] font-mono text-amber-700 dark:text-amber-300">nazneen@bup.edu.bd • faculty123</span>
             </button>
 
-            {/* Account 4: Rafi */}
+            {/* Account: Prof. Fahima Tabassum */}
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('fahima@bup.edu.bd', 'faculty123', 'faculty')}
+              className="btn-motion p-2.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 hover:bg-amber-100/80 border border-amber-200 dark:border-amber-800/60 hover:border-amber-300 text-left transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-extrabold text-amber-950 dark:text-amber-100">Prof. Dr. Fahima Tabassum</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-200 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300">
+                  Faculty (ICE-4101)
+                </span>
+              </div>
+              <span className="text-amber-800/80 dark:text-amber-400 block mt-0.5">Software Testing & QA</span>
+              <span className="text-[9px] font-mono text-amber-700 dark:text-amber-300">fahima@bup.edu.bd • faculty123</span>
+            </button>
+
+            {/* Account: Lec. Adnan Palash */}
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('adnan@bup.edu.bd', 'faculty123', 'faculty')}
+              className="btn-motion p-2.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 hover:bg-amber-100/80 border border-amber-200 dark:border-amber-800/60 hover:border-amber-300 text-left transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-extrabold text-amber-950 dark:text-amber-100">Lec. Istakiak Adnan</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-200 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300">
+                  Faculty (ICE-3205)
+                </span>
+              </div>
+              <span className="text-amber-800/80 dark:text-amber-400 block mt-0.5">Web Technologies Lab</span>
+              <span className="text-[9px] font-mono text-amber-700 dark:text-amber-300">adnan@bup.edu.bd • faculty123</span>
+            </button>
+
+            {/* Account: Lec Samia Ahmed */}
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('samia@bup.edu.bd', 'faculty123', 'faculty')}
+              className="btn-motion p-2.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 hover:bg-amber-100/80 border border-amber-200 dark:border-amber-800/60 hover:border-amber-300 text-left transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-extrabold text-amber-950 dark:text-amber-100">Lec Samia Ahmed</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-200 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300">
+                  Faculty (ICE-2201)
+                </span>
+              </div>
+              <span className="text-amber-800/80 dark:text-amber-400 block mt-0.5">Data Structures & Algos</span>
+              <span className="text-[9px] font-mono text-amber-700 dark:text-amber-300">samia@bup.edu.bd • faculty123</span>
+            </button>
+
+            {/* Student 1: Rafi (BICE-2024 CR) */}
             <button
               type="button"
               onClick={() => handleQuickDemo('rafi@bup.edu.bd', 'bup123', 'student')}
@@ -261,11 +315,11 @@ export const Login: React.FC<LoginProps> = ({ onNavigateRegister }) => {
                   Student CR
                 </span>
               </div>
-              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">B.Sc. in ICT • Section A</span>
+              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">BICE-2024 • Section A (3rd Yr)</span>
               <span className="text-[9px] font-mono text-blue-600 dark:text-blue-400">rafi@bup.edu.bd • bup123</span>
             </button>
 
-            {/* Account 5: Tanvir */}
+            {/* Student 2: Tanvir (BICE-2024 Lead) */}
             <button
               type="button"
               onClick={() => handleQuickDemo('tanvir@bup.edu.bd', 'bup123', 'student')}
@@ -277,8 +331,40 @@ export const Login: React.FC<LoginProps> = ({ onNavigateRegister }) => {
                   Section B Lead
                 </span>
               </div>
-              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">B.Sc. in ICT • Section B</span>
+              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">BICE-2024 • Section B (3rd Yr)</span>
               <span className="text-[9px] font-mono text-blue-600 dark:text-blue-400">tanvir@bup.edu.bd • bup123</span>
+            </button>
+
+            {/* Student 3: Anika Tahsin (BICE-2025) */}
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('anika@bup.edu.bd', 'bup123', 'student')}
+              className="btn-motion p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50/80 dark:hover:bg-blue-950/40 border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 text-left transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-extrabold text-slate-900 dark:text-white">Anika Tahsin</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-teal-100 text-teal-700 dark:bg-teal-900/50 dark:text-teal-300">
+                  Student (2nd Yr)
+                </span>
+              </div>
+              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">BICE-2025 • Section A (2nd Yr)</span>
+              <span className="text-[9px] font-mono text-teal-600 dark:text-teal-400">anika@bup.edu.bd • bup123</span>
+            </button>
+
+            {/* Student 4: Sadia Rahman (BICE-2026) */}
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('sadia@bup.edu.bd', 'bup123', 'student')}
+              className="btn-motion p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50/80 dark:hover:bg-blue-950/40 border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 text-left transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-extrabold text-slate-900 dark:text-white">Sadia Rahman</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">
+                  Student (1st Yr)
+                </span>
+              </div>
+              <span className="text-slate-500 dark:text-slate-400 block mt-0.5">BICE-2026 • Section B (1st Yr)</span>
+              <span className="text-[9px] font-mono text-indigo-600 dark:text-indigo-400">sadia@bup.edu.bd • bup123</span>
             </button>
           </div>
         </div>

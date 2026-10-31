@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, CheckCircle2, RefreshCw, KeyRound, X, Sparkles } from 'lucide-react';
+import { Mail, Smartphone, CheckCircle2, RefreshCw, KeyRound, X, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface OtpModalProps {
   email: string;
+  phoneNumber?: string;
+  deliveryChannel?: 'email' | 'phone';
   demoOtpCode?: string;
   isOpen: boolean;
   onClose: () => void;
@@ -13,6 +15,8 @@ interface OtpModalProps {
 
 export const OtpModal: React.FC<OtpModalProps> = ({
   email,
+  phoneNumber,
+  deliveryChannel = 'email',
   demoOtpCode,
   isOpen,
   onClose,
@@ -23,7 +27,7 @@ export const OtpModal: React.FC<OtpModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [timer, setTimer] = useState(60);
-  const [currentDemoCode, setCurrentDemoCode] = useState(demoOtpCode || '');
+  const [currentDemoCode, setCurrentDemoCode] = useState(demoOtpCode || '245064');
 
   useEffect(() => {
     if (demoOtpCode) {
@@ -121,16 +125,18 @@ export const OtpModal: React.FC<OtpModalProps> = ({
         </button>
 
         <div className="w-14 h-14 rounded-2xl bg-bup-100 dark:bg-bup-900/40 flex items-center justify-center text-bup-700 dark:text-bup-300 mx-auto mb-4 shadow-inner">
-          <KeyRound className="w-8 h-8" />
+          {deliveryChannel === 'phone' ? <Smartphone className="w-8 h-8" /> : <KeyRound className="w-8 h-8" />}
         </div>
 
         <h3 className="text-xl font-bold text-center text-slate-900 dark:text-white mb-1">
-          Two-Factor OTP Verification
+          {deliveryChannel === 'phone' ? 'SMS OTP Mobile Verification' : 'BUP Email OTP Verification'}
         </h3>
         <p className="text-xs text-center text-slate-500 dark:text-slate-400 mb-5">
-          A 6-digit BUP authentication code was dispatched to:
+          {deliveryChannel === 'phone' ? 'A 6-digit authentication code was sent via SMS to:' : 'A 6-digit BUP authentication code was dispatched to:'}
           <br />
-          <span className="font-semibold text-slate-800 dark:text-slate-200">{email}</span>
+          <span className="font-bold text-slate-800 dark:text-slate-200">
+            {deliveryChannel === 'phone' ? (phoneNumber || '+880 17XXXXXXXX') : email}
+          </span>
         </p>
 
         {/* Demo Simulated Banner */}

@@ -103,6 +103,11 @@ router.post('/', authenticateToken, async (req, res) => {
     const commKey = (communityType || 'CAMPUS').toUpperCase();
     const mediaKey = (mediaType || 'TEXT').toUpperCase();
 
+    const VALID_COMMUNITIES = ['CAMPUS', 'DEPARTMENT', 'COURSE', 'CLUB', 'BATCH'];
+    const VALID_MEDIA = ['TEXT', 'IMAGE', 'VIDEO', 'REEL', 'NOTE'];
+    const safeCommunity = VALID_COMMUNITIES.includes(commKey) ? commKey : 'CAMPUS';
+    const safeMedia = VALID_MEDIA.includes(mediaKey) ? mediaKey : 'TEXT';
+
     const post = await prisma.post.create({
       data: {
         authorId: req.user.id,
@@ -112,9 +117,9 @@ router.post('/', authenticateToken, async (req, res) => {
         authorDepartment: req.user.departmentCode || null,
         authorBatch: req.user.batchName || null,
         authorStudentId: req.user.studentId || null,
-        communityType: commKey in prisma.CommunityType ? commKey : 'CAMPUS',
+        communityType: safeCommunity,
         communityTarget: communityTarget || 'General Campus',
-        mediaType: mediaKey in prisma.PostMediaType ? mediaKey : 'TEXT',
+        mediaType: safeMedia,
         mediaUrl: mediaUrl || null,
         attachmentName: attachmentName || null,
         attachmentUrl: attachmentUrl || null,
