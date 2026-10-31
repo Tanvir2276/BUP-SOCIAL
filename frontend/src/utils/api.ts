@@ -1,4 +1,4 @@
-const API_BASE = '/api';
+const API_BASE = (((import.meta as any).env?.VITE_API_URL as string) || '/api').replace(/\/+$/, '');
 
 export const getAuthToken = (): string | null => {
   return localStorage.getItem('bupsoc_token');
@@ -23,7 +23,8 @@ export const apiFetch = async <T = any>(endpoint: string, options: RequestInit =
     (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE}${endpoint}`, {
+  const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const response = await fetch(`${API_BASE}${normalizedEndpoint}`, {
     ...options,
     headers,
   });
