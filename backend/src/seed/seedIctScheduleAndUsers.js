@@ -76,6 +76,17 @@ async function seedIctScheduleAndUsers() {
       bio: 'Instructor: Optical Communication (ICE-4105).',
     },
     {
+      name: 'Suman Saha',
+      email: 'suman.saha@bup.edu.bd',
+      role: 'FACULTY',
+      facultyId: 'FAC-ICT-SUMAN-01',
+      designation: 'Assistant Professor, Department of ICT',
+      departmentCode: 'ICT',
+      isVerified: true,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+      bio: 'Assistant Professor at BUP. Teaching Software & Requirement Engineering (SRE), Web Technology (WT), and Embedded Systems.',
+    },
+    {
       name: 'Lecturer Md. Appel Mahmud Pranto',
       email: 'pranto@bup.edu.bd',
       role: 'FACULTY',

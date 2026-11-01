@@ -717,37 +717,62 @@ const MASTER_ICT_ROUTINE: RoutineSlot[] = [
   },
 ];
 
-// Official Study Materials Available for Instant Download (User Req #4)
+// Official Study Materials Available for Instant Download (User Req #4, #5, #6)
 const OFFICIAL_STUDY_MATERIALS = [
   {
+    id: 'mat-sre-hw',
+    courseCode: 'ICE-3201',
+    courseTitle: 'Software and Requirement Engineering (SRE)',
+    author: 'Asst. Prof. Nazneen Akhter / Asst. Prof. Suman Saha',
+    fileTitle: 'Lecture 2 SDLC & IEEE Code of Ethics Handwritten Study Guide.jpg',
+    size: '2.4 MB',
+    type: 'Handwritten Illustrated Note',
+    fileUrl: '/notes/SRE/handwritten/Lecture_2_SDLC_Study_Notes.jpg',
+    downloads: 712,
+  },
+  {
     id: 'mat-1',
-    courseCode: 'ICE-3207',
-    courseTitle: 'Software and Requirement Engineering',
+    courseCode: 'ICE-3201',
+    courseTitle: 'Software and Requirement Engineering (SRE)',
     author: 'Asst. Prof. Nazneen Akter',
-    fileTitle: 'IEEE 830-1998 Standard SRS Template & Agile User Story Guide.pdf',
-    size: '3.4 MB',
-    type: 'PDF Document',
-    downloads: 412,
+    fileTitle: 'Lecture 1: Software Development Life Cycle (SDLC) Slides.pdf',
+    size: '502 KB',
+    type: 'Official Lecture Slide',
+    fileUrl: '/notes/SRE/Lec_1SDLC.pdf',
+    downloads: 580,
   },
   {
     id: 'mat-2',
     courseCode: 'ICE-3205',
-    courseTitle: 'Web Technologies',
-    author: 'Lec. Md. Istakiak Adnan Palash',
-    fileTitle: 'Session 4: Node.js Express REST API & MySQL Connection Pooling.pdf',
-    size: '2.1 MB',
-    type: 'PDF / Code Pack',
-    downloads: 539,
+    courseTitle: 'Web Technologies (WT)',
+    author: 'Lec. Md. Istakiak Adnan Palash / Asst. Prof. Suman Saha',
+    fileTitle: 'Lecture 1: Internet Architecture, HTTP & HTTPS Protocol.pdf',
+    size: '1.5 MB',
+    type: 'PDF Lecture Slides',
+    fileUrl: '/notes/WT/1.IntroductiontoInternetandHTTP.pdf',
+    downloads: 645,
   },
   {
     id: 'mat-3',
-    courseCode: 'ICE-3201',
-    courseTitle: 'Microprocessor and Computer Architecture',
+    courseCode: 'ICE-3203',
+    courseTitle: 'Microprocessor and Computer Architecture (MCA)',
     author: 'Prof. Dr. Mosabber Uddin Ahmed',
-    fileTitle: 'Intel 8086 Instruction Set Architecture & Memory Segmentation Slides.pdf',
-    size: '4.8 MB',
+    fileTitle: 'ICE 3203 Lecture 1 Part 1: Microprocessor Architecture Overview.pdf',
+    size: '639 KB',
     type: 'PDF Lecture Slides',
-    downloads: 388,
+    fileUrl: '/notes/MCA/ICE%203203_Lecture1_part1.pdf',
+    downloads: 520,
+  },
+  {
+    id: 'mat-mea',
+    courseCode: 'ICE-3204',
+    courseTitle: 'Microwave Engineering and Antenna (MEA)',
+    author: 'Prof. Dr. Md. Zulfiker Mahmud',
+    fileTitle: 'Complete MEA Comprehensive Handwritten Class Note (Up to Mid-Term).pdf',
+    size: '11.5 MB',
+    type: 'Complete Handout Note',
+    fileUrl: '/notes/MEA/MEA%20note%20(upto%20mid).pdf',
+    downloads: 890,
   },
   {
     id: 'mat-4',
@@ -1480,22 +1505,33 @@ export const Routines: React.FC = () => {
                 <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
                   <span className="text-[11px] text-slate-400">{mat.size} • {mat.downloads} downloads</span>
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      generateAndDownloadNoteDocument({
-                        title: mat.courseTitle,
-                        courseCode: mat.courseCode,
-                        courseTitle: mat.courseTitle,
-                        facultyName: mat.author,
-                        department: 'Department of ICT (FST)',
-                      })
-                    }
-                    className="btn-motion btn-bup-gold px-3.5 py-1.5 rounded-xl font-bold flex items-center gap-1.5 shadow-sm text-xs"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Download Note</span>
-                  </button>
+                  {(mat as any).fileUrl ? (
+                    <a
+                      href={(mat as any).fileUrl}
+                      download={mat.fileTitle}
+                      className="btn-motion btn-bup-gold px-3.5 py-1.5 rounded-xl font-bold flex items-center gap-1.5 shadow-sm text-xs"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Download Note</span>
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        generateAndDownloadNoteDocument({
+                          title: mat.courseTitle,
+                          courseCode: mat.courseCode,
+                          courseTitle: mat.courseTitle,
+                          facultyName: mat.author,
+                          department: 'Department of ICT (FST)',
+                        })
+                      }
+                      className="btn-motion btn-bup-gold px-3.5 py-1.5 rounded-xl font-bold flex items-center gap-1.5 shadow-sm text-xs"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Download Note</span>
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

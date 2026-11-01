@@ -147,6 +147,100 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
+// 2.1 Edit / Update Post (User Requirement: Anyone can edit their own post)
+router.put('/:id', authenticateToken, async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const { title, content, communityTarget, tags, imageUrl, mediaType } = req.body;
+
+    const existingPost = await prisma.post.findUnique({ where: { id: postId } });
+    if (!existingPost) {
+      return res.status(404).json({ success: false, message: 'Post not found.' });
+    }
+
+    // Check authorization: author or faculty/admin
+    const isAuthor = existingPost.authorId === req.user.id;
+    const isPrivileged = req.user.role === 'FACULTY' || req.user.role === 'ADMIN';
+
+    if (!isAuthor && !isPrivileged) {
+      return res.status(403).json({ success: false, message: 'Unauthorized to edit this post.' });
+    }
+
+    const updatedPost = await prisma.post.update({
+      where: { id: postId },
+      data: {
+        ...(title && { title }),
+        ...(content && { content }),
+        ...(communityTarget && { communityTarget }),
+        ...(tags && { tags: JSON.stringify(tags) }),
+        ...(imageUrl !== undefined && { imageUrl }),
+        ...(mediaType && { mediaType }),
+      },
+      include: {
+        comments: { orderBy: { createdAt: 'asc' } },
+        reactions: true,
+      },
+    });
+
+    res.json({
+      success: true,
+      message: 'Post updated successfully!',
+      post: {
+        _id: updatedPost.id,
+        id: updatedPost.id,
+        ...updatedPost,
+        tags: updatedPost.tags ? JSON.parse(updatedPost.tags) : [],
+        comments: updatedPost.comments.map((c) => ({
+          _id: c.id,
+          id: c.id,
+          authorId: c.authorId,
+          authorName: c.authorName,
+          authorRole: c.authorRole.toLowerCase(),
+          authorAvatar: c.authorAvatar,
+          content: c.content,
+          createdAt: c.createdAt,
+        })),
+        likes: updatedPost.reactions.map((r) => ({ userId: r.userId })),
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// 2.2 Delete Post (User Requirement: Anyone can delete their own post)
+router.delete('/:id', authenticateToken, async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    const existingPost = await prisma.post.findUnique({ where: { id: postId } });
+    if (!existingPost) {
+      return res.status(404).json({ success: false, message: 'Post not found.' });
+    }
+
+    // Check authorization: author or faculty/admin
+    const isAuthor = existingPost.authorId === req.user.id;
+    const isPrivileged = req.user.role === 'FACULTY' || req.user.role === 'ADMIN';
+
+    if (!isAuthor && !isPrivileged) {
+      return res.status(403).json({ success: false, message: 'Unauthorized to delete this post.' });
+    }
+
+    // Delete comments and reactions first
+    await prisma.comment.deleteMany({ where: { postId } });
+    await prisma.reaction.deleteMany({ where: { postId } });
+    await prisma.post.delete({ where: { id: postId } });
+
+    res.json({
+      success: true,
+      message: 'Post deleted successfully from database!',
+      deletedPostId: postId,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // 3. Teacher Requirement: Add Comment
 router.post('/:id/comments', authenticateToken, async (req, res) => {
   try {

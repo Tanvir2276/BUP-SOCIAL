@@ -27,10 +27,12 @@ import {
   ShieldCheck,
   Compass,
   X,
+  Edit3,
 } from 'lucide-react';
 import { apiFetch } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { CreatePostModal } from '../components/CreatePostModal';
+import { EditPostModal } from '../components/EditPostModal';
 
 // Interactive Facebook-Style Reaction definitions
 const REACTIONS = [
@@ -53,6 +55,7 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [mediaFilter, setMediaFilter] = useState('ALL'); // ALL, NOTE, REEL, VIDEO, IMAGE
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [editingPost, setEditingPost] = useState<any | null>(null);
 
   // Active comment inputs per post ID
   const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
@@ -141,6 +144,50 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
 
   // Default initial authentic BUP campus posts
   const DEFAULT_INITIAL_POSTS = [
+    {
+      _id: 'post-midterm-notes-published-32',
+      id: 'post-midterm-notes-published-32',
+      title: '📢 Official 3.2 Mid-Term Study Notes & Question Bank Published: MCA, MEA, SRE & WT! 📚🎓',
+      content: `Dear 3rd Year ICT & CSE scholars,
+
+The official academic study repositories for 3.2 Mid-Term examinations have been published to the Academics Notes Hub:
+
+1. SRE (ICE-3201): Software Development Life Cycle (SDLC), IEEE 830 SRS Guide, IEEE Code of Ethics, Agile User Stories, and 5 Illustrated Handwritten Study Sheets!
+2. WT (ICE-3205): Internet Architecture, HTML5/CSS3 Box Model, CT-1 & CT-2 Solved Papers, and Practice Problem Sets.
+3. MCA (ICE-3203): Microprocessor 8086 Architecture, Bus Interface, Addressing Modes, Instruction Set & 8255 PPI Interface.
+4. MEA (ICE-3204): Microwave Waveguides, TE/TM Modes, Antenna Radiation Patterns & 11.5 MB Comprehensive Handwritten Class Note!
+
+All 69 files are available for preview and 1-click download in Academics -> "Mid-Term Notes Hub (3.2)". Best of luck with your preparation!`,
+      communityType: 'DEPARTMENT',
+      communityTarget: 'Department of ICT',
+      mediaType: 'NOTE',
+      imageUrl: '/notes/SRE/handwritten/Lecture_2_SDLC_Study_Notes.jpg',
+      attachmentName: 'SRE_Lecture_2_SDLC_Study_Notes.jpg',
+      attachmentUrl: '/notes/SRE/handwritten/Lecture_2_SDLC_Study_Notes.jpg',
+      tags: ['#BUPNotes', '#MidTerm2026', '#SRE', '#WebTech', '#MCA', '#MEA', '#FSTFaculty'],
+      createdAt: new Date().toISOString(),
+      author: {
+        id: 'fac-ict-suman-saha',
+        name: 'Suman Saha',
+        role: 'faculty',
+        department: 'Department of ICT (FST)',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+      },
+      likes: [
+        { userId: 'u1', name: 'Tanvir Naeem' },
+        { userId: 'u2', name: 'Safaytul Islam Rafi' },
+        { userId: 'u3', name: 'Nusrat Jahan Nishi' },
+      ],
+      comments: [
+        {
+          id: 'c-notes-1',
+          content: 'Thank you Sir! The handwritten SRE and MEA lecture notes are incredibly helpful! 🙏🔥',
+          authorName: 'Tanvir Naeem',
+          createdAt: new Date().toISOString(),
+        },
+      ],
+      viewsCount: 1890,
+    },
     {
       _id: 'post-prize-techfest',
       id: 'post-prize-techfest',
@@ -468,6 +515,50 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
     }
   };
 
+  // User Requirement #1: Edit & Delete Own Posts
+  const handleDeletePost = async (postId: string) => {
+    if (!window.confirm('Are you sure you want to delete this post? This cannot be undone.')) {
+      return;
+    }
+
+    setPosts((prev) => prev.filter((p) => p._id !== postId && p.id !== postId));
+
+    try {
+      const stored = localStorage.getItem('bupsoc_feed_posts');
+      if (stored) {
+        const localList: any[] = JSON.parse(stored);
+        const filtered = localList.filter((p) => p._id !== postId && p.id !== postId);
+        localStorage.setItem('bupsoc_feed_posts', JSON.stringify(filtered));
+      }
+    } catch (e) {}
+
+    try {
+      await apiFetch(`/posts/${postId}`, { method: 'DELETE' });
+    } catch (err) {
+      console.warn('Backend delete sync:', err);
+    }
+  };
+
+  const handlePostUpdated = (updatedPost: any) => {
+    setPosts((prev) =>
+      prev.map((p) => (p._id === updatedPost._id || p.id === updatedPost.id ? updatedPost : p))
+    );
+
+    try {
+      const stored = localStorage.getItem('bupsoc_feed_posts');
+      if (stored) {
+        const localList: any[] = JSON.parse(stored);
+        const idx = localList.findIndex(
+          (lp) => lp._id === updatedPost._id || lp.id === updatedPost.id
+        );
+        if (idx !== -1) {
+          localList[idx] = updatedPost;
+          localStorage.setItem('bupsoc_feed_posts', JSON.stringify(localList));
+        }
+      }
+    } catch (e) {}
+  };
+
   // Filter posts by media type
   const filteredPosts = posts.filter((p) => {
     if (mediaFilter === 'ALL') return true;
@@ -725,6 +816,33 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
                         <span className="px-2.5 py-1 rounded-xl text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                           {post.communityTarget}
                         </span>
+
+                        {/* User Requirement #1: Edit & Delete Own Post Buttons */}
+                        {(post.author?.userId === user?.id ||
+                          post.author?.id === user?.id ||
+                          post.author?.name === user?.name ||
+                          post.authorName === user?.name ||
+                          user?.role === 'faculty' ||
+                          user?.role === 'admin') && (
+                          <div className="flex items-center gap-1 ml-1 pl-1 border-l border-slate-200 dark:border-slate-700">
+                            <button
+                              type="button"
+                              onClick={() => setEditingPost(post)}
+                              className="p-1.5 rounded-xl text-slate-400 hover:text-bup-600 dark:hover:text-bup-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                              title="Edit this post"
+                            >
+                              <Edit3 className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeletePost(post._id || post.id)}
+                              className="p-1.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                              title="Delete this post"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -1092,6 +1210,14 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
         isOpen={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onPostCreated={fetchPosts}
+      />
+
+      {/* Edit Post Modal (User Requirement #1: Edit Own Posts) */}
+      <EditPostModal
+        isOpen={!!editingPost}
+        post={editingPost}
+        onClose={() => setEditingPost(null)}
+        onPostUpdated={handlePostUpdated}
       />
     </div>
   );

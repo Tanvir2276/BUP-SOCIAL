@@ -352,6 +352,22 @@ export const Login: React.FC<LoginProps> = ({ onNavigateRegister }) => {
               <span className="text-[9px] font-mono text-amber-700 dark:text-amber-300">nazneen@bup.edu.bd • faculty123</span>
             </button>
 
+            {/* Account: Asst. Prof. Suman Saha (User Req #2) */}
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('suman.saha@bup.edu.bd', 'faculty123', 'faculty')}
+              className="btn-motion p-2.5 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 hover:bg-emerald-100/80 border border-emerald-300 dark:border-emerald-700/60 text-left transition-all ring-1 ring-emerald-500/30 shadow-xs"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-extrabold text-emerald-950 dark:text-emerald-100">Suman Saha</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-200 text-emerald-900 dark:bg-emerald-900/60 dark:text-emerald-300">
+                  Faculty (Dept of ICT)
+                </span>
+              </div>
+              <span className="text-emerald-800/80 dark:text-emerald-300 block mt-0.5">SRE, Web Tech & Networks</span>
+              <span className="text-[9px] font-mono text-emerald-700 dark:text-emerald-400">suman.saha@bup.edu.bd • faculty123</span>
+            </button>
+
             {/* Account: Prof. Fahima Tabassum */}
             <button
               type="button"

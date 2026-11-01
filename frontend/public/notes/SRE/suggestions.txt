@@ -1,0 +1,43 @@
+Mid Syllabus :
+SRE:
+
+
+Lecture 2 (full)
+SDLC er step gula porte hobe.
+
+IEEE code of Ethics(which Principle do they violate) -----Tabular format e likhle valo hoi(principle, Meaning, example) 
+
+Lecture 5(Full)
+But Important :
+
+Functional requirement 
+
+And Functional requirement er ranking
+ mandatory, desirable, optional
+
+Non Functional requirement 
+
+Lecture 7(Use case) 
+Use case thakar chance kom
+Jehetu eta ct te ashse tai eta apatoto skip❌
+
+Lecture 8(Activity Diagram) 
+
+Lecture 9(Data flow diagram+class 
+diagram)
+
+Lecture 10 dorkar nai❌
+
+Lecture 11:Only MVC part ta onno kichu porte hobena r
+
+⭕Exam Instructions :
+Exam question khub e specific vabe likhte hobe
+ 
+Cost Estimation tabular format e dekhate Hobe
+
+Online Hospital
+ Management system 
+
+Online Library Management system 
+
+Online food delivery system

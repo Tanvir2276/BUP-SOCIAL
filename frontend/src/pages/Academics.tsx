@@ -26,6 +26,7 @@ import { apiFetch } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { CreateNoticeModal } from '../components/CreateNoticeModal';
 import { generateAndDownloadNoteDocument } from '../utils/documentGenerator';
+import { AcademicNotesHub } from '../components/AcademicNotesHub';
 
 // Official BUP FST Faculty Directory (from https://bup.edu.bd/faculty_home/3)
 const FST_FACULTY_LIST = [
@@ -122,8 +123,8 @@ interface AcademicsProps {
 export const Academics: React.FC<AcademicsProps> = ({ onViewProfile }) => {
   const { user } = useAuth();
 
-  // Active top tab in Academics: 'courses' | 'faculty' | 'research' | 'admissions' | 'cgpa'
-  const [academicTab, setAcademicTab] = useState<'courses' | 'faculty' | 'research' | 'admissions' | 'cgpa'>('courses');
+  // Active top tab in Academics: 'courses' | 'notes' | 'faculty' | 'research' | 'admissions' | 'cgpa'
+  const [academicTab, setAcademicTab] = useState<'courses' | 'notes' | 'faculty' | 'research' | 'admissions' | 'cgpa'>('courses');
 
   const [departments, setDepartments] = useState<any[]>([]);
   const [selectedDept, setSelectedDept] = useState('ICT');
@@ -249,6 +250,7 @@ export const Academics: React.FC<AcademicsProps> = ({ onViewProfile }) => {
       <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
         {[
           { id: 'courses', label: 'Courses & Notices', icon: BookOpen },
+          { id: 'notes', label: 'Mid-Term Notes Hub (3.2)', icon: Download, badge: '69 Files' },
           { id: 'faculty', label: 'FST Faculty Directory', icon: UserCheck },
           { id: 'research', label: 'Research & Publications', icon: FileText },
           { id: 'admissions', label: 'Admission Circulars', icon: GraduationCap },
@@ -268,6 +270,11 @@ export const Academics: React.FC<AcademicsProps> = ({ onViewProfile }) => {
             >
               <Icon className="w-3.5 h-3.5" />
               <span>{tab.label}</span>
+              {tab.badge && (
+                <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-black ${active ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300'}`}>
+                  {tab.badge}
+                </span>
+              )}
             </button>
           );
         })}
@@ -471,6 +478,11 @@ export const Academics: React.FC<AcademicsProps> = ({ onViewProfile }) => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* TAB 1.5: ACADEMIC MID-TERM NOTES HUB (3.2 MCA, MEA, SRE, WT) */}
+      {academicTab === 'notes' && (
+        <AcademicNotesHub />
       )}
 
       {/* TAB 2: FST FACULTY DIRECTORY (Req 7) */}
