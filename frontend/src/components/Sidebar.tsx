@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Users,
   Megaphone,
   Clock,
   User,
@@ -9,11 +8,12 @@ import {
   Flag,
   BookOpen,
   FileText,
-  Download,
-  Sparkles,
+  Calculator,
+  GraduationCap,
+  Car,
+  ExternalLink,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { generateAndDownloadNoteDocument } from '../utils/documentGenerator';
 
 interface SidebarProps {
   activeTab: string;
@@ -31,26 +31,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { user } = useAuth();
   const isFaculty = user?.role === 'faculty';
 
-  // Left sidebar items focused on high-utility campus academic tools
-  // Top-nav duplicates (feed, routines, clubs, lostfound, dm, rides) cleanly replaced per user request
+  // Left sidebar items per user request:
+  // Elevated CGPA Calculator, Admission Circulars, Research & Publications, Academic Notes Hub
   const navItems = [
     { id: 'notices', label: 'Faculty Notices', icon: Megaphone, badge: 'New' },
-    { id: 'communities', label: 'Academic Communities', icon: Users },
-    { id: 'pages', label: 'Campus Pages & Groups', icon: Flag, badge: 'Hub' },
+    { id: 'cgpa', label: 'CGPA Calculator', icon: Calculator, badge: 'OBE' },
+    { id: 'admissions', label: 'Admission Circulars', icon: GraduationCap, badge: '2026' },
+    { id: 'research', label: 'Research & Publications', icon: FileText },
+    { id: 'notes', label: 'Academic Notes Hub', icon: BookOpen, badge: '3.1 & 3.2' },
     { id: 'reminders', label: 'Custom Reminders', icon: Clock },
-    { id: 'routines', label: 'AI Study Notes & Library', icon: BookOpen, badge: 'OBE' },
+    { id: 'pages', label: 'Campus Pages & Groups', icon: Flag, badge: 'Hub' },
     { id: 'profile', label: 'Profile & Settings', icon: User },
   ];
-
-  const handleQuickDownloadNotes = () => {
-    generateAndDownloadNoteDocument({
-      title: 'ICE-2207 Computer Networks Comprehensive Lecture Handout',
-      courseCode: 'ICE-2207',
-      courseTitle: 'Computer Networks & Internetworking',
-      facultyName: 'Lecturer Sharmeen Jahan Seema',
-      department: 'Department of ICT (FST)',
-    });
-  };
 
   return (
     <aside
@@ -137,28 +129,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
         })}
       </div>
 
-      {/* BUP AI Study Notes & Digital Handouts Fast Launcher */}
+      {/* BUP GO Fast Link (Campus RideShare Partner) */}
       {!collapsed && (
         <div className="p-3 border-t border-slate-100 dark:border-slate-800">
-          <div className="p-3 rounded-2xl bg-gradient-to-r from-bup-navy via-bup-900 to-indigo-900 text-white shadow-md space-y-1.5 border border-blue-500/30">
+          <a
+            href="https://bup-go-project-8njl.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block p-3 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 group border border-emerald-400/30"
+          >
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold tracking-wider uppercase text-amber-400 flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-amber-400" />
-                <span>AI Study Notes Hub</span>
+              <span className="text-[10px] font-extrabold tracking-wider uppercase text-emerald-200 flex items-center gap-1.5">
+                <Car className="w-3.5 h-3.5 text-white" />
+                <span>BUP GO RideShare</span>
               </span>
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="flex items-center gap-1 text-[9px] text-white/90 bg-white/20 px-1.5 py-0.5 rounded-full font-bold">
+                <span>Live</span>
+                <ExternalLink className="w-2.5 h-2.5 text-white" />
+              </span>
             </div>
-            <p className="text-[11px] leading-tight font-medium opacity-90 text-blue-100">
-              Verified OBE handouts, formula guides & semester routine documents.
+            <p className="text-[11px] leading-tight font-medium opacity-90 text-emerald-50 mt-1">
+              BUPian Verified Commute & Smart Campus Ride Sharing.
             </p>
-            <button
-              onClick={handleQuickDownloadNotes}
-              className="inline-flex items-center gap-1.5 text-[11px] font-extrabold text-slate-950 bg-amber-400 hover:bg-amber-300 px-3 py-1.5 rounded-xl transition-all shadow-sm active:scale-95 mt-1"
-            >
-              <Download className="w-3.5 h-3.5 text-slate-950" />
-              <span>Download Notes Handout</span>
-            </button>
-          </div>
+            <div className="flex items-center gap-1 text-[11px] font-extrabold text-amber-300 mt-2 group-hover:underline">
+              <span>Open BUP GO</span>
+              <ExternalLink className="w-3 h-3 text-amber-300" />
+            </div>
+          </a>
         </div>
       )}
     </aside>

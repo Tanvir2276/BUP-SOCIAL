@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { ChatThread } from './FacebookMessengerPopover';
 import { useAuth } from '../context/AuthContext';
+import { CallModal } from './CallModal';
 
 interface FloatingMessengerChatProps {
   chat: ChatThread | null;
@@ -53,6 +54,8 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
   const [messages, setMessages] = useState<MessageItem[]>([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showStickers, setShowStickers] = useState(false);
+  const [callModalOpen, setCallModalOpen] = useState(false);
+  const [activeCallType, setActiveCallType] = useState<'audio' | 'video'>('audio');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -205,20 +208,26 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
         <div className="flex items-center gap-0.5 text-slate-500 dark:text-slate-400">
           <button
             type="button"
-            onClick={() => alert(`Initiating secure audio call with ${chat.name}...`)}
-            className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-bup-700"
+            onClick={() => {
+              setActiveCallType('audio');
+              setCallModalOpen(true);
+            }}
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-bup-700 transition-colors"
             title="Audio call"
           >
-            <Phone className="w-4 h-4" />
+            <Phone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           </button>
 
           <button
             type="button"
-            onClick={() => alert(`Starting video call with ${chat.name}...`)}
-            className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-bup-700"
+            onClick={() => {
+              setActiveCallType('video');
+              setCallModalOpen(true);
+            }}
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-bup-700 transition-colors"
             title="Video call"
           >
-            <Video className="w-4 h-4" />
+            <Video className="w-4 h-4 text-blue-600 dark:text-blue-400" />
           </button>
 
           <button
@@ -401,6 +410,19 @@ export const FloatingMessengerChat: React.FC<FloatingMessengerChatProps> = ({
           </button>
         )}
       </div>
+
+      {/* Audio / Video Call Interface Modal */}
+      <CallModal
+        isOpen={callModalOpen}
+        onClose={() => setCallModalOpen(false)}
+        callType={activeCallType}
+        recipient={{
+          id: chat.id,
+          name: chat.name,
+          avatar: chat.avatar,
+          department: chat.department,
+        }}
+      />
     </div>
   );
 };

@@ -83,6 +83,81 @@ const FST_FACULTY_LIST = [
 ];
 
 // Official FST Research Publications (Journal of FST - JFST)
+const DEFAULT_ICT_COURSES = [
+  {
+    code: 'ICE-3103',
+    name: 'Data Communication',
+    credit: 3.0,
+    levelTerm: 'Level 3, Term 1 (3.1)',
+    faculty: 'Asst. Prof. Nazneen Akhter / Lecturer Md. Istakiak Adnan',
+    description: 'Information theory, AWGN channels, digital modulation schemes, coherent receivers, and error control coding (Hamming, CRC, LDPC).',
+    sections: [{ name: 'Section A' }, { name: 'Section B' }],
+  },
+  {
+    code: 'ICE-3107',
+    name: 'Digital Signal Processing',
+    credit: 3.0,
+    levelTerm: 'Level 3, Term 1 (3.1)',
+    faculty: 'Asst. Prof. Saiful Islam',
+    description: 'Discrete-time signals, LTI systems, Z-transform, frequency response, DFT/FFT algorithms, and IIR/FIR digital filter design.',
+    sections: [{ name: 'Section A' }, { name: 'Section B' }],
+  },
+  {
+    code: 'ICE-3105',
+    name: 'Operating Systems',
+    credit: 3.0,
+    levelTerm: 'Level 3, Term 1 (3.1)',
+    faculty: 'Associate Professor Dr. Md. Sabir Hossain',
+    description: 'Operating system structures, process scheduling, memory hierarchy, DMA controllers, interrupts, and storage architectures.',
+    sections: [{ name: 'Section A' }, { name: 'Section B' }],
+  },
+  {
+    code: 'ICE-3109',
+    name: 'Telecommunication Switching & Systems',
+    credit: 3.0,
+    levelTerm: 'Level 3, Term 1 (3.1)',
+    faculty: 'Col Mohammed Omar Faruque, PhD / Asst. Prof. Suman Saha',
+    description: 'Space/time division switching networks, Erlang traffic engineering formulas, SS7 signaling, and ISDN/ATM architectures.',
+    sections: [{ name: 'Section A' }, { name: 'Section B' }],
+  },
+  {
+    code: 'ICE-3201',
+    name: 'Microprocessor and Computer Architecture',
+    credit: 3.0,
+    levelTerm: 'Level 3, Term 2 (3.2)',
+    faculty: 'Prof. Dr. Mosabber Uddin Ahmed',
+    description: '8086 microprocessor assembly, pipelining, RISC vs CISC, cache hierarchy, and hardware interrupt vector tables.',
+    sections: [{ name: 'Section A' }, { name: 'Section B' }],
+  },
+  {
+    code: 'ICE-3205',
+    name: 'Web Technologies',
+    credit: 3.0,
+    levelTerm: 'Level 3, Term 2 (3.2)',
+    faculty: 'Assistant Professor Suman Saha / Lecturer Istakiak Adnan',
+    description: 'Modern full-stack web architectures, REST APIs, HTTP/HTTPS, responsive UI/UX, database integration, and security.',
+    sections: [{ name: 'Section A' }, { name: 'Section B' }],
+  },
+  {
+    code: 'ICE-3207',
+    name: 'Software and Requirement Engineering',
+    credit: 3.0,
+    levelTerm: 'Level 3, Term 2 (3.2)',
+    faculty: 'Assistant Professor Nazneen Akhter',
+    description: 'SDLC methodologies, SRS authoring, UML activity & use case modeling, IEEE engineering ethics, and agile workflows.',
+    sections: [{ name: 'Section A' }, { name: 'Section B' }],
+  },
+  {
+    code: 'ICE-3203',
+    name: 'Microwave Engineering and Antenna',
+    credit: 3.0,
+    levelTerm: 'Level 3, Term 2 (3.2)',
+    faculty: 'Prof. Dr. Md. Zulfiker Mahmud',
+    description: 'Transmission line theory, Smith chart matching, microwave waveguides, cavity resonators, and antenna radiation patterns.',
+    sections: [{ name: 'Section A' }, { name: 'Section B' }],
+  },
+];
+
 const FST_RESEARCH_PAPERS = [
   {
     id: 'p1',
@@ -117,14 +192,23 @@ const FST_RESEARCH_PAPERS = [
 ];
 
 interface AcademicsProps {
+  initialTab?: 'courses' | 'notes' | 'faculty' | 'research' | 'admissions' | 'cgpa';
   onViewProfile?: (user: any) => void;
 }
 
-export const Academics: React.FC<AcademicsProps> = ({ onViewProfile }) => {
+export const Academics: React.FC<AcademicsProps> = ({ initialTab, onViewProfile }) => {
   const { user } = useAuth();
 
   // Active top tab in Academics: 'courses' | 'notes' | 'faculty' | 'research' | 'admissions' | 'cgpa'
-  const [academicTab, setAcademicTab] = useState<'courses' | 'notes' | 'faculty' | 'research' | 'admissions' | 'cgpa'>('courses');
+  const [academicTab, setAcademicTab] = useState<'courses' | 'notes' | 'faculty' | 'research' | 'admissions' | 'cgpa'>(
+    initialTab || 'courses'
+  );
+
+  useEffect(() => {
+    if (initialTab) {
+      setAcademicTab(initialTab);
+    }
+  }, [initialTab]);
 
   const [departments, setDepartments] = useState<any[]>([]);
   const [selectedDept, setSelectedDept] = useState('ICT');
@@ -171,14 +255,33 @@ export const Academics: React.FC<AcademicsProps> = ({ onViewProfile }) => {
     try {
       const res = await apiFetch(`/departments/${deptCode}/courses`);
       if (res.success && res.courses.length > 0) {
-        setCourses(res.courses);
-        setSelectedCourse(res.courses[0]);
+        if (deptCode === 'ICT') {
+          const existingCodes = new Set(res.courses.map((c: any) => c.code));
+          const additions = DEFAULT_ICT_COURSES.filter((c) => !existingCodes.has(c.code));
+          const merged = [...res.courses, ...additions];
+          setCourses(merged);
+          setSelectedCourse(merged[0]);
+        } else {
+          setCourses(res.courses);
+          setSelectedCourse(res.courses[0]);
+        }
+      } else {
+        if (deptCode === 'ICT') {
+          setCourses(DEFAULT_ICT_COURSES);
+          setSelectedCourse(DEFAULT_ICT_COURSES[0]);
+        } else {
+          setCourses([]);
+          setSelectedCourse(null);
+        }
+      }
+    } catch (e) {
+      if (deptCode === 'ICT') {
+        setCourses(DEFAULT_ICT_COURSES);
+        setSelectedCourse(DEFAULT_ICT_COURSES[0]);
       } else {
         setCourses([]);
         setSelectedCourse(null);
       }
-    } catch (e) {
-      console.error(e);
     } finally {
       setLoadingCourses(false);
     }

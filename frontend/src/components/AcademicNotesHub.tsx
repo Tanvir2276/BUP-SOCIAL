@@ -16,72 +16,16 @@ import {
   Radio,
   Cpu,
   ShieldCheck,
-  Check
+  Check,
+  GraduationCap,
 } from 'lucide-react';
+import {
+  BUP_3_1_NOTES_CATALOG,
+  SRE_HANDWRITTEN_NOTES,
+  AcademicNoteItem,
+} from '../data/bupNotesCatalog';
 
-interface AcademicNoteItem {
-  id: string;
-  course: 'SRE' | 'WT' | 'MCA' | 'MEA';
-  courseCode: string;
-  courseTitle: string;
-  faculty: string;
-  title: string;
-  filename: string;
-  url: string;
-  size: string;
-  format: 'PDF' | 'DOCX' | 'IMAGE' | 'TXT';
-  category: 'Lecture Slide' | 'Handwritten Note' | 'Practice Question' | 'Diagram' | 'Syllabus';
-  isHandwritten?: boolean;
-}
-
-// 1. Five Authentic Handwritten Study Notes from User Uploads
-export const SRE_HANDWRITTEN_NOTES = [
-  {
-    id: 'sre-hw-1',
-    lecture: 'Lecture 2',
-    title: 'Lecture 2: SDLC (Software Development Life Cycle)',
-    topic: '7 Steps of SDLC, Online Library Management System, P-R-D-I-T-D-M Shortcut',
-    url: '/notes/SRE/handwritten/Lecture_2_SDLC_Study_Notes.jpg',
-    thumb: '/notes/SRE/handwritten/Lecture_2_SDLC_Study_Notes.jpg',
-    category: 'Handwritten Study Note',
-  },
-  {
-    id: 'sre-hw-2',
-    lecture: 'Lecture 2',
-    title: 'Lecture 2: IEEE Code of Ethics for Software Engineers',
-    topic: '8 Principles: Public, Client & Employer, Product, Judgment, Management, Profession, Colleagues, Self',
-    url: '/notes/SRE/handwritten/Lecture_2_IEEE_Code_of_Ethics_Summary.jpg',
-    thumb: '/notes/SRE/handwritten/Lecture_2_IEEE_Code_of_Ethics_Summary.jpg',
-    category: 'Handwritten Study Note',
-  },
-  {
-    id: 'sre-hw-3',
-    lecture: 'Lecture 2',
-    title: 'Lecture 2: IEEE Code of Ethics (Principles & Scenarios)',
-    topic: 'Real-world Library System scenarios, Discussion Questions & Decision Making',
-    url: '/notes/SRE/handwritten/Lecture_2_IEEE_Code_of_Ethics_Principles.jpg',
-    thumb: '/notes/SRE/handwritten/Lecture_2_IEEE_Code_of_Ethics_Principles.jpg',
-    category: 'Handwritten Study Note',
-  },
-  {
-    id: 'sre-hw-4',
-    lecture: 'Lecture 5',
-    title: 'Lecture 5: Software Requirements Engineering Guide',
-    topic: 'Business, User, Functional, Non-Functional, Domain Requirements & Ranking Matrix',
-    url: '/notes/SRE/handwritten/Lecture_5_Software_Requirements_Guide.jpg',
-    thumb: '/notes/SRE/handwritten/Lecture_5_Software_Requirements_Guide.jpg',
-    category: 'Handwritten Study Note',
-  },
-  {
-    id: 'sre-hw-5',
-    lecture: 'Lecture 8',
-    title: 'Lecture 8: UML Activity Diagrams & Flow Modeling',
-    topic: 'UML Notation Summary, Login Process, Process Order & Swimlane Book Borrowing Process',
-    url: '/notes/SRE/handwritten/Lecture_8_UML_Activity_Diagram_Reference.jpg',
-    thumb: '/notes/SRE/handwritten/Lecture_8_UML_Activity_Diagram_Reference.jpg',
-    category: 'Handwritten Study Note',
-  },
-];
+export { SRE_HANDWRITTEN_NOTES };
 
 // 2. Complete Catalog of 3.2 Mid-Term Notes from user folders
 export const BUP_MIDTERM_NOTES_CATALOG: AcademicNoteItem[] = [
@@ -757,14 +701,21 @@ export const BUP_MIDTERM_NOTES_CATALOG: AcademicNoteItem[] = [
   },
 ];
 
+export const ALL_COMBINED_NOTES: AcademicNoteItem[] = [
+  ...BUP_MIDTERM_NOTES_CATALOG.map((n) => ({ ...n, level: '3.2' as const })),
+  ...BUP_3_1_NOTES_CATALOG,
+];
+
 export const AcademicNotesHub: React.FC = () => {
-  const [selectedCourse, setSelectedCourse] = useState<'ALL' | 'SRE' | 'WT' | 'MCA' | 'MEA'>('ALL');
-  const [selectedFormat, setSelectedFormat] = useState<'ALL' | 'PDF' | 'IMAGE' | 'DOCX'>('ALL');
+  const [selectedLevel, setSelectedLevel] = useState<'ALL' | '3.2' | '3.1'>('ALL');
+  const [selectedCourse, setSelectedCourse] = useState<'ALL' | 'SRE' | 'WT' | 'MCA' | 'MEA' | 'DC' | 'DSP' | 'OS' | 'TS'>('ALL');
+  const [selectedFormat, setSelectedFormat] = useState<'ALL' | 'PDF' | 'IMAGE' | 'DOCX' | 'PPTX'>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewingImageModal, setViewingImageModal] = useState<any | null>(null);
 
   // Filter notes
-  const filteredNotes = BUP_MIDTERM_NOTES_CATALOG.filter((item) => {
+  const filteredNotes = ALL_COMBINED_NOTES.filter((item) => {
+    if (selectedLevel !== 'ALL' && item.level !== selectedLevel) return false;
     if (selectedCourse !== 'ALL' && item.course !== selectedCourse) return false;
     if (selectedFormat !== 'ALL' && item.format !== selectedFormat) return false;
     if (searchQuery.trim()) {
@@ -779,8 +730,11 @@ export const AcademicNotesHub: React.FC = () => {
   });
 
   const countForCourse = (course: string) => {
-    if (course === 'ALL') return BUP_MIDTERM_NOTES_CATALOG.length;
-    return BUP_MIDTERM_NOTES_CATALOG.filter((n) => n.course === course).length;
+    if (course === 'ALL') {
+      if (selectedLevel === 'ALL') return ALL_COMBINED_NOTES.length;
+      return ALL_COMBINED_NOTES.filter((n) => n.level === selectedLevel).length;
+    }
+    return ALL_COMBINED_NOTES.filter((n) => n.course === course).length;
   };
 
   return (
@@ -792,27 +746,27 @@ export const AcademicNotesHub: React.FC = () => {
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" /> BUP Department of ICT • Level 3, Term 2 (3.2)
+                <Sparkles className="w-3.5 h-3.5" /> BUP Department of ICT • Level 3 (3.1 & 3.2)
               </span>
               <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                Mid-Term Verified
+                Official FST Syllabus Verified
               </span>
             </div>
 
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              Academic Mid-Term Notes & Lecture Hub
+              Academic Notes, Lectures & Exam Repository
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-              Official faculty lecture slides, handwritten exam study guides, UML diagrams, and practice problem sets published directly from <strong className="text-amber-300">MCA</strong>, <strong className="text-amber-300">MEA</strong>, <strong className="text-amber-300">SRE</strong>, and <strong className="text-amber-300">WT</strong> mid-term repositories.
+              Official faculty lecture slides, handwritten study sheets, class test papers, and reference documents published directly from both <strong className="text-cyan-300">Level 3.1 (DC, DSP, OS, TS)</strong> and <strong className="text-amber-300">Level 3.2 (MCA, MEA, SRE, WT)</strong> departmental folders.
             </p>
           </div>
 
           <div className="flex items-center gap-2 sm:self-center">
             <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-center shrink-0">
               <span className="text-2xl sm:text-3xl font-black text-amber-400 block">
-                {BUP_MIDTERM_NOTES_CATALOG.length}
+                {ALL_COMBINED_NOTES.length}
               </span>
               <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">
                 Total Files Published
@@ -821,36 +775,85 @@ export const AcademicNotesHub: React.FC = () => {
           </div>
         </div>
 
-        {/* Course Quick Switcher Chips */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mt-6 pt-6 border-t border-white/10 text-xs font-bold">
+        {/* Level Switcher */}
+        <div className="mt-6 pt-6 border-t border-white/10 flex items-center gap-2 flex-wrap">
+          <span className="text-xs font-bold text-slate-400 mr-2 flex items-center gap-1">
+            <GraduationCap className="w-3.5 h-3.5" /> Academic Level:
+          </span>
           {[
-            { id: 'ALL', label: 'All Courses', sub: '69 Files' },
-            { id: 'SRE', label: 'SRE (ICE-3201)', sub: 'Software & Req' },
-            { id: 'WT', label: 'WT (ICE-3205)', sub: 'Web Tech' },
-            { id: 'MCA', label: 'MCA (ICE-3203)', sub: 'Microprocessor' },
-            { id: 'MEA', label: 'MEA (ICE-3204)', sub: 'Microwave & Ant' },
-          ].map((item) => (
+            { id: 'ALL', label: 'All Semesters' },
+            { id: '3.1', label: 'Level 3, Term 1 (3.1 DC • DSP • OS • TS)' },
+            { id: '3.2', label: 'Level 3, Term 2 (3.2 MCA • MEA • SRE • WT)' },
+          ].map((lvl) => (
             <button
-              key={item.id}
-              type="button"
-              onClick={() => setSelectedCourse(item.id as any)}
-              className={`p-3 rounded-2xl border text-left transition-all ${
-                selectedCourse === item.id
-                  ? 'bg-amber-400 text-slate-950 border-amber-300 shadow-md font-black scale-102'
-                  : 'bg-white/5 text-white hover:bg-white/10 border-white/10'
+              key={lvl.id}
+              onClick={() => {
+                setSelectedLevel(lvl.id as any);
+                setSelectedCourse('ALL');
+              }}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                selectedLevel === lvl.id
+                  ? 'bg-white text-slate-950 shadow-md font-black'
+                  : 'bg-white/10 text-white hover:bg-white/20'
               }`}
             >
-              <div className="flex items-center justify-between">
-                <span>{item.label}</span>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${selectedCourse === item.id ? 'bg-slate-950/20 text-slate-950' : 'bg-white/10 text-amber-300'}`}>
-                  {countForCourse(item.id)}
-                </span>
-              </div>
-              <span className={`text-[10px] block mt-0.5 font-normal ${selectedCourse === item.id ? 'text-slate-800' : 'text-slate-400'}`}>
-                {item.sub}
-              </span>
+              {lvl.label}
             </button>
           ))}
+        </div>
+
+        {/* Course Quick Switcher Chips */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mt-4 text-xs font-bold">
+          {[
+            { id: 'ALL', label: 'All Courses', sub: 'Unified View' },
+            { id: 'DC', label: 'DC (ICE-3103)', sub: 'Data Communication' },
+            { id: 'DSP', label: 'DSP (ICE-3107)', sub: 'Digital Signal Proc' },
+            { id: 'OS', label: 'OS (ICE-3105)', sub: 'Operating Systems' },
+            { id: 'TS', label: 'TS (ICE-3109)', sub: 'Telecom Switching' },
+            { id: 'SRE', label: 'SRE (ICE-3201)', sub: 'Software & Req' },
+            { id: 'WT', label: 'WT (ICE-3205)', sub: 'Web Technologies' },
+            { id: 'MCA', label: 'MCA (ICE-3203)', sub: 'Microprocessor' },
+            { id: 'MEA', label: 'MEA (ICE-3204)', sub: 'Microwave & Ant' },
+          ]
+            .filter((item) => {
+              if (selectedLevel === 'ALL') return true;
+              if (item.id === 'ALL') return true;
+              if (selectedLevel === '3.1') return ['DC', 'DSP', 'OS', 'TS'].includes(item.id);
+              if (selectedLevel === '3.2') return ['SRE', 'WT', 'MCA', 'MEA'].includes(item.id);
+              return true;
+            })
+            .map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setSelectedCourse(item.id as any)}
+                className={`p-3 rounded-2xl border text-left transition-all ${
+                  selectedCourse === item.id
+                    ? 'bg-amber-400 text-slate-950 border-amber-300 shadow-md font-black scale-102'
+                    : 'bg-white/5 text-white hover:bg-white/10 border-white/10'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span>{item.label}</span>
+                  <span
+                    className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                      selectedCourse === item.id
+                        ? 'bg-slate-950/20 text-slate-950 font-black'
+                        : 'bg-white/10 text-amber-300'
+                    }`}
+                  >
+                    {countForCourse(item.id)}
+                  </span>
+                </div>
+                <span
+                  className={`text-[10px] block mt-0.5 font-normal truncate ${
+                    selectedCourse === item.id ? 'text-slate-800' : 'text-slate-400'
+                  }`}
+                >
+                  {item.sub}
+                </span>
+              </button>
+            ))}
         </div>
       </div>
 
@@ -949,7 +952,7 @@ export const AcademicNotesHub: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 font-bold">
-          {(['ALL', 'PDF', 'DOCX', 'IMAGE'] as const).map((fmt) => (
+          {(['ALL', 'PDF', 'PPTX', 'DOCX', 'IMAGE'] as const).map((fmt) => (
             <button
               key={fmt}
               type="button"
@@ -979,6 +982,7 @@ export const AcademicNotesHub: React.FC = () => {
           {filteredNotes.map((note) => {
             const isPdf = note.format === 'PDF';
             const isDoc = note.format === 'DOCX';
+            const isPpt = note.format === 'PPTX';
             const isImg = note.format === 'IMAGE';
 
             return (
@@ -994,6 +998,8 @@ export const AcademicNotesHub: React.FC = () => {
                         ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-200 dark:border-rose-900'
                         : isDoc
                         ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-900'
+                        : isPpt
+                        ? 'bg-orange-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300 border border-orange-200 dark:border-orange-900'
                         : isImg
                         ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900'
                         : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
@@ -1006,6 +1012,9 @@ export const AcademicNotesHub: React.FC = () => {
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300">
                         {note.courseCode}
+                      </span>
+                      <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">
+                        Level {note.level || '3.2'}
                       </span>
                       <span className="text-[10px] font-bold text-slate-400">
                         {note.category}

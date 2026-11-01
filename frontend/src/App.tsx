@@ -40,6 +40,15 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleToggleFloatingChat = (chat: ChatThread | null) => {
+    if (!chat) {
+      setActiveFloatingChat(null);
+      return;
+    }
+    // If clicking on the same chat that's already open, toggle it closed so it never gets stuck!
+    setActiveFloatingChat((prev) => (prev?.id === chat.id ? null : chat));
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
@@ -68,7 +77,7 @@ export const App: React.FC = () => {
       <Navbar
         activeTab={activeTab}
         setActiveTab={handleNavigateTab}
-        onSelectChat={(chat) => setActiveFloatingChat(chat)}
+        onSelectChat={handleToggleFloatingChat}
         onViewProfile={handleViewProfile}
       />
 
@@ -87,15 +96,19 @@ export const App: React.FC = () => {
           {activeTab === 'feed' && (
             <Feed
               onViewProfile={handleViewProfile}
-              onOpenChat={(chat) => setActiveFloatingChat(chat)}
+              onOpenChat={handleToggleFloatingChat}
             />
           )}
-          {activeTab === 'academics' && <Academics onViewProfile={handleViewProfile} />}
-          {activeTab === 'notices' && <Academics onViewProfile={handleViewProfile} />}
+          {activeTab === 'academics' && <Academics initialTab="courses" onViewProfile={handleViewProfile} />}
+          {activeTab === 'notices' && <Academics initialTab="courses" onViewProfile={handleViewProfile} />}
+          {activeTab === 'cgpa' && <Academics initialTab="cgpa" onViewProfile={handleViewProfile} />}
+          {activeTab === 'admissions' && <Academics initialTab="admissions" onViewProfile={handleViewProfile} />}
+          {activeTab === 'research' && <Academics initialTab="research" onViewProfile={handleViewProfile} />}
+          {activeTab === 'notes' && <Academics initialTab="notes" onViewProfile={handleViewProfile} />}
           {activeTab === 'communities' && (
             <Feed
               onViewProfile={handleViewProfile}
-              onOpenChat={(chat) => setActiveFloatingChat(chat)}
+              onOpenChat={handleToggleFloatingChat}
             />
           )}
           {activeTab === 'routines' && <Routines />}
@@ -108,7 +121,7 @@ export const App: React.FC = () => {
           {activeTab === 'messages' && <Messages onViewProfile={handleViewProfile} />}
           {activeTab === 'lostfound' && (
             <LostFound
-              onOpenChat={(chat) => setActiveFloatingChat(chat)}
+              onOpenChat={handleToggleFloatingChat}
               onNavigateTab={(tab) => handleNavigateTab(tab)}
               onViewProfile={handleViewProfile}
             />
@@ -120,7 +133,7 @@ export const App: React.FC = () => {
                 setViewingProfileUser(null);
                 handleNavigateTab('feed');
               }}
-              onOpenChat={(chat) => setActiveFloatingChat(chat)}
+              onOpenChat={handleToggleFloatingChat}
               onViewProfile={handleViewProfile}
             />
           )}

@@ -24,6 +24,7 @@ import { apiFetch } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { encryptE2EE, decryptE2EE } from '../utils/cryptoE2EE';
 import { ALL_100_BANGALDESHI_STUDENTS } from '../data/bangladeshiStudents';
+import { CallModal } from '../components/CallModal';
 
 // Authentic BUP Campus & Faculty DM Threads
 const INITIAL_BUP_THREADS = [
@@ -248,6 +249,8 @@ export const Messages: React.FC<MessagesProps> = ({ onViewProfile }) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showStickerPicker, setShowStickerPicker] = useState(false);
   const [previewMediaUrl, setPreviewMediaUrl] = useState<string | null>(null);
+  const [callModalOpen, setCallModalOpen] = useState(false);
+  const [activeCallType, setActiveCallType] = useState<'audio' | 'video'>('audio');
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -762,20 +765,26 @@ export const Messages: React.FC<MessagesProps> = ({ onViewProfile }) => {
                 <div className="flex items-center gap-1 text-slate-600 dark:text-slate-300 shrink-0">
                   <button
                     type="button"
-                    onClick={() => alert(`Starting secure voice call with ${selectedContact.name}...`)}
-                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl hover:text-bup-600 transition-colors"
+                    onClick={() => {
+                      setActiveCallType('audio');
+                      setCallModalOpen(true);
+                    }}
+                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                     title="Audio call"
                   >
-                    <Phone className="w-4 h-4" />
+                    <Phone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   </button>
 
                   <button
                     type="button"
-                    onClick={() => alert(`Initiating encrypted video room with ${selectedContact.name}...`)}
-                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl hover:text-bup-600 transition-colors"
+                    onClick={() => {
+                      setActiveCallType('video');
+                      setCallModalOpen(true);
+                    }}
+                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                     title="Video call"
                   >
-                    <Video className="w-4 h-4" />
+                    <Video className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   </button>
 
                   {onViewProfile && (
@@ -998,6 +1007,22 @@ export const Messages: React.FC<MessagesProps> = ({ onViewProfile }) => {
             <img src={previewMediaUrl} alt="Preview" className="max-h-[80vh] w-auto rounded-2xl object-contain mx-auto" />
           </div>
         </div>
+      )}
+
+      {/* Audio / Video Call Interface Modal */}
+      {selectedContact && (
+        <CallModal
+          isOpen={callModalOpen}
+          onClose={() => setCallModalOpen(false)}
+          callType={activeCallType}
+          recipient={{
+            id: selectedContact._id,
+            name: selectedContact.name,
+            avatar: selectedContact.avatar,
+            department: selectedContact.department,
+            role: selectedContact.role,
+          }}
+        />
       )}
     </div>
   );
