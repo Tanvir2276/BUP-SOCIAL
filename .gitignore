@@ -8,7 +8,8 @@ build/
 */dist/
 
 # Local database files
-data/
+/data/
+backend/data/
 *.wt
 
 

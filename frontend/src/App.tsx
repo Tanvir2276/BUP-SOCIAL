@@ -72,7 +72,7 @@ export const App: React.FC = () => {
 
   // Authenticated Facebook-style Social Application Layout
   return (
-    <div className="min-h-screen bg-slate-100/70 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors pb-16 lg:pb-0">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-slate-100/70 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors pb-16 lg:pb-0">
       {/* Top Facebook-Style Navigation Bar */}
       <Navbar
         activeTab={activeTab}
@@ -82,7 +82,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Container with Sidebar + Content */}
-      <div className="flex-1 flex max-w-7xl w-full mx-auto items-start">
+      <div className="flex-1 flex max-w-7xl w-full mx-auto items-start min-w-0">
         {/* Left Collapsible Facebook-Style Sidebar */}
         <Sidebar
           activeTab={activeTab}
@@ -92,7 +92,7 @@ export const App: React.FC = () => {
         />
 
         {/* Center Dynamic Content Area */}
-        <main className="flex-1 min-w-0 p-3 sm:p-5 lg:p-6 animate-in fade-in duration-200">
+        <main className="flex-1 min-w-0 w-full max-w-full p-2.5 sm:p-5 lg:p-6 overflow-x-hidden animate-in fade-in duration-200">
           {activeTab === 'feed' && (
             <Feed
               onViewProfile={handleViewProfile}

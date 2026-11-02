@@ -48,11 +48,11 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
   return (
     <>
       <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
-        <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-4 overflow-hidden">
           {/* Logo & Brand */}
           <div
             onClick={() => setActiveTab('feed')}
-            className="cursor-pointer shrink-0 select-none max-w-[55%] sm:max-w-none"
+            className="cursor-pointer shrink min-w-0 select-none"
           >
             <AnimatedBupLogo size="md" />
           </div>
@@ -166,7 +166,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
                     {user?.role === 'faculty' ? 'Faculty' : user?.studentId || 'Student'}
                   </p>
                 </div>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden xs:block" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden md:block" />
               </button>
 
               {/* Profile Dropdown */}

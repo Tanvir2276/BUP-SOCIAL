@@ -115,9 +115,9 @@ export const Feed: React.FC<FeedProps> = ({ onViewProfile, onOpenChat }) => {
       author: 'Tanvir Naeem',
       role: 'Batch 22 Scholar',
       avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150',
-      preview: '/assets/bup_antorikkho_batch22.jpg',
-      title: 'অন্তরীক্ষ-২২ Fest ❤️',
-      caption: 'Unforgettable moments in red panjabi & sarees by BUP Central Lake! FST comrades for life! 🎓✨',
+      preview: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600',
+      title: 'BUP Lakeside Vista 🌿',
+      caption: 'Peaceful afternoon by Central Lake after DSP and Microprocessors lab defense! FST scholars for life! 🎓✨',
       time: '7h ago',
     },
     {
@@ -320,13 +320,13 @@ All 69 files are available for preview and 1-click download in Academics -> "Mid
     {
       _id: 'post-antorikkho-22',
       id: 'post-antorikkho-22',
-      title: 'স্মৃতির পাতায় অন্তরীক্ষ-২২ ❤️ BUP Campus Batch Fest Celebrations',
-      content: 'লাল পাঞ্জাবি আর শাড়ির মুগ্ধতায় পুরো বিইউপি ক্যাম্পাস মুখরিত! Faculty of Science and Technology (FST) এর অন্তরীক্ষ-২২ ব্যাচ ফেস্টের অবিস্মরণীয় মুহূর্তগুলো। একসাথে ক্লাস করা, ল্যাব টেস্টের প্যারা, ক্যাফেটেরিয়ার আড্ডা—সবকিছু মিলিয়ে জীবনের সেরা সময়গুলো কাটছে BUP-তে! 🎓✨🇧🇩',
+      title: 'Campus Life & Lakeside Memories 🌿✨ BUP Autumn Afternoon Moments',
+      content: 'Sunset by the BUP Central Lake after intensive SRE & Microprocessor lab defense! Balancing rigorous engineering coursework with campus culture, friendship and endless laughter by the cafeteria. Proud to be part of the vibrant BUP FST family! 🎓✨🇧🇩',
       communityType: 'CAMPUS',
       communityTarget: 'General Campus',
       mediaType: 'IMAGE',
-      imageUrl: '/assets/bup_antorikkho_batch22.jpg',
-      tags: ['#অন্তরীক্ষ২২', '#BUPCampus', '#FSTBatchFest', '#RedPanjabiSaree', '#Memories'],
+      imageUrl: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1000',
+      tags: ['#BUPCampus', '#CampusLife', '#FSTScholars', '#MirpurDOHS', '#LakesideSunset'],
       createdAt: new Date(Date.now() - 3600000 * 8).toISOString(),
       author: {
         id: 'student-24549010076',
@@ -570,18 +570,18 @@ All 69 files are available for preview and 1-click download in Academics -> "Mid
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-2 sm:px-4 py-4 sm:py-6 space-y-5">
+    <div className="max-w-6xl mx-auto px-1.5 sm:px-4 py-3 sm:py-6 space-y-4 sm:space-y-5 w-full max-w-full overflow-x-hidden">
       {/* Official BUP Admission & Research Alert (Fully Responsive for Mobile & Desktop) */}
-      <div className="rounded-2xl bg-gradient-to-r from-[#072146] via-bup-navy to-[#0a192f] text-white p-3.5 sm:p-4 shadow-md border border-blue-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 overflow-hidden">
-        <div className="flex items-start sm:items-center gap-3 min-w-0">
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-500 text-white shrink-0 tracking-wider shadow-xs">
+      <div className="rounded-2xl bg-gradient-to-r from-[#072146] via-bup-navy to-[#0a192f] text-white p-3.5 sm:p-4 shadow-md border border-blue-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full max-w-full overflow-hidden">
+        <div className="flex items-start sm:items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+          <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-black bg-rose-500 text-white shrink-0 tracking-wider shadow-xs">
             ADMISSION 2026-27
           </span>
-          <div className="min-w-0">
-            <h3 className="text-xs sm:text-sm font-bold text-white leading-tight">
+          <div className="min-w-0 flex-1">
+            <h3 className="text-xs sm:text-sm font-bold text-white leading-tight break-words">
               FST Undergraduate Admission Circular (Spring 2027)
             </h3>
-            <p className="text-[11px] text-blue-200/90 leading-tight mt-0.5">
+            <p className="text-[10px] sm:text-[11px] text-blue-200/90 leading-snug mt-0.5 break-words">
               B.Sc. in ICT, CSE & ES • Written Test: 16 Jan 2027 • Application Deadline: 20 Dec 2026
             </p>
           </div>
@@ -591,15 +591,15 @@ All 69 files are available for preview and 1-click download in Academics -> "Mid
           href="https://admission.bup.edu.bd"
           target="_blank"
           rel="noreferrer"
-          className="btn-motion btn-bup-gold text-xs font-bold px-4 py-2 rounded-xl text-center whitespace-nowrap shrink-0 shadow-sm"
+          className="btn-motion btn-bup-gold text-xs font-bold px-3.5 py-2 rounded-xl text-center whitespace-nowrap shrink-0 self-start sm:self-auto shadow-sm"
         >
           Apply via admission.bup.edu.bd ↗
         </a>
       </div>
 
       {/* 1. Facebook-Style Campus Stories Tray */}
-      <div className="mb-6 overflow-hidden">
-        <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
+      <div className="mb-4 sm:mb-6 w-full max-w-full overflow-hidden">
+        <div className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto pb-2 scrollbar-none w-full max-w-full touch-pan-x">
           {stories.map((story) => {
             if (story.isCreate) {
               const hasValidAvatar = user?.avatar && !user.avatar.includes('photo-1534528741775-53994a69daeb');
@@ -691,49 +691,53 @@ All 69 files are available for preview and 1-click download in Academics -> "Mid
           </div>
 
           {/* Facebook-Style Media Filter Bar: Notes, Reels, Videos, Photos */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-            {[
-              { id: 'ALL', label: 'All Feed', icon: Sparkles },
-              { id: 'NOTE', label: 'Lecture Notes (PDF)', icon: FileText },
-              { id: 'REEL', label: 'Campus Reels', icon: Film },
-              { id: 'VIDEO', label: 'Videos', icon: Video },
-              { id: 'IMAGE', label: 'Photos', icon: ImageIcon },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              const active = mediaFilter === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setMediaFilter(tab.id)}
-                  className={`btn-motion flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-bold whitespace-nowrap transition-all border ${
-                    active
-                      ? 'bg-bup-700 text-white border-bup-700 shadow-md shadow-bup-700/25'
-                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-bup-500'
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
+          <div className="w-full max-w-full overflow-x-auto pb-1 text-xs scrollbar-none touch-pan-x">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-max">
+              {[
+                { id: 'ALL', label: 'All Feed', icon: Sparkles },
+                { id: 'NOTE', label: 'Lecture Notes (PDF)', icon: FileText },
+                { id: 'REEL', label: 'Campus Reels', icon: Film },
+                { id: 'VIDEO', label: 'Videos', icon: Video },
+                { id: 'IMAGE', label: 'Photos', icon: ImageIcon },
+              ].map((tab) => {
+                const Icon = tab.icon;
+                const active = mediaFilter === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setMediaFilter(tab.id)}
+                    className={`btn-motion flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold whitespace-nowrap transition-all border text-xs ${
+                      active
+                        ? 'bg-bup-700 text-white border-bup-700 shadow-md shadow-bup-700/25'
+                        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-bup-500'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Community Space Filter */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-            <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0 ml-1" />
-            {['All', 'Campus', 'Course', 'Department', 'Club'].map((filter) => (
-              <button
-                key={filter}
-                onClick={() => setSelectedFilter(filter)}
-                className={`px-3 py-1 rounded-xl font-semibold transition-all shrink-0 ${
-                  selectedFilter === filter
-                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-                }`}
-              >
-                {filter === 'All' ? 'All Spaces' : `${filter}`}
-              </button>
-            ))}
+          <div className="w-full max-w-full overflow-x-auto pb-1 text-xs scrollbar-none touch-pan-x">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-max">
+              <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0 ml-1" />
+              {['All', 'Campus', 'Course', 'Department', 'Club'].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setSelectedFilter(filter)}
+                  className={`px-3 py-1 rounded-xl font-semibold transition-all shrink-0 text-xs ${
+                    selectedFilter === filter
+                      ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm'
+                      : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  }`}
+                >
+                  {filter === 'All' ? 'All Spaces' : `${filter}`}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Feed Posts Stream */}
@@ -1098,8 +1102,8 @@ All 69 files are available for preview and 1-click download in Academics -> "Mid
           )}
         </div>
 
-        {/* Right: Campus Live Pulse & Trending Sidebar (Sticky & Fixed on Scroll) */}
-        <div className="lg:col-span-4 space-y-4 sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-none">
+        {/* Right: Campus Live Pulse & Trending Sidebar (Hidden on mobile to keep feed clean; Fixed & Sticky on desktop) */}
+        <div className="hidden lg:block lg:col-span-4 space-y-4 sticky top-20 self-start">
           {/* 1. Live Active Counter Card */}
           <div className="glass-panel rounded-3xl p-5 border border-emerald-500/20 shadow-sm relative overflow-hidden">
             <div className="flex items-center justify-between mb-3">

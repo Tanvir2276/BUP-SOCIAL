@@ -10,16 +10,16 @@ export const AnimatedBupLogo: React.FC<AnimatedBupLogoProps> = ({
   showText = true,
 }) => {
   const sizeMap = {
-    sm: { box: 'w-9 h-9', icon: 36, text: 'text-sm', sub: 'text-[9px]' },
-    md: { box: 'w-11 h-11', icon: 44, text: 'text-base', sub: 'text-[10px]' },
-    lg: { box: 'w-16 h-16', icon: 64, text: 'text-xl', sub: 'text-xs' },
-    xl: { box: 'w-24 h-24', icon: 96, text: 'text-2xl', sub: 'text-sm' },
+    sm: { box: 'w-7 h-7 sm:w-9 sm:h-9', icon: 36, text: 'text-xs sm:text-sm', sub: 'text-[9px]' },
+    md: { box: 'w-8 h-8 sm:w-11 sm:h-11', icon: 44, text: 'text-sm sm:text-base', sub: 'text-[10px]' },
+    lg: { box: 'w-12 h-12 sm:w-16 sm:h-16', icon: 64, text: 'text-lg sm:text-xl', sub: 'text-xs' },
+    xl: { box: 'w-16 h-16 sm:w-24 sm:h-24', icon: 96, text: 'text-xl sm:text-2xl', sub: 'text-sm' },
   };
 
   const currentSize = sizeMap[size];
 
   return (
-    <div className="flex items-center gap-3 select-none group">
+    <div className="flex items-center gap-2 sm:gap-3 select-none group min-w-0">
       {/* Animated SVG Emblem */}
       <div className={`relative ${currentSize.box} shrink-0`}>
         {/* Glowing Ambient Backdrop */}
@@ -126,15 +126,15 @@ export const AnimatedBupLogo: React.FC<AnimatedBupLogoProps> = ({
       {/* Brand Typography */}
       {showText && (
         <div className="min-w-0">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1 sm:gap-1.5">
             <span className={`font-extrabold tracking-tight text-slate-900 dark:text-white ${currentSize.text} whitespace-nowrap`}>
               BUP <span className="text-bup-700 dark:text-bup-400">SOCIAL</span>
             </span>
-            <span className="hidden xs:inline-block text-[9px] font-extrabold px-1.5 py-0.2 rounded-md bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 uppercase shadow-sm whitespace-nowrap">
+            <span className="hidden md:inline-block text-[9px] font-extrabold px-1.5 py-0.2 rounded-md bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 uppercase shadow-sm whitespace-nowrap">
               BUPSOC
             </span>
           </div>
-          <p className={`hidden sm:block text-slate-500 dark:text-slate-400 font-medium tracking-tight truncate ${currentSize.sub}`}>
+          <p className="hidden md:block text-slate-500 dark:text-slate-400 font-medium tracking-tight truncate text-[10px]">
             Excellence Through Knowledge • Mirpur
           </p>
         </div>

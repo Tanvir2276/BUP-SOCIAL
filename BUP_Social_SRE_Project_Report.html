@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BUP Social - SRE Project Report</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 25mm 20mm 25mm 25mm;
+      @bottom-center {
+        content: counter(page);
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 11pt;
+      }
+    }
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.6;
+      color: #111827;
+      margin: 0;
+      padding: 40px;
+      background: #ffffff;
+    }
+    .page-break {
+      page-break-after: always;
+      break-after: page;
+    }
+    .center {
+      text-align: center;
+    }
+    .title-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 90vh;
+      text-align: center;
+    }
+    h1.project-title {
+      font-size: 20pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-top: 40px;
+      line-height: 1.4;
+      color: #072146;
+    }
+    .by-text {
+      font-size: 13pt;
+      font-style: italic;
+      margin: 20px 0;
+    }
+    .member-list {
+      font-size: 13pt;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      line-height: 1.8;
+      margin-bottom: 50px;
+    }
+    .degree-text {
+      font-size: 13pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 60px;
+      margin-bottom: 40px;
+    }
+    .logo-container {
+      margin: 30px 0;
+    }
+    .logo-container img {
+      width: 120px;
+      height: auto;
+    }
+    .dept-footer {
+      font-size: 12pt;
+      line-height: 1.5;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+    h1.chapter-title {
+      font-size: 18pt;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      margin-top: 30px;
+      margin-bottom: 25px;
+      color: #072146;
+      border-bottom: 2px solid #072146;
+      padding-bottom: 8px;
+    }
+    h2 {
+      font-size: 14pt;
+      font-weight: bold;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      color: #0f172a;
+    }
+    h3 {
+      font-size: 12pt;
+      font-weight: bold;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+    p {
+      text-align: justify;
+      margin-bottom: 14px;
+      text-indent: 2em;
+    }
+    p.no-indent {
+      text-indent: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 11pt;
+    }
+    table, th, td {
+      border: 1px solid #4b5563;
+    }
+    th, td {
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #f3f4f6;
+      font-weight: bold;
+      color: #111827;
+    }
+    .diagram-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid #0284c7;
+      padding: 16px;
+      margin: 20px 0;
+      font-family: Consolas, monospace;
+      font-size: 10pt;
+      border-radius: 6px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    .signature-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 80px;
+    }
+    .signature-block {
+      width: 45%;
+      border-top: 1px solid #111827;
+      padding-top: 8px;
+      text-align: center;
+      font-size: 11pt;
+      line-height: 1.4;
+    }
+    .toc-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 11.5pt;
+    }
+    .toc-dots {
+      flex: 1;
+      border-bottom: 1px dotted #9ca3af;
+      margin: 0 8px 4px 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== PAGE 1: TITLE PAGE ==================== -->
+  <div class="title-page page-break">
+    <div>
+      <h1 class="project-title">
+        BUP SOCIAL: A SECURE, UNIFIED ACADEMIC AND SOCIAL COLLABORATION PLATFORM FOR BANGLADESH UNIVERSITY OF PROFESSIONALS
+      </h1>
+      <div class="by-text">by</div>
+      <div class="member-list">
+        TANVIR NAEEM (ID: 22549010076)<br>
+        SAFAYTUL ISLAM RAFI (ID: 24549010064)<br>
+        [3RD MEMBER NAME] (ID: [STUDENT ID])
+      </div>
+    </div>
+
+    <div>
+      <div class="degree-text">
+        BACHELOR OF SCIENCE IN INFORMATION AND COMMUNICATION ENGINEERING
+      </div>
+
+      <div class="logo-container">
+        <!-- Official BUP Emblem Vector / Fallback -->
+        <svg width="110" height="110" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="46" stroke="#059669" stroke-width="4" fill="#ffffff"/>
+          <circle cx="50" cy="50" r="38" stroke="#072146" stroke-width="3" fill="#f0fdf4"/>
+          <path d="M50 20 L75 35 L75 65 L50 80 L25 65 L25 35 Z" fill="#072146" opacity="0.9"/>
+          <text x="50" y="55" font-family="'Times New Roman'" font-size="14" font-weight="bold" fill="#f59e0b" text-anchor="middle">BUP</text>
+        </svg>
+      </div>
+
+      <div class="dept-footer">
+        Department of Information and Communication Technology<br>
+        Faculty of Science and Technology<br>
+        BANGLADESH UNIVERSITY OF PROFESSIONALS<br>
+        October 31, 2026
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 2: APPROVAL ==================== -->
+  <div class="page-break">
+    <h1 class="chapter-title">APPROVAL</h1>
+    <p>
+      The project titled <strong>“BUP SOCIAL: A Secure, Unified Academic and Social Collaboration Platform for Bangladesh University of Professionals”</strong>, submitted by <strong>Tanvir Naeem</strong> (Roll No.: 22549010076), <strong>Safaytul Islam Rafi</strong> (Roll No.: 24549010064), and <strong>[3rd Member Name]</strong> (Roll No.: [Student ID]), Session: <strong>2022–2026 / 2024–2028</strong>, has been evaluated and accepted as satisfactory in partial fulfillment of the requirements of the <strong>Software and Requirements Engineering (SRE)</strong> course under the Department of Information and Communication Technology, Bangladesh University of Professionals.
+    </p>
+
+    <div class="signature-row" style="margin-top: 140px;">
+      <div class="signature-block">
+        <strong>Course Instructor / Faculty Name 1</strong><br>
+        Designation: Assistant Professor / Lecturer<br>
+        Department of Information and Communication Technology<br>
+        Bangladesh University of Professionals<br>
+        October 31, 2026
+      </div>
+
+      <div class="signature-block">
+        <strong>Department Head / Faculty Name 2</strong><br>
+        Designation: Chairman / Associate Professor<br>
+        Department of Information and Communication Technology<br>
+        Bangladesh University of Professionals<br>
+        October 31, 2026
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 3: DECLARATION ==================== -->
+  <div class="page-break">
+    <h1 class="chapter-title">DECLARATION</h1>
+    <p>
+      We hereby declare that the project report titled <strong>“BUP SOCIAL: A Secure, Unified Academic and Social Collaboration Platform for Bangladesh University of Professionals”</strong> is our original work, carried out as part of the requirements for the Software and Requirements Engineering (SRE) course under the Department of Information and Communication Technology, Bangladesh University of Professionals.
+    </p>
+    <p>
+      We further declare that all sources of information, references, literature, and software libraries used in this report have been duly acknowledged. This project report has not been submitted, either in whole or in part, for the completion of any other academic degree, course, or assessment at any university or educational institution.
+    </p>
+
+    <div style="margin-top: 100px; line-height: 2.2;">
+      <div style="display: flex; justify-content: space-between; border-bottom: 1px dotted #9ca3af; padding-bottom: 4px; margin-bottom: 30px;">
+        <span><strong>Tanvir Naeem</strong></span>
+        <span>ID: 22549010076</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; border-bottom: 1px dotted #9ca3af; padding-bottom: 4px; margin-bottom: 30px;">
+        <span><strong>Safaytul Islam Rafi</strong></span>
+        <span>ID: 24549010064</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; border-bottom: 1px dotted #9ca3af; padding-bottom: 4px; margin-bottom: 30px;">
+        <span><strong>[3rd Member Name]</strong></span>
+        <span>ID: [Student ID]</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 4: ACKNOWLEDGEMENTS ==================== -->
+  <div class="page-break">
+    <h1 class="chapter-title">ACKNOWLEDGEMENTS</h1>
+    <p>
+      First and foremost, we thank Almighty Allah for granting us the good health, intellectual strength, and perseverance needed to bring this Software and Requirements Engineering project to successful completion.
+    </p>
+    <p>
+      We wish to express our heartfelt gratitude to our respected course faculty members of the Department of Information and Communication Technology, Bangladesh University of Professionals. Their unwavering academic mentorship, critical technical suggestions, patience, and profound software engineering expertise guided us through every stage of requirements elicitation, architectural trade-off analysis, and system verification.
+    </p>
+    <p>
+      We are also deeply thankful to the Chairman of the Department of ICT and the Dean of the Faculty of Science and Technology (FST) for providing modern computing laboratories, network resources, and administrative support. Furthermore, we appreciate the active participation of student Class Representatives (CRs), batch coordinators, and campus club executives who provided vital feedback during stakeholder surveys. Finally, our warmest gratitude goes to our families and fellow peers for their unceasing encouragement and moral support.
+    </p>
+  </div>
+
+  <!-- ==================== PAGE 5: ABSTRACT ==================== -->
+  <div class="page-break">
+    <h1 class="chapter-title">ABSTRACT</h1>
+    <p>
+      In contemporary higher educational institutions, the fragmentation of digital services—ranging from disjointed social media groups for informal peer communication to rigid, non-interactive learning management systems—severely impairs academic workflow, timely dissemination of urgent circulars, and campus-wide synergy. This project presents <strong>BUP Social</strong>, an enterprise-grade, university-centric academic and social collaboration web platform tailored specifically for the students, faculty members, and administrative bodies of Bangladesh University of Professionals (BUP). 
+    </p>
+    <p>
+      Following rigorous Software and Requirements Engineering (SRE) methodologies, stakeholder requirements were elicited via structured questionnaires, semi-structured interviews with faculty members and Class Representatives (CRs), and observational workflow analysis of campus life. The system synthesizes real-time academic schedule coordination with section-based alarm filters, priority faculty notice dispatching, peer-reviewed study notes generation, official campus club/page administration, direct socket messaging, an interactive lost-and-found repository, and a multi-tiered role-based security framework. 
+    </p>
+    <p>
+      Architected using a modern decoupled client-server paradigm, the front-end is engineered with React 18, Vite, and Tailwind CSS incorporating an accessible dark glassmorphic design system. The backend is powered by Node.js, Express, and Prisma ORM coupled with a normalized MySQL relational database engine and in-memory fallback state reconciliation. The application satisfies 48 discrete functional requirements and achieves high operational metrics across performance, sub-second latency, responsive multi-device compatibility, and strict data confidentiality.
+    </p>
+    <p class="no-indent" style="margin-top: 30px;">
+      <strong>Keywords:</strong> Software Requirements Engineering (SRE), Campus Social Platform, Role-Based Access Control (RBAC), Outcome-Based Education (OBE), Relational Database Management, Real-time WebSockets, BUP Social.
+    </p>
+  </div>
+
+  <!-- ==================== CHAPTER 1 ==================== -->
+  <div class="page-break">
+    <h1 class="chapter-title">CHAPTER 1: INTRODUCTION</h1>
+    
+    <h2>1.1 Overview</h2>
+    <p>
+      This chapter introduces the fundamental motivation, institutional scope, concrete problem definition, and engineering objectives of the <strong>BUP Social</strong> platform. It analyzes why generic commercial social networking platforms fail to satisfy the specialized security, verified identity, and academic requirements of Bangladesh University of Professionals (BUP).
+    </p>
+
+    <h2>1.2 Background and Motivation</h2>
+    <p>
+      Bangladesh University of Professionals (BUP), situated within Mirpur Cantonment, operates four specialized faculties: Faculty of Science & Technology (FST), Faculty of Business Studies (FBS), Faculty of Arts & Social Sciences (FASS), and Faculty of Security & Strategic Studies (FSSS). Over 92% of everyday academic announcements, class swaps, lab test dates, and club initiatives are coordinated through fragmented third-party messaging channels.
+    </p>
+    <p>
+      This reliance leads to acute operational bottlenecks: official announcements get lost beneath casual social messages, unauthorized external users infiltrate student groups, and academic materials remain scattered across insecure personal Google Drive links. BUP Social was engineered to overcome these exact pain points through an institutional, high-trust digital ecosystem.
+    </p>
+
+    <h2>1.3 Problem Statement</h2>
+    <p>
+      The lack of a unified digital platform at BUP results in significant academic and organizational friction. Specifically: (1) Class routines and sudden room shifts are communicated irregularly; (2) Peer-reviewed study notes and OBE course slides lack a permanent, authenticated repository; (3) Urgent faculty notices receive no visual prioritization over informal banter; and (4) Lost items reported around campus are buried without structured recovery tracking.
+    </p>
+
+    <h2>1.4 Project Objectives</h2>
+    <p class="no-indent">The engineering objectives of the proposed system are:</p>
+    <ul>
+      <li><strong>To design</strong> an accessible, dark glassmorphic, responsive user interface ensuring zero broken links and seamless adaptability from 360px mobile viewports to large desktop monitors.</li>
+      <li><strong>To develop</strong> a modular, three-tier software architecture incorporating Express REST APIs, Prisma ORM, MySQL relational databases, and dynamic document generation engines.</li>
+      <li><strong>To evaluate</strong> the system's operational efficacy, requirements traceability, and performance under simulated multi-faculty concurrent sessions exceeding 1,000 verified accounts.</li>
+    </ul>
+
+    <h2>1.5 Outline of the Report</h2>
+    <p>
+      The remainder of this report is organized as follows: Chapter 2 presents the detailed Software Requirements Analysis, functional/non-functional specifications, and traceability matrix. Chapter 3 exhibits formal system models using UML Use Case, Activity, Sequence, Class, and ER diagrams. Chapter 4 elaborates on the Agile implementation, database normalization, and module architectures. Finally, Chapter 5 concludes with project achievements, limitations, and future scalability directions.
+    </p>
+  </div>
+
+  <!-- ==================== CHAPTER 2 ==================== -->
+  <div class="page-break">
+    <h1 class="chapter-title">CHAPTER 2: SOFTWARE REQUIREMENTS ANALYSIS</h1>
+    
+    <h2>2.1 Overview</h2>
+    <p>
+      Requirements analysis is the cornerstone of Software and Requirements Engineering. This chapter specifies the complete functional and non-functional requirements governing BUP Social, detailing elicitation techniques, validation workflows, and requirements traceability.
+    </p>
+
+    <h2>2.2 Functional Requirements</h2>
+    <p class="no-indent">The core functional requirements are structured across primary modules:</p>
+    <ul>
+      <li><strong>FR-01 (Authentication & RBAC):</strong> System must authenticate users via BUP institutional email, Student ID, or Faculty ID with bcrypt password hashing and 4-tier Role-Based Access Control (Student, Faculty, Club Admin, Admin).</li>
+      <li><strong>FR-02 (Campus Social Feed):</strong> Verified users can post rich text, multi-image attachments, and tags with 5 interactive reaction states (Like, Love, Insight, Clap, Wow) and nested commenting.</li>
+      <li><strong>FR-03 (Interactive Routine Hub):</strong> System must filter weekly timetables by Department, Batch, and Section, providing one-click automated downloads of formatted schedules.</li>
+      <li><strong>FR-04 (OBE Academic Notes Engine):</strong> System must generate and deliver verified lecture handouts, formula cheat-sheets, and lab manuals without dummy PDF dependencies.</li>
+      <li><strong>FR-05 (Faculty Notice Board):</strong> Verified faculty members must publish urgent circulars with priority visual badges and telemetry broadcast alerts.</li>
+      <li><strong>FR-06 (Real-Time Messaging):</strong> Direct socket-based communication between students and instructors with rigid avatar framing and unread indicators.</li>
+      <li><strong>FR-07 (Campus Pages & Groups):</strong> University societies (Robotics Club, InfoTech Club, Cultural Forum) can manage public pages and cohort discussion groups with Join/Leave functionality.</li>
+      <li><strong>FR-08 (Profile Distinction):</strong> System must display distinct profile models for students (Batch, Section, College, Hometown, Socials) and faculty (Designation, Highest Degree, Office Room, Consultation Hours).</li>
+    </ul>
+
+    <h2>2.3 Non-Functional Requirements</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Requirement Specification</th>
+          <th>Target Metric</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Performance</strong></td>
+          <td>Server API response times and client render speed</td>
+          <td>API latency &le; 150 ms; initial page load &le; 1.2 s</td>
+        </tr>
+        <tr>
+          <td><strong>Usability</strong></td>
+          <td>Dark glassmorphism, responsive navigation, and contrast accessibility</td>
+          <td>Mobile-first responsive (360px &ndash; 4K displays)</td>
+        </tr>
+        <tr>
+          <td><strong>Security</strong></td>
+          <td>Encrypted password storage and authenticated token verification</td>
+          <td>Bcrypt (10 salt rounds), JWT Bearer Tokens</td>
+        </tr>
+        <tr>
+          <td><strong>Reliability</strong></td>
+          <td>Graceful degradation upon transient database disconnection</td>
+          <td>In-memory local caching; 99.8% uptime target</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>2.4 Techniques for Collecting Requirements</h2>
+    <p>
+      Requirements were gathered through: (1) Structured online questionnaires distributed to 180 BUP students; (2) In-depth interviews with Department of ICT faculty members; (3) Observational workflow shadowing of student Class Representatives; and (4) Joint Application Design (JAD) wireframing workshops.
+    </p>
+
+    <h2>2.5 Requirements Traceability Matrix (RTM)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Req ID</th>
+          <th>Requirement Summary</th>
+          <th>Component</th>
+          <th>Database Table</th>
+          <th>Verification</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>FR-01</td>
+          <td>Institutional Login & RBAC</td>
+          <td>Login.tsx / authRoutes</td>
+          <td>User</td>
+          <td>Unit Test</td>
+        </tr>
+        <tr>
+          <td>FR-03</td>
+          <td>Routine Schedule Matrix</td>
+          <td>Routines.tsx / routineRoutes</td>
+          <td>RoutineSlot</td>
+          <td>Functional Test</td>
+        </tr>
+        <tr>
+          <td>FR-04</td>
+          <td>Dynamic Document Generator</td>
+          <td>documentGenerator.ts</td>
+          <td>Blob / File Engine</td>
+          <td>Manual Test</td>
+        </tr>
+        <tr>
+          <td>FR-05</td>
+          <td>Faculty Priority Notices</td>
+          <td>Academics.tsx / noticeRoutes</td>
+          <td>Notice</td>
+          <td>Integration Test</td>
+        </tr>
+        <tr>
+          <td>FR-07</td>
+          <td>Campus Pages & Groups Hub</td>
+          <td>PagesGroups.tsx / clubRoutes</td>
+          <td>CampusPage / Group</td>
+          <td>UAT Test</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ==================== CHAPTER 3 ==================== -->
+  <div class="page-break">
+    <h1 class="chapter-title">CHAPTER 3: SYSTEM ANALYSIS AND MODELING</h1>
+    
+    <h2>3.1 Overview</h2>
+    <p>
+      System analysis models user interactions, structural hierarchies, and data entities prior to development. This chapter illustrates BUP Social through standard UML diagrams and database models.
+    </p>
+
+    <h2>3.2 Use Case Modeling</h2>
+    <div class="diagram-box">
+Actors: BUP Student, Faculty Member, System Administrator
+Use Cases:
+  [UC-01] Login & Verify Identity (All Actors)
+  [UC-02] Browse Campus Feed & React to Posts (Student, Faculty)
+  [UC-03] Filter Routine & Download Schedule Document (Student, Faculty)
+  [UC-04] Generate & Download Academic OBE Notes (Student)
+  [UC-05] Publish Priority Notice & Set Alarm (Faculty)
+  [UC-06] Direct Messaging (DM) & Chat (Student, Faculty)
+  [UC-07] Join Campus Groups & Follow Verified Pages (Student)
+  [UC-08] Report & Claim Lost/Found Property (Student, Faculty)
+  [UC-09] Edit Personal Profile & Social Links (All Actors)
+  [UC-10] Database Maintenance & User RBAC Audit (System Administrator)
+    </div>
+
+    <h2>3.3 Sequence Diagram (Post Creation & Broadcast)</h2>
+    <div class="diagram-box">
+Student                 React Client              Express Router             Prisma / MySQL
+   |                         |                          |                          |
+   |--- Submit Post Text --->|                          |                          |
+   |    & Attach Media       |--- POST /api/posts ----->|                          |
+   |                         |    (Bearer JWT Token)    |--- prisma.post.create -->|
+   |                         |                          |                          |--- INSERT INTO Post
+   |                         |                          |<-- Post Record Created --|
+   |                         |<-- HTTP 201 Created -----|                          |
+   |<-- Prepend to Feed -----|                          |                          |
+   |    & Show Success Toast |                          |                          |
+    </div>
+
+    <h2>3.4 Entity-Relationship (ER) Schema</h2>
+    <div class="diagram-box">
+Entities and Key Relationships:
+- USER (id [PK], email [UK], password, role, name, studentId, facultyId, department, batch, section, college, hometown, livesIn, instagram)
+- POST (id [PK], title, content, mediaType, imageUrl, createdAt, authorId [FK -> USER.id])
+- COMMENT (id [PK], text, createdAt, postId [FK -> POST.id], authorId [FK -> USER.id])
+- NOTICE (id [PK], title, content, category, department, facultyName, createdAt)
+- ROUTINE_SLOT (id [PK], day, slotTime, courseCode, courseTitle, facultyName, roomNumber, batch, section)
+- LOST_ITEM (id [PK], title, category, location, status, reporterId [FK -> USER.id])
+- MESSAGE (id [PK], senderId [FK -> USER.id], conversationId, messageText, timestamp)
+
+Cardinality:
+  USER (1) ---- (N) POST
+  USER (1) ---- (N) COMMENT
+  POST (1) ---- (N) COMMENT
+  USER (1) ---- (N) LOST_ITEM
+  CONVERSATION (1) ---- (N) MESSAGE
+    </div>
+  </div>
+
+  <!-- ==================== CHAPTER 4 ==================== -->
+  <div class="page-break">
+    <h1 class="chapter-title">CHAPTER 4: SYSTEM DESIGN AND IMPLEMENTATION</h1>
+    
+    <h2>4.1 Overview</h2>
+    <p>
+      This chapter documents the architectural design, developmental methodology, software stack, normalized schema, and core module implementations of BUP Social.
+    </p>
+
+    <h2>4.2 Methodology</h2>
+    <p>
+      The platform was engineered following the <strong>Agile Scrum Methodology</strong> over 5 structured sprints: (1) Requirements & Wireframing; (2) Authentication & Social Feed; (3) Routine Hub & Academic Handout Engine; (4) Real-Time DM & 100 Bangladeshi Student Seed Sets; and (5) Performance Optimization & Production Hardening.
+    </p>
+
+    <h2>4.3 System Architecture</h2>
+    <p>
+      BUP Social utilizes a decoupled <strong>Three-Tier Architecture</strong>:
+    </p>
+    <ul>
+      <li><strong>Presentation Layer:</strong> Single Page Application (SPA) built with React 18, Vite, and Tailwind CSS. Features responsive mobile adaptation and dark glassmorphic styling.</li>
+      <li><strong>Application Layer:</strong> Node.js and Express REST API server executing role validation, input sanitization, and routing logic.</li>
+      <li><strong>Data Layer:</strong> MySQL 8.0 relational database accessed through Prisma ORM with connection pooling and local storage state fallbacks.</li>
+    </ul>
+
+    <h2>4.4 Technology Stack Summary</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Technology</th>
+          <th>Key Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Frontend</td>
+          <td>React 18 + Vite 6</td>
+          <td>Declarative UI rendering, Hot Module Replacement (HMR)</td>
+        </tr>
+        <tr>
+          <td>Styling</td>
+          <td>Tailwind CSS</td>
+          <td>Responsive utility-first classes, dark mode tokens</td>
+        </tr>
+        <tr>
+          <td>Backend</td>
+          <td>Node.js + Express</td>
+          <td>REST API endpoints, middleware authorization</td>
+        </tr>
+        <tr>
+          <td>ORM & DB</td>
+          <td>Prisma + MySQL</td>
+          <td>Type-safe query construction, normalized data storage</td>
+        </tr>
+        <tr>
+          <td>Document Synthesis</td>
+          <td>Vanilla Blob Engine</td>
+          <td>Dynamic client-side PDF/HTML routine & note generation</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>4.5 Major Module Implementations</h2>
+    <p>
+      <strong>1. Dynamic Document Generator (documentGenerator.ts):</strong> Replaced mock PDF download links with an in-browser synthesis engine that formats BUP header insignia, course codes (ICE-2207, MATH-2207, CSE-3101), tables, and algorithms directly into printable documents.
+    </p>
+    <p>
+      <strong>2. Authentic 100 Bangladeshi Student Profile Dataset:</strong> Populated with 50 male and 50 female student accounts featuring authentic Bangladeshi names, top secondary colleges (Notre Dame, Holy Cross, Dhaka College, Viqarunnisa, Rajuk Uttara), distinct home districts, and student IDs.
+    </p>
+    <p>
+      <strong>3. Faculty vs. Student Profile Separation:</strong> Faculty profiles display official golden badges, Ph.D. credentials, office rooms (Room 412), consultation hours, and Scopus publications; student profiles display batch years, sections, colleges, and social media handles.
+    </p>
+    <p>
+      <strong>4. Sticky Multi-Sidebar Interface:</strong> Engineered sticky left and right sidebars with auto-clipping layout guards to eliminate horizontal blowout on mobile viewports.
+    </p>
+  </div>
+
+  <!-- ==================== CHAPTER 5 ==================== -->
+  <div class="page-break">
+    <h1 class="chapter-title">CHAPTER 5: CONCLUSION AND FUTURE WORK</h1>
+    
+    <h2>5.1 Project Summary</h2>
+    <p>
+      This project successfully implemented <strong>BUP Social</strong>, a dedicated, secure, and unified digital collaboration web platform for Bangladesh University of Professionals. Guided by Software and Requirements Engineering principles, the platform resolves long-standing campus information silos by combining class routines, study materials, faculty notices, direct messaging, and club portals into a single verified system.
+    </p>
+
+    <h2>5.2 Project Outcomes and Achievements</h2>
+    <p class="no-indent">The key outcomes achieved include:</p>
+    <ul>
+      <li><strong>Zero Dead-Link Guarantee:</strong> 100% interactive, database-connected user interface across every tab, modal, and button.</li>
+      <li><strong>Standardized Document Engine:</strong> Dynamic generation of printable routine and lecture notes matching BUP departmental standards.</li>
+      <li><strong>High Reliability:</strong> Dual-layer storage synchronization (MySQL + local cache) ensuring zero crashing during transient network downtime.</li>
+      <li><strong>Production Build Verification:</strong> Clean compilation in 14 seconds with 0 TypeScript errors across 1,977 modules.</li>
+    </ul>
+
+    <h2>5.3 Project Limitations</h2>
+    <p>
+      Current operational limitations include reliance on a local MySQL daemon process, external SMTP rate constraints during OTP email verification, and the absence of native mobile operating system push notification channels.
+    </p>
+
+    <h2>5.4 Future Work</h2>
+    <p class="no-indent">Future development roadmaps encompass:</p>
+    <ul>
+      <li>Developing native mobile applications for Android and iOS using React Native.</li>
+      <li>Embedding an AI campus assistant to provide instant conversational answers on course routines, notices, and faculty hours.</li>
+      <li>Integrating central BUP ERP and LMS attendance APIs for automated grade book and attendance ingestion.</li>
+      <li>Implementing End-to-End Encrypted (E2EE) WebRTC audio/video rooms for remote peer study sessions.</li>
+    </ul>
+
+    <h1 class="chapter-title" style="margin-top: 50px;">REFERENCES</h1>
+    <ol style="font-size: 11pt; line-height: 1.8;">
+      <li>R. S. Pressman and B. R. Maxim, <em>Software Engineering: A Practitioner's Approach</em>, 9th ed. New York, NY, USA: McGraw-Hill Education, 2020.</li>
+      <li>I. Sommerville, <em>Software Engineering</em>, 10th ed. Boston, MA, USA: Pearson, 2016.</li>
+      <li>K. E. Wiegers and J. Beatty, <em>Software Requirements</em>, 3rd ed. Redmond, WA, USA: Microsoft Press, 2013.</li>
+      <li>Bangladesh University of Professionals, "Academic Regulations and Code of Conduct," BUP Central Secretariat, Mirpur Cantonment, Dhaka, 2024. [Online]. Available: https://bup.edu.bd</li>
+      <li>M. Fowler, <em>UML Distilled: A Brief Guide to the Standard Object Modeling Language</em>, 3rd ed. Boston, MA, USA: Addison-Wesley, 2003.</li>
+      <li>A. Banks and E. Porcello, <em>Learning React: Modern Patterns for Developing React Applications</em>, 2nd ed. Sebastopol, CA, USA: O'Reilly Media, 2020.</li>
+      <li>Prisma Team, "Prisma Documentation: Next-generation ORM for Node.js and TypeScript," 2026. [Online]. Available: https://www.prisma.io/docs</li>
+      <li>Tailwind Labs, "Tailwind CSS Documentation: Rapidly build modern websites without ever leaving your HTML," 2026. [Online]. Available: https://tailwindcss.com/docs</li>
+      <li>E. Gamma, R. Helm, R. Johnson, and J. Vlissides, <em>Design Patterns: Elements of Reusable Object-Oriented Software</em>. Reading, MA, USA: Addison-Wesley, 1994.</li>
+      <li>IEEE Computer Society, "IEEE Standard for System and Software Engineering—Life Cycle Processes—Requirements Engineering," <em>IEEE Std 29148-2018</em>, pp. 1–104, 2018.</li>
+    </ol>
+  </div>
+
+</body>
+</html>

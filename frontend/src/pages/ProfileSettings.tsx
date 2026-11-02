@@ -84,7 +84,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
   // Cover Photo State
   const [coverPhoto, setCoverPhoto] = useState<string>(() => {
     if (!isOwnProfile && viewingUser?.coverPhoto) return viewingUser.coverPhoto;
-    return localStorage.getItem('bupsoc_cover_photo') || '/assets/bup_antorikkho_batch22.jpg';
+    return localStorage.getItem('bupsoc_cover_photo') || 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&auto=format&fit=crop&q=80';
   });
   const [coverUploading, setCoverUploading] = useState(false);
   const [showCoverPresets, setShowCoverPresets] = useState(false);
@@ -108,12 +108,15 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
   useEffect(() => {
     if (viewingUser) {
       setAvatarPreview(viewingUser.avatar || '');
-      setCoverPhoto(viewingUser.coverPhoto || '/assets/bup_antorikkho_batch22.jpg');
+      setCoverPhoto(viewingUser.coverPhoto || 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&auto=format&fit=crop&q=80');
       setThoughtStatus(viewingUser.thought || (viewingUser.role === 'faculty' ? 'Research & academic mentorship' : viewingUser.motto || ''));
+      setIsFollowing(localStorage.getItem(`bupsoc_following_${viewingUser.id || viewingUser.name}`) === 'true');
+      setFollowerCount(viewingUser.followersCount || 1420);
     } else {
       setAvatarPreview(user?.avatar || '');
-      setCoverPhoto(localStorage.getItem('bupsoc_cover_photo') || user?.coverPhoto || '/assets/bup_antorikkho_batch22.jpg');
+      setCoverPhoto(localStorage.getItem('bupsoc_cover_photo') || user?.coverPhoto || 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&auto=format&fit=crop&q=80');
       setThoughtStatus(localStorage.getItem('bupsoc_user_thought') || user?.thought || user?.motto || '');
+      setFollowerCount(Number(localStorage.getItem('bupsoc_followers_count')) || (user as any)?.followersCount || 2410);
     }
   }, [viewingUser, user]);
 
@@ -209,7 +212,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
     if (!isOwnProfile && viewingUser?.coverPhoto) {
       setCoverPhoto(viewingUser.coverPhoto);
     } else {
-      setCoverPhoto(localStorage.getItem('bupsoc_cover_photo') || '/assets/bup_antorikkho_batch22.jpg');
+      setCoverPhoto(localStorage.getItem('bupsoc_cover_photo') || 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&auto=format&fit=crop&q=80');
     }
   }, [viewingUser, activeProfile]);
 
@@ -474,10 +477,12 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 
               <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
                 {[
-                  { title: 'অন্তরীক্ষ-২২ Cohort (Batch Fest)', url: '/assets/bup_antorikkho_batch22.jpg', tag: 'Official Batch 22' },
-                  { title: 'BUP Central Campus Lake & Bridge', url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200', tag: 'Lakefront' },
-                  { title: 'Academic Block 2 & Library Vista', url: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200', tag: 'Faculty Block' },
-                  { title: 'BUP FST Robotics Hardware Lab', url: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=1200', tag: 'FST ICT Lab' },
+                  { title: 'BUP Central Campus Lake & Bridge', url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&auto=format&fit=crop&q=80', tag: 'Campus Lakefront' },
+                  { title: 'Academic Block 2 & Library Complex', url: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600&auto=format&fit=crop&q=80', tag: 'Academic Block' },
+                  { title: 'University Green Plaza & Amphitheatre', url: 'https://images.unsplash.com/photo-1562774053-701939374585?w=1600&auto=format&fit=crop&q=80', tag: 'Green Plaza' },
+                  { title: 'Central Knowledge Library & Archive', url: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1600&auto=format&fit=crop&q=80', tag: 'Library' },
+                  { title: 'BUP FST Robotics Hardware Lab (Lab 402)', url: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=1600&auto=format&fit=crop&q=80', tag: 'FST ICT Lab' },
+                  { title: 'Bijoy Auditorium & Convocation Hall', url: 'https://images.unsplash.com/photo-1627556704290-2b1f5853ff78?w=1600&auto=format&fit=crop&q=80', tag: 'Auditorium' },
                 ].map((preset, idx) => (
                   <div
                     key={idx}
@@ -857,7 +862,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                 <span className="text-[10px] text-bup-600 font-bold">4 Photos</span>
               </h3>
               <div className="grid grid-cols-2 gap-2 rounded-2xl overflow-hidden">
-                <img src="/assets/bup_antorikkho_batch22.jpg" alt="" className="w-full h-24 object-cover rounded-xl hover:scale-105 transition-transform" />
+                <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=600" alt="" className="w-full h-24 object-cover rounded-xl hover:scale-105 transition-transform" />
                 <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600" alt="" className="w-full h-24 object-cover rounded-xl hover:scale-105 transition-transform" />
                 <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600" alt="" className="w-full h-24 object-cover rounded-xl hover:scale-105 transition-transform" />
                 <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600" alt="" className="w-full h-24 object-cover rounded-xl hover:scale-105 transition-transform" />
@@ -894,16 +899,30 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
               </div>
 
               <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
-                🚀 Official Teaser: BUP Inter-Department Hackathon 2026 Trailer & Launch
+                {isTargetFaculty
+                  ? '📢 Academic Notice & Mid-Term Office Consultation Hours: Room 302'
+                  : !isOwnProfile
+                  ? 'Collaborative Study Session for Midterms at Central Library 📚✨'
+                  : '🚀 Official Teaser: BUP Inter-Department Hackathon 2026 Trailer & Launch'}
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                Calling all coders, innovators, and problem solvers across FST, FBS, and FASS! Gear up for the most anticipated hackathon of the semester. Registration opens this Sunday!
+                {isTargetFaculty
+                  ? 'Scholars are advised to consult during designated office hours (Sun & Tue 11:00 AM - 1:00 PM). Midterm answer script evaluations for ICE-3201 and research capstone proposals are now available for review.'
+                  : !isOwnProfile
+                  ? 'Engaged in group discussion on SRE software architecture, Microprocessor 8086 interfacing and Data Structures graph algorithms. Feel free to join our study table at Library 2nd floor!'
+                  : 'Calling all coders, innovators, and problem solvers across FST, FBS, and FASS! Gear up for the most anticipated hackathon of the semester. Registration opens this Sunday!'}
               </p>
 
               <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
                 <img
-                  src="/assets/bup_antorikkho_batch22.jpg"
-                  alt="Batch 22 Hackathon"
+                  src={
+                    isTargetFaculty
+                      ? 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1000'
+                      : !isOwnProfile
+                      ? 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1000'
+                      : 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=1000'
+                  }
+                  alt="Post Attachment"
                   className="w-full max-h-80 object-cover"
                 />
               </div>
@@ -1190,8 +1209,8 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {[
               {
-                title: 'অন্তরীক্ষ-২২ Fest Core',
-                desc: 'Batch fest organizing committee member & stage coordinator',
+                title: 'FST Innovation Fellowship',
+                desc: 'Department competitive hackathon organizer & tech lead',
                 color: 'from-amber-500 to-orange-500',
                 icon: Flame,
               },

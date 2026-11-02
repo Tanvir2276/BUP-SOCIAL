@@ -119,7 +119,7 @@ export const PagesGroups: React.FC = () => {
         category: newCategory || 'Study & Cohort Circle',
         membersCount: 1,
         avatar: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=200',
-        coverPhoto: '/assets/bup_antorikkho_batch22.jpg',
+        coverPhoto: 'https://images.unsplash.com/photo-1562774053-701939374585?w=1600&auto=format&fit=crop&q=80',
         description: newDescription || `Official discussion circle founded by ${user?.name}.`,
         adminName: user?.name || 'Munshi Tanvir Hossain',
         adminRole: 'Group Founder',
