@@ -125,16 +125,16 @@ export const AnimatedBupLogo: React.FC<AnimatedBupLogoProps> = ({
 
       {/* Brand Typography */}
       {showText && (
-        <div className="min-w-0">
+        <div className="min-w-0 shrink-0">
           <div className="flex items-center gap-1 sm:gap-1.5">
             <span className={`font-extrabold tracking-tight text-slate-900 dark:text-white ${currentSize.text} whitespace-nowrap`}>
               BUP <span className="text-bup-700 dark:text-bup-400">SOCIAL</span>
             </span>
-            <span className="hidden md:inline-block text-[9px] font-extrabold px-1.5 py-0.2 rounded-md bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 uppercase shadow-sm whitespace-nowrap">
+            <span className="hidden xl:inline-block text-[9px] font-extrabold px-1.5 py-0.5 rounded-md bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 uppercase shadow-sm whitespace-nowrap shrink-0">
               BUPSOC
             </span>
           </div>
-          <p className="hidden md:block text-slate-500 dark:text-slate-400 font-medium tracking-tight truncate text-[10px]">
+          <p className="hidden xl:block text-slate-500 dark:text-slate-400 font-medium tracking-tight truncate text-[10px]">
             Excellence Through Knowledge • Mirpur
           </p>
         </div>

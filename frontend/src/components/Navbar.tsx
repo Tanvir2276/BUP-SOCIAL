@@ -52,13 +52,13 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
           {/* Logo & Brand */}
           <div
             onClick={() => setActiveTab('feed')}
-            className="cursor-pointer shrink min-w-0 select-none"
+            className="cursor-pointer shrink-0 select-none flex items-center mr-2 xl:mr-4"
           >
             <AnimatedBupLogo size="md" />
           </div>
 
           {/* Desktop Nav Items */}
-          <nav className="hidden lg:flex items-center gap-1.5 text-xs font-semibold">
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 text-xs font-semibold shrink-0">
             {[
               { id: 'feed', label: 'Community Feed' },
               { id: 'academics', label: 'Academics & Notices' },
@@ -69,7 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-3.5 py-2 rounded-xl whitespace-nowrap transition-all ${
+                className={`px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl whitespace-nowrap transition-all ${
                   activeTab === tab.id
                     ? 'btn-bup-primary text-white shadow-sm'
                     : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -85,7 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
             {/* Campus Global Search Trigger */}
             <button
               onClick={() => setSearchModalOpen(true)}
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/70 dark:bg-slate-800/80 hover:border-bup-500 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all shadow-xs"
+              className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/70 dark:bg-slate-800/80 hover:border-bup-500 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all shadow-xs"
               title="Search students, faculty, pages, groups..."
             >
               <Search className="w-3.5 h-3.5 text-bup-600 dark:text-bup-400" />
@@ -93,10 +93,10 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onSelec
             </button>
             <button
               onClick={() => setSearchModalOpen(true)}
-              className="sm:hidden p-1.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="xl:hidden p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
               title="Search BUP Campus"
             >
-              <Search className="w-4 h-4 text-bup-600" />
+              <Search className="w-4 h-4 text-bup-600 dark:text-bup-400" />
             </button>
 
             {/* Campus Notification Center Popover (Classes, Exams, Notes) */}
