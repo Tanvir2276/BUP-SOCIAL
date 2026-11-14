@@ -97,10 +97,12 @@ export const App: React.FC = () => {
             <Feed
               onViewProfile={handleViewProfile}
               onOpenChat={handleToggleFloatingChat}
+              onNavigateTab={handleNavigateTab}
             />
           )}
           {activeTab === 'academics' && <Academics initialTab="courses" onViewProfile={handleViewProfile} />}
-          {activeTab === 'notices' && <Academics initialTab="courses" onViewProfile={handleViewProfile} />}
+          {activeTab === 'courses' && <Academics initialTab="courses" onViewProfile={handleViewProfile} />}
+          {activeTab === 'notices' && <Academics initialTab="faculty" onViewProfile={handleViewProfile} />}
           {activeTab === 'cgpa' && <Academics initialTab="cgpa" onViewProfile={handleViewProfile} />}
           {activeTab === 'admissions' && <Academics initialTab="admissions" onViewProfile={handleViewProfile} />}
           {activeTab === 'research' && <Academics initialTab="research" onViewProfile={handleViewProfile} />}
@@ -109,6 +111,14 @@ export const App: React.FC = () => {
             <Feed
               onViewProfile={handleViewProfile}
               onOpenChat={handleToggleFloatingChat}
+              onNavigateTab={handleNavigateTab}
+            />
+          )}
+          {activeTab === 'saved' && (
+            <Feed
+              onViewProfile={handleViewProfile}
+              onOpenChat={handleToggleFloatingChat}
+              onNavigateTab={handleNavigateTab}
             />
           )}
           {activeTab === 'routines' && <Routines />}
@@ -118,6 +128,7 @@ export const App: React.FC = () => {
           {activeTab === 'pages' && <PagesGroups />}
           {activeTab === 'clubs' && <ClubsEvents />}
           {activeTab === 'rides' && <RideShare />}
+          {activeTab === 'travel' && <RideShare />}
           {activeTab === 'messages' && <Messages onViewProfile={handleViewProfile} />}
           {activeTab === 'lostfound' && (
             <LostFound
